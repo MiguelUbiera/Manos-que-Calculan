@@ -41,33 +41,28 @@
                 <h2>Categorías</h2>
                 <ul class="category-list">
                     <li class="category-item">
-                        <button class="category-btn active" data-category="all">
+                        <a href="#" class="category-btn active">
                             <span>📚</span> Todas las actividades
-                        </button>
+                        </a>
                     </li>
                     <li class="category-item">
-                        <button class="category-btn" data-category="juegos">
+                        <a href="#" class="category-btn">
                             <span>🎯</span> Juegos Matemáticos
-                        </button>
+                        </a>
                     </li>
                     <li class="category-item">
-                        <button class="category-btn" data-category="herramientas">
+                        <a href="#" class="category-btn">
                             <span>🛠️</span> Herramientas
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </div>
         </aside>
         
         <main class="main-content">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Buscar actividades...">
-                <button id="searchButton">🔍 Buscar</button>
-            </div>
-            
             <div class="activities-grid">
                 <!-- Juego de Multiplicación -->
-                <div class="activity-card" data-category="juegos" data-content="multiplicacion">
+                <div class="activity-card" data-category="juegos">
                     <div class="card-inner">
                         <div class="card-header">
                             <h3>Desafíos de Multiplicación</h3>
@@ -82,13 +77,13 @@
                         </div>
                         <div class="card-footer">
                             <span>⏱️ 15 min</span>
-                            <a href="actividades/multiplicacion.html" class="open-btn">Abrir</a>
+                            <a href="#" class="open-btn">Abrir</a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Juego de Suma -->
-                <div class="activity-card" data-category="juegos" data-content="suma">
+                <div class="activity-card" data-category="juegos">
                     <div class="card-inner">
                         <div class="card-header">
                             <h3>Desafíos de Suma</h3>
@@ -103,13 +98,13 @@
                         </div>
                         <div class="card-footer">
                             <span>⏱️ 10 min</span>
-                            <a href="actividades/suma.html" class="open-btn">Abrir</a>
+                            <a href="#" class="open-btn">Abrir</a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Juego de Resta -->
-                <div class="activity-card" data-category="juegos" data-content="resta">
+                <div class="activity-card" data-category="juegos">
                     <div class="card-inner">
                         <div class="card-header">
                             <h3>Desafíos de Resta</h3>
@@ -124,13 +119,13 @@
                         </div>
                         <div class="card-footer">
                             <span>⏱️ 10 min</span>
-                            <a href="actividades/resta.html" class="open-btn">Abrir</a>
+                            <a href="#" class="open-btn">Abrir</a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Calculadora Humana -->
-                <div class="activity-card" data-category="juegos" data-content="calculadora">
+                <div class="activity-card" data-category="juegos">
                     <div class="card-inner">
                         <div class="card-header">
                             <h3>Calculadora Humana</h3>
@@ -145,13 +140,13 @@
                         </div>
                         <div class="card-footer">
                             <span>⏱️ 20 min</span>
-                            <a href="actividades/calculadora.html" class="open-btn">Abrir</a>
+                            <a href="#" class="open-btn">Abrir</a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Sorteo (en Herramientas) -->
-                <div class="activity-card" data-category="herramientas" data-content="sorteo">
+                <div class="activity-card" data-category="herramientas">
                     <div class="card-inner">
                         <div class="card-header">
                             <h3>Sorteo de Estudiantes</h3>
@@ -165,13 +160,11 @@
                         </div>
                         <div class="card-footer">
                             <span>⏱️ 5 min</span>
-                            <a href="actividades/sorteo.html" class="open-btn">Abrir</a>
+                            <a href="#" class="open-btn">Abrir</a>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="loading-spinner" id="loadingSpinner"></div>
         </main>
     </div>
     
@@ -179,7 +172,5 @@
         <p>Instituto para Sordos Santa Rosa, Inc.</p>
         <p>© 2025 - Desarrollado por Miguel Ubiera</p>
     </footer>
-
-    <script src="js/main.js"></script>
 </body>
 </html>
