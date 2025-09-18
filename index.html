@@ -97,7 +97,7 @@
         header {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
-            padding: 1.5rem;
+            padding: 1rem; /* Reducido de 1.5rem para hacer la franja más angosta */
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: relative;
@@ -127,7 +127,7 @@
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem; /* Reducido para compensar el header más angosto */
         }
 
         .logo-icon {
@@ -137,11 +137,11 @@
 
         h1 {
             font-size: 2.2rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem; /* Reducido para compensar el header más angosto */
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto;
@@ -178,6 +178,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden; /* Asegura que el contenido no se desborde */
         }
 
         .categories h2 {
@@ -233,6 +234,7 @@
         .category-item:nth-child(7) { animation-delay: 0.7s; }
         .category-item:nth-child(8) { animation-delay: 0.8s; }
         .category-item:nth-child(9) { animation-delay: 0.9s; }
+        .category-item:nth-child(10) { animation-delay: 1.0s; }
 
         .category-btn {
             display: flex;
@@ -279,6 +281,19 @@
             background: var(--primary);
             color: white;
         }
+
+        /* Colores para los símbolos matemáticos */
+        .math-symbol {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .math-z { color: #FF5722; } /* Naranja */
+        .math-r { color: #2196F3; } /* Azul */
+        .math-algebra { color: #E91E63; } /* Rosa */
+        .math-geometry { color: #4CAF50; } /* Verde */
+        .math-trig { color: #9C27B0; } /* Púrpura */
+        .math-calc { color: #FF9800; } /* Amber */
 
         .main-content {
             flex: 1;
@@ -500,7 +515,7 @@
                 <div>👧</div>
             </div>
         </div>
-        <p class="subtitle">Explora un ambiente inclusivo y disfruta de diversas actividades matemáticas clasificadas por temas, niveles educativos y categorías.</p>
+        <p class="subtitle">Explora un ambiente inclusivo y disfruta las actividades y herramientas disponibles</p>
     </header>
     
     <div class="container">
@@ -526,32 +541,32 @@
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span>ℤ</span> 1ro - Números Z
+                                <span class="math-symbol math-z">ℤ</span> 1ro - Números Z
                             </a>
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span>ℝ</span> 2do - Números R
+                                <span class="math-symbol math-r">ℝ</span> 2do - Números R
                             </a>
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span>𝑥</span> 3ro - Álgebra
+                                <span class="math-symbol math-algebra">𝑥</span> 3ro - Álgebra
                             </a>
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span>△</span> 4to - Geometría
+                                <span class="math-symbol math-geometry">△</span> 4to - Geometría
                             </a>
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span>θ</span> 5to - Trigonometría
+                                <span class="math-symbol math-trig">θ</span> 5to - Trigonometría
                             </a>
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span>∫</span> 6to - Cálculo
+                                <span class="math-symbol math-calc">∫</span> 6to - Cálculo
                             </a>
                         </li>
                     </ul>
