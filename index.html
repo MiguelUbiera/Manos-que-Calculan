@@ -136,7 +136,7 @@
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem; /* Reducido de 2.2rem */
             margin-bottom: 0.3rem; /* Reducido para compensar el header más angosto */
         }
 
@@ -150,7 +150,7 @@
         .container {
             display: flex;
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 1.5rem auto; /* Reducido de 2rem para acercar contenido hacia arriba */
             gap: 2rem;
             padding: 0 1rem;
             position: relative;
@@ -163,7 +163,7 @@
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            height: 70vh; /* Altura fija para el scroll */
+            height: 65vh; /* Altura reducida para acercar categorías hacia arriba */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -219,7 +219,7 @@
         }
 
         .category-item {
-            margin-bottom: 0.4rem; /* Más compacto */
+            margin-bottom: 0.3rem; /* Más compacto */
             opacity: 0;
             transform: translateX(-20px);
             animation: fadeInRight 0.6s ease forwards;
@@ -241,7 +241,7 @@
             align-items: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.6rem 0.8rem; /* Más compacto */
+            padding: 0.5rem 0.7rem; /* Más compacto */
             background: var(--light);
             border: none;
             border-radius: 6px;
@@ -253,7 +253,7 @@
             overflow: hidden;
             text-decoration: none;
             color: inherit;
-            font-size: 0.9rem; /* Texto más compacto */
+            font-size: 0.85rem; /* Texto más compacto */
         }
 
         .category-btn::before {
@@ -292,7 +292,7 @@
         .math-r { color: #2196F3; } /* Azul */
         .math-algebra { color: #E91E63; } /* Rosa */
         .math-geometry { color: #4CAF50; } /* Verde */
-        .math-trig { color: #9C27B0; } /* Púrpura */
+        .math-conics { color: #8E24AA; } /* Violeta para Cónicas */
         .math-calc { color: #FF9800; } /* Amber */
 
         .main-content {
@@ -432,7 +432,7 @@
 
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem; /* Reducido de 2rem */
             margin-top: 2rem;
             background: var(--dark);
             color: white;
@@ -561,7 +561,7 @@
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn">
-                                <span class="math-symbol math-trig">θ</span> 5to - Trigonometría
+                                <span class="math-symbol math-conics">⎔</span> 5to - Cónicas
                             </a>
                         </li>
                         <li class="category-item">
