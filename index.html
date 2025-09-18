@@ -163,13 +163,21 @@
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            height: fit-content;
+            height: 70vh; /* Altura fija para el scroll */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .categories {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .categories h2 {
@@ -180,12 +188,37 @@
             border-bottom: 2px solid var(--light);
         }
 
+        .category-list-container {
+            flex: 1;
+            overflow-y: auto; /* Scroll vertical */
+            padding-right: 5px;
+        }
+
+        /* Estilos para la barra de scroll */
+        .category-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .category-list-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .category-list-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .category-list-container::-webkit-scrollbar-thumb:hover {
+            background: #303f9f;
+        }
+
         .category-list {
             list-style: none;
         }
 
         .category-item {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem; /* Más compacto */
             opacity: 0;
             transform: translateX(-20px);
             animation: fadeInRight 0.6s ease forwards;
@@ -206,7 +239,7 @@
             align-items: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.8rem 1rem;
+            padding: 0.6rem 0.8rem; /* Más compacto */
             background: var(--light);
             border: none;
             border-radius: 6px;
@@ -218,6 +251,7 @@
             overflow: hidden;
             text-decoration: none;
             color: inherit;
+            font-size: 0.9rem; /* Texto más compacto */
         }
 
         .category-btn::before {
@@ -413,6 +447,12 @@
             .sidebar {
                 flex: 1;
                 width: 100%;
+                height: auto;
+            }
+            
+            .category-list-container {
+                overflow-y: visible;
+                max-height: none;
             }
             
             .activities-grid {
@@ -467,53 +507,55 @@
         <aside class="sidebar">
             <div class="categories">
                 <h2>Categorías</h2>
-                <ul class="category-list">
-                    <li class="category-item">
-                        <a href="#" class="category-btn active">
-                            <span>📚</span> Todas las actividades
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>🎉</span> Diversión
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>🛠️</span> Herramientas
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>🔢</span> 1ro - Números y Operaciones
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>📐</span> 2do - Geometría Básica
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>📊</span> 3ro - Fracciones y Decimales
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>📈</span> 4to - Álgebra Elemental
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>📏</span> 5to - Mediciones y Estadística
-                        </a>
-                    </li>
-                    <li class="category-item">
-                        <a href="#" class="category-btn">
-                            <span>🧮</span> 6to - Matemáticas Avanzadas
-                        </a>
-                    </li>
-                </ul>
+                <div class="category-list-container">
+                    <ul class="category-list">
+                        <li class="category-item">
+                            <a href="#" class="category-btn active">
+                                <span>📚</span> Colección
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>🎉</span> Diversión
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>🛠️</span> Herramientas
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>ℤ</span> 1ro - Números Z
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>ℝ</span> 2do - Números R
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>𝑥</span> 3ro - Álgebra
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>△</span> 4to - Geometría
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>θ</span> 5to - Trigonometría
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn">
+                                <span>∫</span> 6to - Cálculo
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </aside>
         
