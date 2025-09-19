@@ -139,6 +139,7 @@
             width: 100%;
             max-width: 1200px;
             position: relative;
+            margin-bottom: 0.5rem;
         }
 
         .child-figure {
@@ -182,11 +183,9 @@
         }
 
         .search-container {
-            /* Reposicionada al nivel del header-content, un poco más a la izquierda */
             position: absolute;
-            top: 0.8rem;
-            left: 5%;
-            margin: 0;
+            left: 1rem;
+            bottom: 0;
             z-index: 10;
         }
 
@@ -194,11 +193,11 @@
             display: flex;
             align-items: center;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 0.3rem 0.5rem;
+            border-radius: 15px;
+            padding: 0.3rem 0.6rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 120px; /* Tamaño justo para "buscar actividad" */
+            width: 150px;
         }
 
         .search-box input {
@@ -206,19 +205,19 @@
             border: none;
             color: white;
             padding: 0.2rem 0.1rem;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             outline: none;
             width: 100%;
         }
 
         .search-box input::placeholder {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
         }
 
         .search-icon {
             margin-right: 0.2rem;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .container {
@@ -581,10 +580,18 @@
             
             .search-container {
                 position: relative;
-                top: auto;
+                bottom: auto;
                 left: auto;
+                transform: none;
                 margin: 1rem auto;
                 display: block;
+                width: 100%;
+            }
+            
+            .search-box {
+                width: 100%;
+                max-width: 200px;
+                margin: 0 auto;
             }
             
             footer {
@@ -626,13 +633,13 @@
             <div class="child-figure" id="right-child">
                 <div>👧</div>
             </div>
-        </div>
-        
-        <!-- Barra de búsqueda reposicionada al nivel del header-content, a la izquierda -->
-        <div class="search-container">
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" placeholder="Buscar actividad...">
+            
+            <!-- Barra de búsqueda reposicionada -->
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Buscar actividad">
+                </div>
             </div>
         </div>
         
