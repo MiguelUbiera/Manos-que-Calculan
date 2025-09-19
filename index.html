@@ -28,6 +28,7 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
+            padding-bottom: 3rem; /* Espacio adicional para empujar el footer */
         }
 
         /* Animaciones globales */
@@ -84,10 +85,10 @@
             }
         }
 
-        /* Manos de fondo con animación */
+        /* Manos de fondo con animación - TAMAÑO AUMENTADO */
         .floating-hand {
             position: fixed;
-            font-size: 2rem;
+            font-size: 3rem; /* Aumentado de 2rem */
             opacity: 0.15;
             z-index: -1;
             pointer-events: none;
@@ -116,7 +117,7 @@
         }
 
         .child-figure {
-            font-size: 2.5rem; /* Reducido de 3rem */
+            font-size: 2.5rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -131,7 +132,7 @@
         }
 
         .logo-icon {
-            font-size: 2rem; /* Reducido de 2.5rem */
+            font-size: 2rem;
             animation: pulse 2s infinite;
         }
 
@@ -150,7 +151,7 @@
         .container {
             display: flex;
             max-width: 1200px;
-            margin: 1rem auto; /* Reducido de 1.2rem */
+            margin: 1rem auto;
             gap: 2rem;
             padding: 0 1rem;
             position: relative;
@@ -161,9 +162,9 @@
             flex: 0 0 250px;
             background: white;
             border-radius: 10px;
-            padding: 1.2rem; /* Reducido de 1.5rem */
+            padding: 1.2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            height: 58vh; /* Altura reducida */
+            height: 70vh; /* Aumentado de 58vh */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -183,7 +184,7 @@
 
         .categories h2 {
             font-size: 1.2rem;
-            margin-bottom: 0.8rem; /* Reducido de 1rem */
+            margin-bottom: 0.8rem;
             color: var(--primary);
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light);
@@ -219,7 +220,7 @@
         }
 
         .category-item {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem; /* Aumentado ligeramente para mejor espaciado */
             opacity: 0;
             transform: translateX(-20px);
             animation: fadeInRight 0.6s ease forwards;
@@ -241,7 +242,7 @@
             align-items: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.4rem 0.6rem; /* Más compacto */
+            padding: 0.5rem 0.7rem; /* Aumentado ligeramente para mejor legibilidad */
             background: var(--light);
             border: none;
             border-radius: 6px;
@@ -432,8 +433,8 @@
 
         footer {
             text-align: center;
-            padding: 1rem; /* Reducido de 1.2rem */
-            margin-top: 1.5rem; /* Reducido de 2rem */
+            padding: 1rem;
+            margin-top: 5rem; /* Aumentado significativamente de 1.5rem */
             background: var(--dark);
             color: white;
             position: relative;
@@ -442,7 +443,7 @@
 
         .empty-state {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem; /* Aumentado de 3rem */
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -484,24 +485,32 @@
             }
             
             .child-figure {
-                font-size: 2rem; /* Ajustado para móviles */
+                font-size: 2rem;
             }
             
             .logo-icon {
-                font-size: 1.8rem; /* Ajustado para móviles */
+                font-size: 1.8rem;
+            }
+            
+            footer {
+                margin-top: 3rem; /* Ajuste para móviles */
             }
         }
     </style>
 </head>
 <body>
-    <!-- Manos de fondo -->
-    <div class="floating-hand" style="top: 10%; left: 5%; animation-delay: 0s;">👐</div>
-    <div class="floating-hand" style="top: 20%; right: 10%; animation-delay: 2s;">👐</div>
-    <div class="floating-hand" style="top: 40%; left: 15%; animation-delay: 4s;">👐</div>
-    <div class="floating-hand" style="top: 60%; right: 5%; animation-delay: 6s;">👐</div>
-    <div class="floating-hand" style="top: 80%; left: 8%; animation-delay: 8s;">👐</div>
-    <div class="floating-hand" style="top: 30%; right: 20%; animation-delay: 10s;">👐</div>
-    <div class="floating-hand" style="top: 70%; left: 25%; animation-delay: 12s;">👐</div>
+    <!-- Manos de fondo - MÁS MANOS Y MÁS GRANDES -->
+    <div class="floating-hand" style="top: 5%; left: 3%; animation-delay: 0s;">👐</div>
+    <div class="floating-hand" style="top: 15%; right: 8%; animation-delay: 1s;">👐</div>
+    <div class="floating-hand" style="top: 25%; left: 10%; animation-delay: 2s;">👐</div>
+    <div class="floating-hand" style="top: 35%; right: 15%; animation-delay: 3s;">👐</div>
+    <div class="floating-hand" style="top: 45%; left: 5%; animation-delay: 4s;">👐</div>
+    <div class="floating-hand" style="top: 55%; right: 5%; animation-delay: 5s;">👐</div>
+    <div class="floating-hand" style="top: 65%; left: 12%; animation-delay: 6s;">👐</div>
+    <div class="floating-hand" style="top: 75%; right: 10%; animation-delay: 7s;">👐</div>
+    <div class="floating-hand" style="top: 85%; left: 8%; animation-delay: 8s;">👐</div>
+    <div class="floating-hand" style="top: 20%; right: 25%; animation-delay: 9s;">👐</div>
+    <div class="floating-hand" style="top: 40%; left: 20%; animation-delay: 10s;">👐</div>
     
     <header>
         <div class="header-content">
