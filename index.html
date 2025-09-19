@@ -28,7 +28,7 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            padding-bottom: 5rem; /* Espacio para el footer */
+            padding-bottom: 5rem;
         }
 
         /* Animaciones globales */
@@ -37,23 +37,28 @@
             50% { transform: scale(1.1); }
         }
 
-        @keyframes floatHand {
+        @keyframes floatElement {
             0%, 100% {
                 transform: translate(0, 0) rotate(0deg);
                 opacity: 0.1;
             }
             25% {
-                transform: translate(30px, -20px) rotate(5deg);
-                opacity: 0.2;
-            }
-            50% {
-                transform: translate(-20px, 15px) rotate(-5deg);
+                transform: translate(20px, -15px) rotate(5deg);
                 opacity: 0.15;
             }
-            75% {
-                transform: translate(15px, 25px) rotate(3deg);
-                opacity: 0.2;
+            50% {
+                transform: translate(-15px, 10px) rotate(-5deg);
+                opacity: 0.12;
             }
+            75% {
+                transform: translate(10px, 20px) rotate(3deg);
+                opacity: 0.15;
+            }
+        }
+
+        @keyframes swapChildren {
+            0%, 100% { transform: translateX(0); opacity: 1; }
+            50% { transform: translateX(20px); opacity: 0; }
         }
 
         @keyframes fadeInRight {
@@ -85,14 +90,14 @@
             }
         }
 
-        /* Manos de fondo con animación */
-        .floating-hand {
+        /* Elementos flotantes de fondo */
+        .floating-element {
             position: fixed;
-            font-size: 3rem;
-            opacity: 0.15;
+            font-size: 2.5rem;
+            opacity: 0.1;
             z-index: -1;
             pointer-events: none;
-            animation: floatHand 15s infinite ease-in-out;
+            animation: floatElement 18s infinite ease-in-out;
         }
 
         header {
@@ -114,6 +119,7 @@
             align-items: center;
             width: 100%;
             max-width: 1200px;
+            position: relative;
         }
 
         .child-figure {
@@ -121,6 +127,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: transform 0.5s ease;
+        }
+
+        .child-swap {
+            animation: swapChildren 5s infinite;
         }
 
         .logo {
@@ -150,6 +161,40 @@
             text-align: center;
         }
 
+        .search-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.4rem 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.3rem;
+            width: 180px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-icon {
+            margin-right: 0.3rem;
+            font-size: 1rem;
+        }
+
         .container {
             display: flex;
             max-width: 1200px;
@@ -164,9 +209,9 @@
             flex: 0 0 250px;
             background: white;
             border-radius: 10px;
-            padding: 1rem; /* Reducido para más espacio */
+            padding: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            height: 75vh; /* Aumentado para ver todas las categorías */
+            height: 75vh;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -199,7 +244,6 @@
             padding-right: 5px;
         }
 
-        /* Estilos para la barra de scroll */
         .category-list-container::-webkit-scrollbar {
             width: 6px;
         }
@@ -286,18 +330,17 @@
             color: white;
         }
 
-        /* Colores para los símbolos matemáticos */
         .math-symbol {
             font-weight: bold;
             font-size: 1.1em;
         }
         
-        .math-z { color: #FF5722; } /* Naranja */
-        .math-r { color: #2196F3; } /* Azul */
-        .math-algebra { color: #E91E63; } /* Rosa */
-        .math-geometry { color: #4CAF50; } /* Verde */
-        .math-conics { color: #8E24AA; } /* Violeta para Cónicas */
-        .math-calc { color: #FF9800; } /* Amber */
+        .math-z { color: #FF5722; }
+        .math-r { color: #2196F3; }
+        .math-algebra { color: #E91E63; }
+        .math-geometry { color: #4CAF50; }
+        .math-conics { color: #8E24AA; }
+        .math-calc { color: #FF9800; }
 
         .main-content {
             flex: 1;
@@ -493,7 +536,7 @@
                 grid-template-columns: 1fr;
             }
             
-            .floating-hand {
+            .floating-element {
                 display: none;
             }
             
@@ -510,6 +553,11 @@
                 font-size: 1.8rem;
             }
             
+            .search-container {
+                position: relative;
+                margin: 1rem 0;
+            }
+            
             footer {
                 position: relative;
                 margin-top: 2rem;
@@ -518,26 +566,25 @@
     </style>
 </head>
 <body>
-    <!-- Manos de fondo - MÁS MANOS, INCLUYENDO EN EL CENTRO -->
-    <div class="floating-hand" style="top: 5%; left: 3%; animation-delay: 0s;">👐</div>
-    <div class="floating-hand" style="top: 15%; right: 8%; animation-delay: 1s;">👐</div>
-    <div class="floating-hand" style="top: 25%; left: 10%; animation-delay: 2s;">👐</div>
-    <div class="floating-hand" style="top: 35%; right: 15%; animation-delay: 3s;">👐</div>
-    <div class="floating-hand" style="top: 45%; left: 5%; animation-delay: 4s;">👐</div>
-    <div class="floating-hand" style="top: 55%; right: 5%; animation-delay: 5s;">👐</div>
-    <div class="floating-hand" style="top: 65%; left: 12%; animation-delay: 6s;">👐</div>
-    <div class="floating-hand" style="top: 75%; right: 10%; animation-delay: 7s;">👐</div>
-    <div class="floating-hand" style="top: 85%; left: 8%; animation-delay: 8s;">👐</div>
-    <div class="floating-hand" style="top: 20%; right: 25%; animation-delay: 9s;">👐</div>
-    <div class="floating-hand" style="top: 40%; left: 20%; animation-delay: 10s;">👐</div>
-    <div class="floating-hand" style="top: 50%; left: 45%; animation-delay: 11s;">👐</div>
-    <div class="floating-hand" style="top: 30%; right: 45%; animation-delay: 12s;">👐</div>
-    <div class="floating-hand" style="top: 60%; left: 50%; animation-delay: 13s;">👐</div>
-    <div class="floating-hand" style="top: 40%; right: 40%; animation-delay: 14s;">👐</div>
+    <!-- Elementos matemáticos flotantes en el fondo -->
+    <div class="floating-element" style="top: 10%; left: 5%; animation-delay: 0s;">📐</div>
+    <div class="floating-element" style="top: 20%; right: 8%; animation-delay: 2s;">📏</div>
+    <div class="floating-element" style="top: 30%; left: 12%; animation-delay: 4s;">🔺</div>
+    <div class="floating-element" style="top: 40%; right: 15%; animation-delay: 6s;">🔷</div>
+    <div class="floating-element" style="top: 50%; left: 7%; animation-delay: 8s;">⭕</div>
+    <div class="floating-element" style="top: 60%; right: 5%; animation-delay: 10s;">📊</div>
+    <div class="floating-element" style="top: 70%; left: 15%; animation-delay: 12s;">🧮</div>
+    <div class="floating-element" style="top: 80%; right: 12%; animation-delay: 14s;">✏️</div>
+    <div class="floating-element" style="top: 25%; left: 25%; animation-delay: 1s;">👐</div>
+    <div class="floating-element" style="top: 45%; right: 25%; animation-delay: 3s;">👐</div>
+    <div class="floating-element" style="top: 65%; left: 35%; animation-delay: 5s;">👐</div>
+    <div class="floating-element" style="top: 35%; right: 35%; animation-delay: 7s;">👐</div>
+    <div class="floating-element" style="top: 55%; left: 45%; animation-delay: 9s;">👐</div>
+    <div class="floating-element" style="top: 75%; right: 45%; animation-delay: 11s;">👐</div>
     
     <header>
         <div class="header-content">
-            <div class="child-figure">
+            <div class="child-figure" id="left-child">
                 <div>👦</div>
             </div>
             
@@ -547,8 +594,15 @@
                 <span class="logo-icon">👐</span>
             </div>
             
-            <div class="child-figure">
+            <div class="child-figure" id="right-child">
                 <div>👧</div>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Buscar actividades...">
+                </div>
             </div>
         </div>
         <p class="subtitle">Explora un ambiente inclusivo y disfruta los recursos que hemos preparado para ti</p>
@@ -651,7 +705,31 @@
             const categoryButtons = document.querySelectorAll('.category-btn');
             const defaultContent = document.getElementById('default-content');
             const categoryContents = document.querySelectorAll('.category-content');
+            const searchInput = document.getElementById('search-input');
+            const leftChild = document.getElementById('left-child');
+            const rightChild = document.getElementById('right-child');
             
+            // Función para intercambiar niños cada 5 segundos
+            function swapChildren() {
+                leftChild.classList.add('child-swap');
+                rightChild.classList.add('child-swap');
+                
+                setTimeout(() => {
+                    const leftHtml = leftChild.innerHTML;
+                    const rightHtml = rightChild.innerHTML;
+                    
+                    leftChild.innerHTML = rightHtml;
+                    rightChild.innerHTML = leftHtml;
+                    
+                    leftChild.classList.remove('child-swap');
+                    rightChild.classList.remove('child-swap');
+                }, 2500);
+            }
+            
+            // Iniciar intercambio cada 5 segundos
+            setInterval(swapChildren, 5000);
+            
+            // Manejo de categorías
             categoryButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -679,6 +757,15 @@
                         defaultContent.style.display = 'block';
                     }
                 });
+            });
+            
+            // Funcionalidad de búsqueda
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                // Aquí se implementará la lógica de búsqueda cuando se agreguen actividades
+                console.log('Buscando:', searchTerm);
+                // En el futuro, esto filtrará las actividades mostradas
             });
         });
     </script>
