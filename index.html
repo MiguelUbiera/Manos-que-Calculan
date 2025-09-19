@@ -28,7 +28,7 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            padding-bottom: 3rem; /* Espacio adicional para empujar el footer */
+            padding-bottom: 5rem; /* Espacio para el footer */
         }
 
         /* Animaciones globales */
@@ -85,10 +85,10 @@
             }
         }
 
-        /* Manos de fondo con animación - TAMAÑO AUMENTADO */
+        /* Manos de fondo con animación */
         .floating-hand {
             position: fixed;
-            font-size: 3rem; /* Aumentado de 2rem */
+            font-size: 3rem;
             opacity: 0.15;
             z-index: -1;
             pointer-events: none;
@@ -139,6 +139,7 @@
         h1 {
             font-size: 1.8rem;
             margin-bottom: 0.3rem;
+            text-align: center;
         }
 
         .subtitle {
@@ -146,6 +147,7 @@
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto;
+            text-align: center;
         }
 
         .container {
@@ -162,9 +164,9 @@
             flex: 0 0 250px;
             background: white;
             border-radius: 10px;
-            padding: 1.2rem;
+            padding: 1rem; /* Reducido para más espacio */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            height: 70vh; /* Aumentado de 58vh */
+            height: 75vh; /* Aumentado para ver todas las categorías */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -188,6 +190,7 @@
             color: var(--primary);
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light);
+            text-align: center;
         }
 
         .category-list-container {
@@ -220,7 +223,7 @@
         }
 
         .category-item {
-            margin-bottom: 0.3rem; /* Aumentado ligeramente para mejor espaciado */
+            margin-bottom: 0.3rem;
             opacity: 0;
             transform: translateX(-20px);
             animation: fadeInRight 0.6s ease forwards;
@@ -242,7 +245,7 @@
             align-items: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.5rem 0.7rem; /* Aumentado ligeramente para mejor legibilidad */
+            padding: 0.5rem 0.7rem;
             background: var(--light);
             border: none;
             border-radius: 6px;
@@ -434,16 +437,17 @@
         footer {
             text-align: center;
             padding: 1rem;
-            margin-top: 5rem; /* Aumentado significativamente de 1.5rem */
             background: var(--dark);
             color: white;
-            position: relative;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
             z-index: 1;
         }
 
         .empty-state {
             text-align: center;
-            padding: 4rem; /* Aumentado de 3rem */
+            padding: 4rem;
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -455,6 +459,19 @@
             margin-bottom: 1.5rem;
         }
 
+        .category-content {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -464,6 +481,7 @@
                 flex: 1;
                 width: 100%;
                 height: auto;
+                margin-bottom: 1rem;
             }
             
             .category-list-container {
@@ -493,13 +511,14 @@
             }
             
             footer {
-                margin-top: 3rem; /* Ajuste para móviles */
+                position: relative;
+                margin-top: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Manos de fondo - MÁS MANOS Y MÁS GRANDES -->
+    <!-- Manos de fondo - MÁS MANOS, INCLUYENDO EN EL CENTRO -->
     <div class="floating-hand" style="top: 5%; left: 3%; animation-delay: 0s;">👐</div>
     <div class="floating-hand" style="top: 15%; right: 8%; animation-delay: 1s;">👐</div>
     <div class="floating-hand" style="top: 25%; left: 10%; animation-delay: 2s;">👐</div>
@@ -511,6 +530,10 @@
     <div class="floating-hand" style="top: 85%; left: 8%; animation-delay: 8s;">👐</div>
     <div class="floating-hand" style="top: 20%; right: 25%; animation-delay: 9s;">👐</div>
     <div class="floating-hand" style="top: 40%; left: 20%; animation-delay: 10s;">👐</div>
+    <div class="floating-hand" style="top: 50%; left: 45%; animation-delay: 11s;">👐</div>
+    <div class="floating-hand" style="top: 30%; right: 45%; animation-delay: 12s;">👐</div>
+    <div class="floating-hand" style="top: 60%; left: 50%; animation-delay: 13s;">👐</div>
+    <div class="floating-hand" style="top: 40%; right: 40%; animation-delay: 14s;">👐</div>
     
     <header>
         <div class="header-content">
@@ -538,47 +561,47 @@
                 <div class="category-list-container">
                     <ul class="category-list">
                         <li class="category-item">
-                            <a href="#" class="category-btn active">
+                            <a href="#" class="category-btn active" data-category="coleccion">
                                 <span>📚</span> Colección
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="diversion">
                                 <span>🎉</span> Diversión
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="herramientas">
                                 <span>🛠️</span> Herramientas
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="numeros-z">
                                 <span class="math-symbol math-z">ℤ</span> 1ro - Números Z
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="numeros-r">
                                 <span class="math-symbol math-r">ℝ</span> 2do - Números R
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="algebra">
                                 <span class="math-symbol math-algebra">𝑥</span> 3ro - Álgebra
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="geometria">
                                 <span class="math-symbol math-geometry">△</span> 4to - Geometría
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="conicas">
                                 <span class="math-symbol math-conics">⎔</span> 5to - Cónicas
                             </a>
                         </li>
                         <li class="category-item">
-                            <a href="#" class="category-btn">
+                            <a href="#" class="category-btn" data-category="calculo">
                                 <span class="math-symbol math-calc">∫</span> 6to - Cálculo
                             </a>
                         </li>
@@ -588,10 +611,28 @@
         </aside>
         
         <main class="main-content">
-            <div class="empty-state">
+            <div class="empty-state" id="default-content">
                 <p>📚 Todas las actividades se mostrarán aquí</p>
                 <p>Selecciona una categoría del menú para filtrar las actividades</p>
                 <p><small>Próximamente añadiremos actividades para cada categoría</small></p>
+            </div>
+            
+            <div class="category-content" id="coleccion-content">
+                <h2>📚 Actividades de Colección</h2>
+                <p>Aquí encontrarás todas las actividades de recopilación y organización.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="diversion-content">
+                <h2>🎉 Actividades Divertidas</h2>
+                <p>Juegos y actividades lúdicas para aprender matemáticas.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="herramientas-content">
+                <h2>🛠️ Herramientas Matemáticas</h2>
+                <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
+                <p><small>Contenido en desarrollo</small></p>
             </div>
             
             <div class="activities-grid" style="display: none;">
@@ -604,5 +645,42 @@
         <p>Instituto para Sordos Santa Rosa, Inc.</p>
         <p>© 2025 - Desarrollado por Miguel Ubiera</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const defaultContent = document.getElementById('default-content');
+            const categoryContents = document.querySelectorAll('.category-content');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los botones
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Añadir clase active al botón clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar contenido por defecto
+                    defaultContent.style.display = 'none';
+                    
+                    // Ocultar todos los contenidos de categoría
+                    categoryContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Mostrar el contenido correspondiente a la categoría seleccionada
+                    const category = this.getAttribute('data-category');
+                    const contentToShow = document.getElementById(`${category}-content`);
+                    
+                    if (contentToShow) {
+                        contentToShow.classList.add('active');
+                    } else {
+                        // Si no hay contenido específico, mostrar el contenido por defecto
+                        defaultContent.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
