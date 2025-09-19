@@ -52,13 +52,32 @@
             }
             75% {
                 transform: translate(10px, 20px) rotate(3deg);
+                opacity: 极
                 opacity: 0.15;
             }
         }
 
-        @keyframes swapChildren {
-            0%, 100% { transform: translateX(0); opacity: 1; }
-            50% { transform: translateX(20px); opacity: 0; }
+        @keyframes smoothSwap {
+            0% { 
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-5px) scale(0.95);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-10px) scale(0.9);
+                opacity: 0;
+            }
+            75% {
+                transform: translateY(5px) scale(0.95);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInRight {
@@ -87,18 +106,6 @@
             100% {
                 transform: scale(50, 50);
                 opacity: 0;
-            }
-        }
-
-        /* Animación suave para los niños */
-        @keyframes fadeInSmooth {
-            0% {
-                opacity: 0;
-                transform: scale(0.8) translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
             }
         }
 
@@ -139,18 +146,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.5s ease;
-            /* Aplicar animación suave inicial */
-            animation: fadeInSmooth 1s ease-out forwards;
-        }
-
-        .child-figure div {
-            /* Asegurar que los emojis de los niños tengan la animación suave */
-            animation: fadeInSmooth 1s ease-out forwards;
         }
 
         .child-swap {
-            animation: swapChildren 5s infinite;
+            animation: smoothSwap 2s ease-in-out;
         }
 
         .logo {
@@ -181,12 +180,9 @@
         }
 
         .search-container {
-            /* Mover la barra de búsqueda al borde inferior del header */
             position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
-            margin: 0;
-            z-index: 10;
+            bottom: 10px; /* Cambiado a la parte inferior */
+            right: 10px;
         }
 
         .search-box {
@@ -196,7 +192,6 @@
             border-radius: 20px;
             padding: 0.4rem 0.8rem;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .search-box input {
@@ -232,6 +227,7 @@
             background: white;
             border-radius: 10px;
             padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 极
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             height: 75vh;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -241,6 +237,7 @@
 
         .sidebar:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8极
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -257,6 +254,8 @@
             color: var(--primary);
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light);
+            text-align: center;
+极
             text-align: center;
         }
 
@@ -275,6 +274,7 @@
             border-radius: 10px;
         }
 
+        .category-list-container::-webkit极
         .category-list-container::-webkit-scrollbar-thumb {
             background: var(--primary);
             border-radius: 10px;
@@ -297,11 +297,16 @@
 
         .category-item:nth-child(1) { animation-delay: 0.1s; }
         .category-item:nth-child(2) { animation-delay: 0.2s; }
+        .category-item:nth-child(3) { animation-delay: 0.3极
+        .category-item:nth-child(3) { animation-delay: 极
         .category-item:nth-child(3) { animation-delay: 0.3s; }
+        .category极
         .category-item:nth-child(4) { animation-delay: 0.4s; }
         .category-item:nth-child(5) { animation-delay: 0.5s; }
         .category-item:nth-child(6) { animation-delay: 0.6s; }
         .category-item:nth-child(7) { animation-delay: 0.7s; }
+        .category-item:n极
+        .category-item:nth-child(8) { animation-del极
         .category-item:nth-child(8) { animation-delay: 0.8s; }
         .category-item:nth-child(9) { animation-delay: 0.9s; }
         .category-item:nth-child(10) { animation-delay: 1.0s; }
@@ -354,6 +359,8 @@
 
         .math-symbol {
             font-weight: bold;
+           极
+            font-weight: bold;
             font-size: 1.1em;
         }
         
@@ -370,6 +377,7 @@
 
         .activities-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250极
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
         }
@@ -422,8 +430,10 @@
             background: var(--secondary);
             color: white;
             padding: 2px 8px;
+            border-radius: 12极
             border-radius: 12px;
             font-size: 0.7rem;
+            animation: pulse 2极
             animation: pulse 2s infinite;
         }
 
@@ -449,6 +459,7 @@
 
         .card-footer {
             padding: 1rem 1.2rem;
+            background:极
             background: var(--light);
             display: flex;
             justify-content: space-between;
@@ -492,6 +503,7 @@
         .open-btn:hover {
             background: #c51162;
             transform: translateY(-2px);
+            box-shadow: 0 4px 极
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
@@ -515,6 +527,10 @@
             padding: 4rem;
             background: white;
             border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+极
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 极
+            box-shadow: 0 极
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
@@ -551,6 +567,8 @@
             
             .category-list-container {
                 overflow-y: visible;
+                max极
+                overflow-y: visible;
                 max-height: none;
             }
             
@@ -562,6 +580,7 @@
                 display: none;
             }
             
+            .极
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
@@ -577,8 +596,6 @@
             
             .search-container {
                 position: relative;
-                bottom: auto;
-                right: auto;
                 margin: 1rem 0;
             }
             
@@ -591,22 +608,30 @@
 </head>
 <body>
     <!-- Elementos matemáticos flotantes en el fondo -->
+    <div class="floating-element" style="top: 10%; left: 5%; animation-delay: 0极
     <div class="floating-element" style="top: 10%; left: 5%; animation-delay: 0s;">📐</div>
     <div class="floating-element" style="top: 20%; right: 8%; animation-delay: 2s;">📏</div>
     <div class="floating-element" style="top: 30%; left: 12%; animation-delay: 4s;">🔺</div>
+    <极
+    <div class="floating-element" style="top: 40%; right: 15%; animation-delay: 6极
     <div class="floating-element" style="top: 40%; right: 15%; animation-delay: 6s;">🔷</div>
     <div class="floating-element" style="top: 50%; left: 7%; animation-delay: 8s;">⭕</div>
     <div class="floating-element" style="top: 60%; right: 5%; animation-delay: 10s;">📊</div>
     <div class="floating-element" style="top: 70%; left: 15%; animation-delay: 12s;">🧮</div>
     <div class="floating-element" style="top: 80%; right: 12%; animation-delay: 14s;">✏️</div>
     <div class="floating-element" style="top: 25%; left: 25%; animation-delay: 1s;">👐</div>
+    <div class="极
     <div class="floating-element" style="top: 45%; right: 25%; animation-delay: 3s;">👐</div>
+    <div class="floating-element"极
     <div class="floating-element" style="top: 65%; left: 35%; animation-delay: 5s;">👐</div>
     <div class="floating-element" style="top: 35%; right: 35%; animation-delay: 7s;">👐</div>
     <div class="floating-element" style="top: 55%; left: 45%; animation-delay: 9s;">👐</div>
+    <div class="floating-element" style="top: 75%; right: 45%; animation-delay: 11极
+    <div class="floating-element" style="top: 75%;极
     <div class="floating-element" style="top: 75%; right: 45%; animation-delay: 11s;">👐</div>
     
     <header>
+        <极
         <div class="header-content">
             <div class="child-figure" id="left-child">
                 <div>👦</div>
@@ -618,19 +643,18 @@
                 <span class="logo-icon">👐</span>
             </div>
             
+            <div class="child-f极
             <div class="child-figure" id="right-child">
                 <div>👧</div>
             </div>
-        </div>
-        
-        <!-- La barra de búsqueda ahora está fuera del header-content, en el borde inferior -->
-        <div class="search-container">
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" placeholder="Buscar actividades...">
+
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Buscar actividades...">
+                </div>
             </div>
         </div>
-        
         <p class="subtitle">Explora un ambiente inclusivo y disfruta los recursos que hemos preparado para ti</p>
     </header>
     
@@ -642,6 +666,7 @@
                     <ul class="category-list">
                         <li class="category-item">
                             <a href="#" class="category-btn active" data-category="coleccion">
+                                <span>📚</极
                                 <span>📚</span> Colección
                             </a>
                         </li>
@@ -661,6 +686,8 @@
                             </a>
                         </li>
                         <li class="category-item">
+                            <极
+                            <a href="#" class="category-btn" data极
                             <a href="#" class="category-btn" data-category="numeros-r">
                                 <span class="math-symbol math-r">ℝ</span> 2do - Números R
                             </a>
@@ -677,12 +704,15 @@
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn" data-category="conicas">
+                                <span class="极
                                 <span class="math-symbol math-conics">⎔</span> 5to - Cónicas
                             </a>
                         </li>
                         <li class="category-item">
                             <a href="#" class="category-btn" data-category="calculo">
+                                <span class="math-symbol math-c极
                                 <span class="math-symbol math-calc">∫</span> 6to - Cálculo
+                            </极
                             </a>
                         </li>
                     </ul>
@@ -705,13 +735,18 @@
             
             <div class="category-content" id="diversion-content">
                 <h2>🎉 Actividades Divertidas</h2>
+                <极
+                <h2>🎉 Actividades Divertidas</h2>
                 <p>Juegos y actividades lúdicas para aprender matemáticas.</p>
                 <p><small>Contenido en desarrollo</small></p>
             </div>
             
+            <div class="category-content"极
+            <极
             <div class="category-content" id="herramientas-content">
                 <h2>🛠️ Herramientas Matemáticas</h2>
                 <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
+                <p><small>Contenido en desarrollo</极
                 <p><small>Contenido en desarrollo</small></p>
             </div>
             
@@ -737,25 +772,23 @@
             
             // Función para intercambiar niños cada 5 segundos con animación suave
             function swapChildren() {
-                // Aplicar animación de salida suave
-                leftChild.style.animation = 'fadeInSmooth 0.5s ease-out reverse forwards';
-                rightChild.style.animation = 'fadeInSmooth 0.5s ease-out reverse forwards';
+                leftChild.classList.add('child-swap');
+                rightChild.classList.add('child-swap');
                 
                 setTimeout(() => {
                     const leftHtml = leftChild.innerHTML;
                     const rightHtml = rightChild.innerHTML;
                     
+                    // Intercambiar los contenidos
                     leftChild.innerHTML = rightHtml;
                     rightChild.innerHTML = leftHtml;
                     
-                    // Aplicar animación de entrada suave
-                    leftChild.style.animation = 'fadeInSmooth 0.5s ease-out forwards';
-                    rightChild.style.animation = 'fadeInSmooth 0.5s ease-out forwards';
-                    
-                    // Remover la clase de swap después de la animación
-                    leftChild.classList.remove('child-swap');
-                    rightChild.classList.remove('child-swap');
-                }, 250);
+                    // Remover la clase de animación después de completar
+                    setTimeout(() => {
+                        leftChild.classList.remove('child-swap');
+                        rightChild.classList.remove('child-swap');
+                    }, 2000);
+                }, 1000);
             }
             
             // Iniciar intercambio cada 5 segundos
@@ -773,6 +806,7 @@
                     this.classList.add('active');
                     
                     // Ocultar contenido por defecto
+                    default极
                     defaultContent.style.display = 'none';
                     
                     // Ocultar todos los contenidos de categoría
