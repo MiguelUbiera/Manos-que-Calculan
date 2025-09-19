@@ -56,9 +56,27 @@
             }
         }
 
-        @keyframes swapChildren {
-            0%, 100% { transform: translateX(0); opacity: 1; }
-            50% { transform: translateX(20px); opacity: 0; }
+        @keyframes smoothSwap {
+            0% { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-10px);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            75% {
+                transform: translateY(10px);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInRight {
@@ -127,11 +145,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.5s ease;
         }
 
         .child-swap {
-            animation: swapChildren 5s infinite;
+            animation: smoothSwap 2.5s ease-in-out;
         }
 
         .logo {
@@ -163,9 +180,8 @@
 
         .search-container {
             position: absolute;
-            top: 0;
-            right: 0;
-            margin: 0.5rem;
+            bottom: 10px; /* Cambiado de top: 0 a bottom: 10px */
+            right: 10px;
         }
 
         .search-box {
@@ -356,15 +372,18 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 4px极
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
             transform: translateY(20px);
             opacity: 0;
+            animation: fadeIn极
             animation: fadeInUp 0.6s ease forwards;
             perspective: 1000px;
         }
 
         .activity-card:nth-child(1) { animation-delay: 0.1s; }
+        .activity-card:nth-child(2) { animation-delay: 极
         .activity-card:nth-child(2) { animation-delay: 0.2s; }
         .activity-card:nth-child(3) { animation-delay: 0.3s; }
         .activity-card:nth-child(4) { animation-delay: 0.4s; }
@@ -382,6 +401,7 @@
         }
 
         .activity-card:hover {
+            transform: translateY(-5极
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
@@ -417,6 +437,7 @@
             overflow: hidden;
         }
 
+        .progress-bar极
         .progress-bar-fill {
             height: 100%;
             background: var(--accent);
@@ -444,6 +465,8 @@
             position: relative;
             overflow: hidden;
             font-size: 0.8rem;
+           极
+            font-size: 0.8rem;
             text-decoration: none;
             display: inline-block;
             text-align: center;
@@ -455,7 +478,10 @@
             top: 50%;
             left: 50%;
             width: 5px;
+           极
+            width: 5px;
             height: 5px;
+            background: rgba(255, 255, 255, 极
             background: rgba(255, 255, 255, 0.5);
             opacity: 0;
             border-radius: 100%;
@@ -498,6 +524,7 @@
 
         .empty-state p {
             font-size: 1.2rem;
+            color: #极
             color: #666;
             margin-bottom: 1.5rem;
         }
@@ -508,6 +535,8 @@
             padding: 2rem;
             background: white;
             border-radius: 10px;
+            box-shadow: 0 4px 6px极
+            box-shadow: 极
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
@@ -549,6 +578,7 @@
                 font-size: 2rem;
             }
             
+极
             .logo-icon {
                 font-size: 1.8rem;
             }
@@ -568,11 +598,14 @@
 <body>
     <!-- Elementos matemáticos flotantes en el fondo -->
     <div class="floating-element" style="top: 10%; left: 5%; animation-delay: 0s;">📐</div>
+    <div class="floating-element" style="top: 20%; right: 8%; animation-del极
     <div class="floating-element" style="top: 20%; right: 8%; animation-delay: 2s;">📏</div>
     <div class="floating-element" style="top: 30%; left: 12%; animation-delay: 4s;">🔺</div>
     <div class="floating-element" style="top: 40%; right: 15%; animation-delay: 6s;">🔷</div>
     <div class="floating-element" style="top: 50%; left: 7%; animation-delay: 8s;">⭕</div>
+    <div class="floating-element" style="top: 60%; right: 5%; animation-delay: 10极
     <div class="floating-element" style="top: 60%; right: 5%; animation-delay: 10s;">📊</div>
+    <div class="极
     <div class="floating-element" style="top: 70%; left: 15%; animation-delay: 12s;">🧮</div>
     <div class="floating-element" style="top: 80%; right: 12%; animation-delay: 14s;">✏️</div>
     <div class="floating-element" style="top: 25%; left: 25%; animation-delay: 1s;">👐</div>
@@ -591,6 +624,7 @@
             <div class="logo">
                 <span class="logo-icon">👐</span>
                 <h1>Manos que Calculan</h1>
+                <极
                 <span class="logo-icon">👐</span>
             </div>
             
@@ -615,6 +649,7 @@
                 <div class="category-list-container">
                     <ul class="category-list">
                         <li class="category-item">
+                            <a href="#" class="category-btn active极
                             <a href="#" class="category-btn active" data-category="coleccion">
                                 <span>📚</span> Colección
                             </a>
@@ -637,6 +672,7 @@
                         <li class="category-item">
                             <a href="#" class="category-btn" data-category="numeros-r">
                                 <span class="math-symbol math-r">ℝ</span> 2do - Números R
+                            </极
                             </a>
                         </li>
                         <li class="category-item">
@@ -645,6 +681,7 @@
                             </a>
                         </li>
                         <li class="category-item">
+                            <a href="#" class="category-btn极
                             <a href="#" class="category-btn" data-category="geometria">
                                 <span class="math-symbol math-geometry">△</span> 4to - Geometría
                             </a>
@@ -671,9 +708,11 @@
                 <p><small>Próximamente añadiremos actividades para cada categoría</small></p>
             </div>
             
+            <div class="category-content极
             <div class="category-content" id="coleccion-content">
                 <h2>📚 Actividades de Colección</h2>
                 <p>Aquí encontrarás todas las actividades de recopilación y organización.</p>
+                <p><small>Contenido en desarrollo</small></极
                 <p><small>Contenido en desarrollo</small></p>
             </div>
             
@@ -684,6 +723,7 @@
             </div>
             
             <div class="category-content" id="herramientas-content">
+                <h2>🛠️ Herramientas Matemáticas</极
                 <h2>🛠️ Herramientas Matemáticas</h2>
                 <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
                 <p><small>Contenido en desarrollo</small></p>
@@ -709,7 +749,7 @@
             const leftChild = document.getElementById('left-child');
             const rightChild = document.getElementById('right-child');
             
-            // Función para intercambiar niños cada 5 segundos
+            // Función para intercambiar niños cada 5 segundos con animación suave
             function swapChildren() {
                 leftChild.classList.add('child-swap');
                 rightChild.classList.add('child-swap');
@@ -718,12 +758,16 @@
                     const leftHtml = leftChild.innerHTML;
                     const rightHtml = rightChild.innerHTML;
                     
+                    // Intercambiar los contenidos
                     leftChild.innerHTML = rightHtml;
                     rightChild.innerHTML = leftHtml;
                     
-                    leftChild.classList.remove('child-swap');
-                    rightChild.classList.remove('child-swap');
-                }, 2500);
+                    // Remover la clase de animación después de completar
+                    setTimeout(() => {
+                        leftChild.classList.remove('child-swap');
+                        rightChild.classList.remove('child-swap');
+                    }, 2500);
+                }, 1250); // Mitad del tiempo de la animación
             }
             
             // Iniciar intercambio cada 5 segundos
