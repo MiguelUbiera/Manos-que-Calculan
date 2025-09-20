@@ -51,7 +51,7 @@
                 transform: translate(-15px, 10px) rotate(-5deg);
                 opacity: 0.12;
             }
-            75% {
+            to {
                 transform: translate(10px, 20px) rotate(3deg);
                 opacity: 0.15;
             }
@@ -536,7 +536,7 @@
 
         .empty-state p {
             font-size: 1.2rem;
-            color: 666;
+            color: #666;
             margin-bottom: 1.5rem;
         }
 
@@ -805,10 +805,11 @@
             const searchInput = document.getElementById('search-input');
             const leftChild = document.getElementById('left-child');
             const rightChild = document.getElementById('right-child');
+            
+            // Asegurar que los emojis de niños tengan la animación correcta
             const leftEmoji = leftChild.querySelector('div');
             const rightEmoji = rightChild.querySelector('div');
             
-            // Inicialización: aparecer lentamente al cargar la página
             leftEmoji.style.animation = 'fadeInSlow 15s ease-out forwards';
             rightEmoji.style.animation = 'fadeInSlow 15s ease-out forwards';
             
