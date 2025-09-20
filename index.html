@@ -1,4 +1,6 @@
- <!DOCTYPE html>
+
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -554,44 +556,6 @@
             display: block;
         }
 
-        /* Modal para Sorteo */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 800px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -661,16 +625,16 @@
     <div class="floating-element" style="top: 55%; right: 7%; animation-delay: 5s;">📊</div>
     <div class="floating-element" style="top: 65%; left: 12%; animation-delay: 6s;">🧮</div>
     <div class="floating-element" style="top: 75%; right: 9%; animation-delay: 7s;">✏️</div>
-    <div class="floating-element" style="top: 20%; left: 20%; animation-delay: 0.5s;">➕</div>
-    <div class="floating-element" style="top: 40%; right: 22%; animation-delay: 1.5s;">➖</div>
-    <div class="floating-element" style="top: 60%; left: 30%; animation-delay: 2.5s;">✖️</div>
-    <div class="floating-element" style="top: 30%; right: 32%; animation-delay: 3.5s;">➗</div>
-    <div class="floating-element" style="top: 50%; left: 40%; animation-delay: 4.5s;">%</div>
-    <div class="floating-element" style="top: 70%; right: 42%; animation-delay: 5.5s;">√</div>
-    <div class="floating-element" style="top: 10%; right: 25%; animation-delay: 6.5s;">π</div>
-    <div class="floating-element" style="top: 80%; left: 25%; animation-delay: 7.5s;">∫</div>
-    <div class="floating-element" style="top: 35%; left: 75%; animation-delay: 0.8s;">∑</div>
-    <div class="floating-element" style="top: 65%; right: 75%; animation-delay: 1.8s;">∛</div>
+    <div class="floating-element" style="top: 20%; left: 20%; animation-delay: 0.5s;">👐</div>
+    <div class="floating-element" style="top: 40%; right: 22%; animation-delay: 1.5s;">👐</div>
+    <div class="floating-element" style="top: 60%; left: 30%; animation-delay: 2.5s;">👐</div>
+    <div class="floating-element" style="top: 30%; right: 32%; animation-delay: 3.5s;">👐</div>
+    <div class="floating-element" style="top: 50%; left: 40%; animation-delay: 4.5s;">👐</div>
+    <div class="floating-element" style="top: 70%; right: 42%; animation-delay: 5.5s;">👐</div>
+    <div class="floating-element" style="top: 10%; right: 25%; animation-delay: 6.5s;">➕</div>
+    <div class="floating-element" style="top: 80%; left: 25%; animation-delay: 7.5s;">➗</div>
+    <div class="floating-element" style="top: 35%; left: 75%; animation-delay: 0.8s;">🔢</div>
+    <div class="floating-element" style="top: 65%; right: 75%; animation-delay: 1.8s;">➖</div>
 
     <header>
         <!-- Elementos flotantes en la franja azul -->
@@ -727,11 +691,6 @@
                         <li class="category-item">
                             <a href="#" class="category-btn" data-category="herramientas">
                                 <span>🛠️</span> Herramientas
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="sorteo">
-                                <span>🎲</span> Sorteo
                             </a>
                         </li>
                         <li class="category-item">
@@ -792,14 +751,6 @@
                 <h2>🛠️ Herramientas Matemáticas</h2>
                 <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
                 <p><small>Contenido en desarrollo</small></p>
-                <div class="activity-card">
-                    <div class="card-header">
-                        <h3>Sorteo</h3>
-                    </div>
-                    <div class="card-body">
-                        <button class="open-btn" id="openSorteoModal">Abrir Sorteo</button>
-                    </div>
-                </div>
             </div>
             
             <div class="category-content" id="numeros-z-content">
@@ -849,22 +800,6 @@
         <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
     </footer>
 
-    <!-- Modal para Sorteo -->
-    <div id="sorteoModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="grado">1ro de Secundaria</div>
-            <div class="controls">
-                <button id="sortearBtn">Comenzar Sorteo</button>
-            </div>
-            <div id="resultado"></div>
-            <div id="seleccionados">
-                <h3>Estudiantes Seleccionados:</h3>
-                <ul id="listaSeleccionados"></ul>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const categoryButtons = document.querySelectorAll('.category-btn');
@@ -873,12 +808,6 @@
             const searchInput = document.getElementById('search-input');
             const leftChild = document.getElementById('left-child');
             const rightChild = document.getElementById('right-child');
-            const openSorteoModalBtn = document.getElementById('openSorteoModal');
-            const sorteoModal = document.getElementById('sorteoModal');
-            const closeBtn = sorteoModal.querySelector('.close');
-            const sortearBtn = document.getElementById('sortearBtn');
-            const resultadoDiv = document.getElementById('resultado');
-            const listaSeleccionados = document.getElementById('listaSeleccionados');
             
             // Obtener los emojis de los niños
             const leftEmoji = leftChild.querySelector('div');
@@ -952,53 +881,7 @@
                 console.log('Buscando:', searchTerm);
                 // En el futuro, esto filtrará las actividades mostradas
             });
-            
-            // Abrir el modal de sorteo
-            openSorteoModalBtn.addEventListener('click', function() {
-                sorteoModal.style.display = 'block';
-            });
-            
-            // Cerrar el modal de sorteo
-            closeBtn.addEventListener('click', function() {
-                sorteoModal.style.display = 'none';
-            });
-            
-            // Cerrar el modal al hacer clic fuera de él
-            window.addEventListener('click', function(event) {
-                if (event.target == sorteoModal) {
-                    sorteoModal.style.display = 'none';
-                }
-            });
-            
-            // Función para el sorteo
-            const curso = {
-                "1ro": [
-                    "Agüero Gómez, Leandro José",
-                    "Carrasco Cabrera, Israel",
-                    "Guzmán Sarante, Marisol",
-                    "Parra Osorio, Jadiel Nicolás",
-                    "Peña Espinal, Luis Ángel",
-                    "Poché Pérez, Hillary Nayrelis",
-                    "Valdez Liranzo, Nildo Enrique"
-                ]
-            };
-            
-            let disponibles = [...curso["1ro"]];
-            const seleccionados = [];
-            
-            sortearBtn.addEventListener('click', () => {
-                if (disponibles.length === 0) {
-                    resultadoDiv.textContent = "Todos los estudiantes han sido seleccionados.";
-                    sortearBtn.disabled = true;
-                    return;
-                }
-                
-                // Animación de selección aleatoria
-                let intervalId;
-                let contador = 0;
-                const duracionAnimacion = 2000; // 2 segundos
-                const tiempoPorIteracion = 50;
-                
-                intervalId = setInterval(() => {
-                    const indiceAleatorio = Math.floor(Math.random() * disponibles.length);
-                    resultadoDiv.textContent = `${dis
+        });
+    </script>
+</body>
+</html>
