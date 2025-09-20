@@ -1,4 +1,4 @@
-
+ 
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -29,7 +29,7 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            padding-bottom: 0;
+            padding-bottom: 5rem;
         }
 
         /* Animaciones globales */
@@ -80,37 +80,37 @@
                 transform: scale(25, 25);
                 opacity: 1;
             }
-            100% {
+            to {
                 transform: scale(50, 50);
                 opacity: 0;
             }
         }
 
-        /* Animación lenta para desaparecer (15 segundos) - SUAVE */
+        /* Animación lenta para desaparecer (15 segundos) */
         @keyframes fadeOutSlow {
             0% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: scale(1) translateY(0);
             }
-            100% {
+            to {
                 opacity: 0;
-                transform: translateY(5px) scale(0.98);
+                transform: scale(0.9) translateY(5px);
             }
         }
 
         /* Animación lenta para aparecer (15 segundos) */
         @keyframes fadeInSlow {
-            0% {
+            from {
                 opacity: 0;
-                transform: translateY(5px) scale(0.98);
+                transform: scale(0.9) translateY(5px);
             }
-            100% {
+            to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: scale(1) translateY(0);
             }
         }
 
-        /* Elementos flotantes de fondo */
+        /* Elementos flotantes de fondo - Aumentada densidad */
         .floating-element {
             position: fixed;
             font-size: 2.5rem;
@@ -118,6 +118,17 @@
             z-index: -1;
             pointer-events: none;
             animation: floatElement 18s infinite ease-in-out;
+        }
+
+        /* Elementos flotantes en la franja azul */
+        .header-floating-element {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            animation: floatElement 15s infinite ease-in-out;
+            color: rgba(255, 255, 255, 0.3);
         }
 
         header {
@@ -140,7 +151,6 @@
             width: 100%;
             max-width: 1200px;
             position: relative;
-            gap: 1rem;
         }
 
         .child-figure {
@@ -149,6 +159,10 @@
             flex-direction: column;
             align-items: center;
             transition: none;
+        }
+
+        .child-figure div {
+            /* Los emojis de los niños usarán las nuevas animaciones lentas */
         }
 
         .logo {
@@ -179,55 +193,55 @@
             position: relative;
         }
 
-        /* Barra de búsqueda en el borde inferior derecho del header */
         .search-container {
-            position: absolute;
-            bottom: 0;
-            right: 10rem;
-            z-index: 10;
+            margin: 0.5rem auto 1rem auto;
             display: flex;
-            align-items: center;
-            margin-top: 0.5rem;
+            justify-content: center;
+            width: 100%;
         }
 
         .search-box {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            padding: 0.4rem 0.6rem;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            width: 150px;
-            min-height: 32px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            background: white;
+            border-radius: 25px;
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            width: 300px;
+            min-height: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
 
         .search-box input {
             background: transparent;
             border: none;
             color: var(--dark);
-            padding: 0.3rem 0.2rem;
-            font-size: 0.85rem;
+            padding: 0.3rem 0.5rem;
+            font-size: 1rem;
             outline: none;
             width: 100%;
         }
 
         .search-box input::placeholder {
             color: rgba(0, 0, 0, 0.5);
-            font-size: 0.85rem;
         }
 
         .search-icon {
-            margin-right: 0.3rem;
-            font-size: 0.9rem;
-            color: var(--dark);
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--primary);
         }
 
         .container {
             display: flex;
             max-width: 1200px;
-            margin: 1rem auto;
+            margin: 0.5rem auto;
             gap: 2rem;
             padding: 0 1rem;
             position: relative;
@@ -244,6 +258,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
+            margin-top: 0;
         }
 
         .sidebar:hover {
@@ -306,6 +321,11 @@
         .category-item:nth-child(2) { animation-delay: 0.2s; }
         .category-item:nth-child(3) { animation-delay: 0.3s; }
         .category-item:nth-child(4) { animation-delay: 0.4s; }
+        .category-item:nth-child(5) { animation-delay: 0.5s; }
+        .category-item:nth-child(6) { animation-delay: 0.6s; }
+        .category-item:nth-child(7) { animation-delay: 0.7s; }
+        .category-item:nth-child(8) { animation-delay: 0.8s; }
+        .category-item:nth-child(9) { animation-delay: 0.9s; }
 
         .category-btn {
             display: flex;
@@ -497,14 +517,13 @@
 
         footer {
             text-align: center;
-            padding: 1.2rem 1rem;
+            padding: 1rem;
             background: var(--dark);
             color: white;
+            position: absolute;
+            bottom: 0;
             width: 100%;
             z-index: 1;
-            box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-            font-size: 0.9rem;
-            margin-top: 3rem;
         }
 
         .empty-state {
@@ -517,7 +536,7 @@
 
         .empty-state p {
             font-size: 1.2rem;
-            color: #666;
+            color: 666;
             margin-bottom: 1.5rem;
         }
 
@@ -555,7 +574,7 @@
                 grid-template-columns: 1fr;
             }
             
-            .floating-element {
+            .floating-element, .header-floating-element {
                 display: none;
             }
             
@@ -574,38 +593,55 @@
             
             .search-container {
                 position: relative;
-                bottom: auto;
+                top: auto;
                 right: auto;
                 transform: none;
                 margin: 1rem auto;
                 display: block;
             }
             
+            .search-box {
+                width: 90%;
+                max-width: 300px;
+            }
+            
             footer {
                 position: relative;
-                margin-top: 3rem;
+                margin-top: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Elementos matemáticos flotantes en el fondo -->
-    <div class="floating-element" style="top: 10%; left: 5%; animation-delay: 0s;">📐</div>
-    <div class="floating-element" style="top: 20%; right: 8%; animation-delay: 2s;">📏</div>
-    <div class="floating-element" style="top: 30%; left: 12%; animation-delay: 4s;">🔺</div>
-    <div class="floating-element" style="top: 40%; right: 15%; animation-delay: 6s;">🔷</div>
-    <div class="floating-element" style="top: 50%; left: 7%; animation-delay: 8s;">⭕</div>
-    <div class="floating-element" style="top: 60%; right: 5%; animation-delay: 10s;">📊</div>
-    <div class="floating-element" style="top: 70%; left: 15%; animation-delay: 12s;">🧮</div>
-    <div class="floating-element" style="top: 80%; right: 12%; animation-delay: 14s;">✏️</div>
-    <div class="floating-element" style="top: 25%; left: 25%; animation-delay: 1s;">👐</div>
-    <div class="floating-element" style="top: 45%; right: 25%; animation-delay: 3s;">👐</div>
-    <div class="floating-element" style="top: 65%; left: 35%; animation-delay: 5s;">👐</div>
-    <div class="floating-element" style="top: 35%; right: 35%; animation-delay: 7s;">👐</div>
-    <div class="floating-element" style="top: 55%; left: 45%; animation-delay: 9s;">👐</div>
-    <div class="floating-element" style="top: 75%; right: 45%; animation-delay: 11s;">👐</div>
-    
+    <!-- Elementos flotantes en el fondo - Aumentada densidad -->
+    <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
+    <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">📏</div>
+    <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">🔺</div>
+    <div class="floating-element" style="top: 35%; right: 10%; animation-delay: 3s;">🔷</div>
+    <div class="floating-element" style="top: 45%; left: 5%; animation-delay: 4s;">⭕</div>
+    <div class="floating-element" style="top: 55%; right: 7%; animation-delay: 5s;">📊</div>
+    <div class="floating-element" style="top: 65%; left: 12%; animation-delay: 6s;">🧮</div>
+    <div class="floating-element" style="top: 75%; right: 9%; animation-delay: 7s;">✏️</div>
+    <div class="floating-element" style="top: 20%; left: 20%; animation-delay: 0.5s;">👐</div>
+    <div class="floating-element" style="top: 40%; right: 22%; animation-delay: 1.5s;">👐</div>
+    <div class="floating-element" style="top: 60%; left: 30%; animation-delay: 2.5s;">👐</div>
+    <div class="floating-element" style="top: 30%; right: 32%; animation-delay: 3.5s;">👐</div>
+    <div class="floating-element" style="top: 50%; left: 40%; animation-delay: 4.5s;">👐</div>
+    <div class="floating-element" style="top: 70%; right: 42%; animation-delay: 5.5s;">👐</div>
+    <div class="floating-element" style="top: 10%; right: 25%; animation-delay: 6.5s;">➕</div>
+    <div class="floating-element" style="top: 80%; left: 25%; animation-delay: 7.5s;">➗</div>
+    <div class="floating-element" style="top: 35%; left: 75%; animation-delay: 0.8s;">🔢</div>
+    <div class="floating-element" style="top: 65%; right: 75%; animation-delay: 1.8s;">➖</div>
+
     <header>
+        <!-- Elementos flotantes en la franja azul -->
+        <div class="header-floating-element" style="top: 20%; left: 10%; animation-delay: 0s;">👐</div>
+        <div class="header-floating-element" style="top: 60%; right: 15%; animation-delay: 2s;">👐</div>
+        <div class="header-floating-element" style="top: 40%; left: 20%; animation-delay: 4s;">👐</div>
+        <div class="header-floating-element" style="top: 30%; right: 25%; animation-delay: 1s;">👐</div>
+        <div class="header-floating-element" style="top: 70%; left: 30%; animation-delay: 3s;">👐</div>
+        <div class="header-floating-element" style="top: 50%; right: 35%; animation-delay: 5s;">👐</div>
+        
         <div class="header-content">
             <div class="child-figure" id="left-child">
                 <div>👦</div>
@@ -623,15 +659,15 @@
         </div>
         
         <p class="subtitle">Explora un ambiente inclusivo y disfruta los recursos que hemos preparado para ti</p>
-        
-        <!-- Barra de búsqueda en el borde inferior derecho del header -->
-        <div class="search-container">
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" placeholder="Buscar actividad...">
-            </div>
-        </div>
     </header>
+    
+    <!-- Barra de búsqueda reposicionada en un lugar visible -->
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Buscar actividad...">
+        </div>
+    </div>
     
     <div class="container">
         <aside class="sidebar">
@@ -659,7 +695,31 @@
                                 <span class="math-symbol math-z">ℤ</span> 1ro - Números Z
                             </a>
                         </li>
-                        <!-- ❌ ELIMINADAS: 2do, 3ro, 4to, 5to, 6to -->
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="personajes">
+                                <span>👤</span> Personajes
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="materiales">
+                                <span>📋</span> Materiales
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="justicia">
+                                <span>⚖️</span> Justicia
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="joven-sordo">
+                                <span>👨‍🦯</span> Joven sordo
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="creadores">
+                                <span>👥</span> Creadores
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -690,6 +750,42 @@
                 <p><small>Contenido en desarrollo</small></p>
             </div>
             
+            <div class="category-content" id="numeros-z-content">
+                <h2>ℤ Números Z</h2>
+                <p>Actividades relacionadas con números enteros.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="personajes-content">
+                <h2>👤 Personajes</h2>
+                <p>Biografías de personas relevantes en la comunidad sorda y matemática.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="materiales-content">
+                <h2>📋 Materiales</h2>
+                <p>Prácticas imprimibles, exámenes e instrumentos de aprendizaje.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="justicia-content">
+                <h2>⚖️ Justicia</h2>
+                <p>Todo el marco legal que regula los derechos de las personas sordas.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="joven-sordo-content">
+                <h2>👨‍🦯 Joven sordo</h2>
+                <p>Novedades sobre lengua de señas y recursos para jóvenes.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="creadores-content">
+                <h2>👥 Creadores</h2>
+                <p>Información sobre las personas que desarrollaron este sitio web.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
             <div class="activities-grid" style="display: none;">
                 <!-- Las actividades se agregarán aquí posteriormente -->
             </div>
@@ -698,7 +794,7 @@
     
     <footer>
         <p>Instituto para Sordos Santa Rosa, Inc.</p>
-        <p>© 2025 - Desarrollado por Miguel Ubiera</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
     </footer>
 
     <script>
@@ -718,7 +814,7 @@
             
             // Función para el ciclo completo de desaparecer y aparecer (30 segundos total)
             function cycleChildren() {
-                // Desaparecer lentamente durante 15 segundos — SUAVE
+                // Desaparecer lentamente durante 15 segundos
                 leftEmoji.style.animation = 'fadeOutSlow 15s ease-in forwards';
                 rightEmoji.style.animation = 'fadeOutSlow 15s ease-in forwards';
                 
@@ -738,7 +834,7 @@
                     newLeftEmoji.style.animation = 'fadeInSlow 15s ease-out forwards';
                     newRightEmoji.style.animation = 'fadeInSlow 15s ease-out forwards';
                     
-                }, 15000);
+                }, 15000); // Esperar 15 segundos (duración de fadeOutSlow)
             }
             
             // Iniciar el ciclo cada 30 segundos (15s desaparecer + 15s aparecer)
@@ -777,7 +873,10 @@
             // Funcionalidad de búsqueda
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
+                
+                // Aquí se implementará la lógica de búsqueda cuando se agreguen actividades
                 console.log('Buscando:', searchTerm);
+                // En el futuro, esto filtrará las actividades mostradas
             });
         });
     </script>
