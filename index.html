@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -107,48 +107,6 @@
                 opacity: 1;
                 transform: scale(1) translateY(0);
             }
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            animation: fadeInSlow 0.3s ease;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-        }
-
-        .close-modal:hover {
-            color: var(--secondary);
         }
 
         /* Elementos flotantes de fondo - Aumentada densidad */
@@ -596,6 +554,45 @@
             display: block;
         }
 
+        /* Estilos para la cuadrícula de herramientas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-name {
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -613,7 +610,7 @@
                 max-height: none;
             }
             
-            .activities-grid {
+            .activities-grid, .tools-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -651,11 +648,6 @@
             footer {
                 position: relative;
                 margin-top: 2rem;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
             }
         }
     </style>
@@ -713,7 +705,7 @@
     <div class="search-container">
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="Buscar actividad...">
+            <input type="text" id="search-input" placeholder="Buscar recurso...">
         </div>
     </div>
     
@@ -775,9 +767,9 @@
         
         <main class="main-content">
             <div class="empty-state" id="default-content">
-                <p>📚 Todas las actividades se mostrarán aquí</p>
-                <p>Selecciona una categoría del menú para filtrar las actividades</p>
-                <p><small>Próximamente añadiremos actividades para cada categoría</small></p>
+                <p>📚 Todos los recursos se mostrarán aquí</p>
+                <p>Selecciona una categoría del menú para filtrar los recursos</p>
+                <p><small>Próximamente añadiremos recursos para cada categoría</small></p>
             </div>
             
             <div class="category-content" id="coleccion-content">
@@ -795,10 +787,37 @@
             <div class="category-content" id="herramientas-content">
                 <h2>🛠️ Herramientas Matemáticas</h2>
                 <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
-                <p><small>Contenido en desarrollo</small></p>
-                <!-- Botón para abrir el sorteo -->
-                <div style="margin-top: 20px;">
-                    <button class="open-btn" id="open-sorteo-btn">Abrir Herramienta de Sorteo</button>
+                
+                <div class="tools-grid">
+                    <div class="tool-card" onclick="window.open('sorteo.html', '_blank')">
+                        <div class="tool-icon">🎲</div>
+                        <div class="tool-name">Sorteo de Estudiantes</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">🧮</div>
+                        <div class="tool-name">Calculadora</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-name">Gráficas</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">📐</div>
+                        <div class="tool-name">Geometría</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">🔢</div>
+                        <div class="tool-name">Números</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">⏱️</div>
+                        <div class="tool-name">Temporizador</div>
+                    </div>
                 </div>
             </div>
             
@@ -844,14 +863,6 @@
         </main>
     </div>
     
-    <!-- Modal para la herramienta de sorteo -->
-    <div id="sorteo-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div id="sorteo-content"></div>
-        </div>
-    </div>
-    
     <footer>
         <p>Instituto para Sordos Santa Rosa, Inc.</p>
         <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
@@ -865,10 +876,6 @@
             const searchInput = document.getElementById('search-input');
             const leftChild = document.getElementById('left-child');
             const rightChild = document.getElementById('right-child');
-            const modal = document.getElementById('sorteo-modal');
-            const closeModal = document.querySelector('.close-modal');
-            const sorteoContent = document.getElementById('sorteo-content');
-            const openSorteoBtn = document.getElementById('open-sorteo-btn');
             
             // Obtener los emojis de los niños
             const leftEmoji = leftChild.querySelector('div');
@@ -941,184 +948,6 @@
                 // Aquí se implementará la lógica de búsqueda cuando se agreguen actividades
                 console.log('Buscando:', searchTerm);
                 // En el futuro, esto filtrará las actividades mostradas
-            });
-            
-            // Cargar contenido del sorteo
-            function cargarSorteo() {
-                sorteoContent.innerHTML = `
-                    <style>
-                        @keyframes seleccionarNombre {
-                            0% { opacity: 0; transform: translateY(-20px); }
-                            50% { opacity: 1; transform: translateY(0); }
-                            100% { opacity: 1; transform: translateY(0); }
-                        }
-                        
-                        .sorteo-container {
-                            margin: 20px auto;
-                            padding: 20px;
-                            max-width: 800px;
-                            background: white;
-                            border-radius: 15px;
-                            text-align: center;
-                        }
-                        
-                        .sorteo-grado {
-                            font-size: 1.5rem;
-                            font-weight: bold;
-                            color: black;
-                            margin-top: 20px;
-                        }
-                        
-                        .sorteo-controls {
-                            margin-top: 20px;
-                        }
-                        
-                        .sorteo-controls button {
-                            padding: 10px 20px;
-                            font-size: 1rem;
-                            background-color: var(--primary);
-                            color: white;
-                            border: none;
-                            border-radius: 5px;
-                            cursor: pointer;
-                            margin: 5px;
-                            transition: background-color 0.3s ease;
-                        }
-                        
-                        .sorteo-controls button:hover {
-                            background-color: #0056b3;
-                        }
-                        
-                        .sorteo-controls button:disabled {
-                            background-color: #ccc;
-                            cursor: not-allowed;
-                        }
-                        
-                        .sorteo-resultado {
-                            margin-top: 30px;
-                            font-size: 2rem;
-                            font-weight: bold;
-                            color: black;
-                            animation: seleccionarNombre 2s ease-in-out;
-                        }
-                        
-                        .sorteo-seleccionados {
-                            margin-top: 30px;
-                        }
-                        
-                        .sorteo-seleccionados h3 {
-                            font-size: 1.5rem;
-                            color: var(--primary);
-                        }
-                        
-                        .sorteo-listaSeleccionados li {
-                            font-size: 1.2rem;
-                            font-weight: bold;
-                            color: black;
-                            list-style-type: disc;
-                            margin-left: 20px;
-                        }
-                    </style>
-                    <div class="sorteo-container">
-                        <div class="sorteo-grado" id="sorteo-grado">1ro de Secundaria</div>
-                        <div class="sorteo-controls">
-                            <button id="sorteo-sortearBtn">Comenzar Sorteo</button>
-                        </div>
-                        <div id="sorteo-resultado"></div>
-                        <div id="sorteo-seleccionados">
-                            <h3>Estudiantes Seleccionados:</h3>
-                            <ul id="sorteo-listaSeleccionados"></ul>
-                        </div>
-                    </div>
-                `;
-                
-                // Inicializar funcionalidad del sorteo
-                const curso = {
-                    "1ro": [
-                        "Agüero Gómez, Leandro José",
-                        "Carrasco Cabrera, Israel",
-                        "Guzmán Sarante, Marisol",
-                        "Parra Osorio, Jadiel Nicolás",
-                        "Peña Espinal, Luis Ángel",
-                        "Poché Pérez, Hillary Nayrelis",
-                        "Valdez Liranzo, Nildo Enrique"
-                    ]
-                };
-
-                let disponibles = [...curso["1ro"]];
-                const seleccionados = [];
-
-                const sortearBtn = document.getElementById('sorteo-sortearBtn');
-                const resultadoDiv = document.getElementById('sorteo-resultado');
-                const listaSeleccionados = document.getElementById('sorteo-listaSeleccionados');
-
-                sortearBtn.addEventListener('click', () => {
-                    if (disponibles.length === 0) {
-                        resultadoDiv.textContent = "Todos los estudiantes han sido seleccionados.";
-                        sortearBtn.disabled = true;
-                        return;
-                    }
-
-                    // Animación de selección aleatoria
-                    let intervalId;
-                    let contador = 0;
-                    const duracionAnimacion = 2000; // 2 segundos
-                    const tiempoPorIteracion = 50;
-
-                    intervalId = setInterval(() => {
-                        const indiceAleatorio = Math.floor(Math.random() * disponibles.length);
-                        resultadoDiv.textContent = `${disponibles[indiceAleatorio]}`;
-                        contador += tiempoPorIteracion;
-
-                        if (contador >= duracionAnimacion) {
-                            clearInterval(intervalId);
-
-                            // Finalizar selección
-                            const indiceFinal = Math.floor(Math.random() * disponibles.length);
-                            const estudianteSeleccionado = disponibles[indiceFinal];
-
-                            // Actualizar listas
-                            seleccionados.push(estudianteSeleccionado);
-                            disponibles.splice(indiceFinal, 1);
-
-                            // Mostrar resultados
-                            resultadoDiv.textContent = `${estudianteSeleccionado}`;
-                            actualizarListaSeleccionados();
-
-                            // Desactivar botón si no quedan estudiantes disponibles
-                            if (disponibles.length === 0) {
-                                sortearBtn.disabled = true;
-                            }
-                        }
-                    }, tiempoPorIteracion);
-                });
-
-                function actualizarListaSeleccionados() {
-                    listaSeleccionados.innerHTML = '';
-                    seleccionados.forEach(estudiante => {
-                        const li = document.createElement('li');
-                        li.textContent = estudiante;
-                        listaSeleccionados.appendChild(li);
-                    });
-                }
-            }
-            
-            // Abrir modal de sorteo
-            openSorteoBtn.addEventListener('click', function() {
-                cargarSorteo();
-                modal.style.display = 'block';
-            });
-            
-            // Cerrar modal
-            closeModal.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-            
-            // Cerrar modal al hacer clic fuera del contenido
-            window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
             });
         });
     </script>
