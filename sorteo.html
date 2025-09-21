@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,7 +29,8 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            padding-bottom: 5rem;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Animaciones globales */
@@ -66,6 +68,29 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* Animaciones para niños */
+        @keyframes fadeOutSlow {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.9) translateY(5px);
+            }
+        }
+
+        @keyframes fadeInSlow {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
         /* Encabezado */
         .encabezado {
             background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -75,24 +100,27 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
+            width: 100%;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .child-figure {
+            font-size: 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-width: 50px;
         }
-
-        .encabezado h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.3rem;
-            text-align: center;
-        }
-
-        .encabezado h2 {
-            font-size: 1rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            position: relative;
+        
+        .child-figure div {
+            transition: opacity 0.5s, transform 0.5s;
         }
 
         .logo {
@@ -108,15 +136,25 @@
             animation: pulse 2s infinite;
         }
 
+        .encabezado h2 {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0.5rem auto 0;
+            text-align: center;
+            position: relative;
+        }
+
         /* Contenedor principal */
         .container {
-            margin: 20px auto; /* Subimos el margen superior */
+            margin: 20px auto;
             padding: 40px;
             max-width: 800px;
             background: white;
             border-radius: 15px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             text-align: center;
+            flex: 1;
         }
 
         .grado {
@@ -192,10 +230,28 @@
             padding: 1rem;
             background: var(--dark);
             color: white;
-            position: absolute;
-            bottom: 0;
             width: 100%;
-            z-index: 1;
+            margin-top: auto;
+        }
+
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .child-figure {
+                display: none;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            #resultado {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -222,10 +278,20 @@
 
     <!-- Encabezado -->
     <div class="encabezado">
-        <div class="logo">
-            <span class="logo-icon">👐</span>
-            <h1>Manos que Calculan</h1>
-            <span class="logo-icon">👐</span>
+        <div class="header-content">
+            <div class="child-figure" id="left-child">
+                <div>👦</div>
+            </div>
+            
+            <div class="logo">
+                <span class="logo-icon">👐</span>
+                <h1>Manos que Calculan</h1>
+                <span class="logo-icon">👐</span>
+            </div>
+            
+            <div class="child-figure" id="right-child">
+                <div>👧</div>
+            </div>
         </div>
         <h2>Profesores: Miguel Ubiera y Anna Morán</h2>
     </div>
@@ -267,6 +333,42 @@
         const sortearBtn = document.getElementById('sortearBtn');
         const resultadoDiv = document.getElementById('resultado');
         const listaSeleccionados = document.getElementById('listaSeleccionados');
+        const leftChild = document.getElementById('left-child');
+        const rightChild = document.getElementById('right-child');
+
+        // Obtener los emojis de los niños
+        const leftEmoji = leftChild.querySelector('div');
+        const rightEmoji = rightChild.querySelector('div');
+        
+        // Inicializar con animación de entrada
+        leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+        rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+        
+        // Función para alternar entre niño y niña
+        function toggleChildren() {
+            // Desaparecer lentamente durante 3 segundos
+            leftEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
+            rightEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
+            
+            setTimeout(() => {
+                // Cambiar los emojis después de que hayan desaparecido
+                if (leftEmoji.textContent === '👦') {
+                    leftEmoji.textContent = '👧';
+                    rightEmoji.textContent = '👦';
+                } else {
+                    leftEmoji.textContent = '👦';
+                    rightEmoji.textContent = '👧';
+                }
+                
+                // Reaparecer lentamente durante 3 segundos
+                leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+                rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+                
+            }, 3000); // Esperar 3 segundos (duración de fadeOutSlow)
+        }
+        
+        // Iniciar el ciclo cada 10 segundos (3s desaparecer + 3s aparecer + 4s de pausa)
+        setInterval(toggleChildren, 10000);
 
         sortearBtn.addEventListener('click', () => {
             if (disponibles.length === 0) {
