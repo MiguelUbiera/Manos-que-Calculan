@@ -535,12 +535,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
-        .empty-state p {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 1.5rem;
-        }
-
         .category-content {
             display: none;
             text-align: center;
@@ -794,6 +788,11 @@
                         <div class="tool-name">Sorteo de Estudiantes</div>
                     </div>
                     
+                    <div class="tool-card" onclick="window.open('Elecciones.html', '_blank')">
+                        <div class="tool-icon">🗳️</div>
+                        <div class="tool-name">Elecciones</div>
+                    </div>
+                    
                     <div class="tool-card">
                         <div class="tool-icon">🧮</div>
                         <div class="tool-name">Calculadora</div>
@@ -812,11 +811,6 @@
                     <div class="tool-card">
                         <div class="tool-icon">🔢</div>
                         <div class="tool-name">Números</div>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <div class="tool-icon">⏱️</div>
-                        <div class="tool-name">Temporizador</div>
                     </div>
                 </div>
             </div>
@@ -905,7 +899,7 @@
                     leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
                     rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
                     
-                }, 3000); // Esperar 3 segundos (duración de fadeOutSlow)
+                }, 3000); // Esperar 3 segundos (duración of fadeOutSlow)
             }
             
             // Iniciar el ciclo cada 10 segundos (3s desaparecer + 3s aparecer + 4s de pausa)
