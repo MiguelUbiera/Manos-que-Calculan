@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -173,6 +173,7 @@
             justify-content: center;
             gap: 1rem;
             margin-bottom: 0.4rem;
+            flex-wrap: wrap;
         }
 
         .logo-icon {
@@ -358,6 +359,7 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: left 0.5s;
+            z-index: 1;
         }
 
         .category-btn:hover::before {
@@ -781,6 +783,10 @@
                     <div class="tool-card" onclick="window.open('Calculadora120s.html', '_blank')">
                         <div class="tool-icon">🧠</div>
                         <div class="tool-name">Calculadora B 120s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Suma A 3s.html', '_blank')">
+                        <div class="tool-icon">⏱️</div>
+                        <div class="tool-name">Suma A 3s</div>
                     </div>
                 </div>
             </div>
