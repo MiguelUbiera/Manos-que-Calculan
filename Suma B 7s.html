@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Desafíos de Sumas - Instituto Santa Rosa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --secondary: #f50057;
+            --accent: #00bcd4;
+            --light: #f5f5f5;
+            --dark: #212121;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Elementos flotantes de fondo */
+        .floating-element {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            animation: floatElement 18s infinite ease-in-out;
+        }
+        
+        @keyframes floatElement {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.1;
+            }
+            25% {
+                transform: translate(20px, -15px) rotate(5deg);
+                opacity: 0.15;
+            }
+            50% {
+                transform: translate(-15px, 10px) rotate(-5deg);
+                opacity: 0.12;
+            }
+            75% {
+                transform: translate(10px, 20px) rotate(3deg);
+                opacity: 0.15;
+            }
+        }
+
+        /* Encabezado */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.6rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .child-figure {
+            font-size: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 40px;
+        }
+        
+        .child-figure div {
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        
+        .logo-icon {
+            font-size: 1.6rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        
+        .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin: 0.2rem 0 0;
+        }
+
+        /* Animaciones para niños */
+        @keyframes fadeOutSlow {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.9) translateY(5px);
+            }
+        }
+
+        @keyframes fadeInSlow {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Contenido principal */
+        #inicio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        #nombre-input {
+            font-size: 18px;
+            padding: 10px;
+            width: 250px;
+            margin: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        #comenzar-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #comenzar-btn:hover {
+            background-color: #303f9f;
+        }
+        
+        #contenedor {
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 1rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #juego {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 60%;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        #historial {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 30%;
+        }
+        
+        #problema {
+            font-size: 36px;
+            margin: 10px;
+            color: var(--primary);
+        }
+        
+        #temporizador {
+            font-size: 20px;
+            color: var(--secondary);
+            margin: 5px;
+            animation: blink 1s step-start infinite;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+        
+        /* Estilos para las opciones de selección múltiple */
+        #opciones-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .opcion {
+            width: 80px;
+            height: 70px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .opcion:hover {
+            background-color: #303f9f;
+            transform: translateY(-2px);
+        }
+        
+        .opcion.seleccionada {
+            background-color: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        #mensaje {
+            min-height: 60px;
+            margin: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .burbuja {
+            background-color: var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            margin: 3px 0;
+            animation: flotar 3s ease-in-out forwards;
+            position: relative;
+            font-size: 18px;
+        }
+        
+        @keyframes flotar {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-30px); }
+        }
+        
+        #resultado-final {
+            font-size: 18px;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 8px;
+        }
+        
+        #reiniciar-btn, #terminar-btn, #barrer-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 4px;
+        }
+        
+        #reiniciar-btn:hover, #terminar-btn:hover, #barrer-btn:hover {
+            background-color: #303f9f;
+        }
+        
+        #reiniciar-btn {
+            display: none;
+        }
+        
+        #terminar-btn {
+            background-color: var(--secondary);
+        }
+        
+        #terminar-btn:hover {
+            background-color: #c51162;
+        }
+        
+        #barrer-btn {
+            background-color: #6c757d;
+        }
+        
+        #barrer-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .reconocimiento {
+            background-color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 450px;
+            margin: 10px auto;
+        }
+        
+        .reconocimiento h1 {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 0;
+        }
+        
+        .reconocimiento h2 {
+            font-size: 0.85rem;
+            color: #555;
+            margin: 3px 0;
+        }
+        
+        .reconocimiento p {
+            font-size: 0.9rem;
+            color: #333;
+            margin: 3px 0;
+        }
+        
+        .ocultar {
+            display: none;
+        }
+        
+        #historial h2 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        #historial table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        
+        #historial th, #historial td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        #historial th {
+            background-color: #f4f4f4;
+        }
+        
+        .verde {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .azul {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .morado {
+            background-color: #e6e6fa;
+            color: #6c757d;
+        }
+        
+        .rojo {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        #bloques-container {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            width: 120px;
+        }
+        
+        .bloque {
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent);
+            margin: 2px;
+            border-radius: 3px;
+            opacity: 0;
+            animation: appear 0.5s ease forwards;
+        }
+        
+        @keyframes appear {
+            0% { opacity: 0; transform: scale(0); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 0.6rem;
+            background: var(--dark);
+            color: white;
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        footer p {
+            margin: 0.2rem 0;
+            font-size: 0.75rem;
+        }
+        
+        @media (max-width: 768px) {
+            #contenedor {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            #juego, #historial {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 0.4rem;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+            }
+            
+            .child-figure {
+                display: none;
+            }
+            
+            #problema {
+                font-size: 28px;
+            }
+            
+            .opcion {
+                width: 70px;
+                height: 60px;
+                font-size: 20px;
+            }
+            
+            #inicio {
+                min-height: 60vh;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #opciones-container {
+                gap: 5px;
+            }
+            
+            .opcion {
+                width: 60px;
+                height: 50px;
+                font-size: 18px;
+            }
+            
+            #problema {
+                font-size: 24px;
+            }
+            
+            #temporizador {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Elementos flotantes en el fondo -->
+    <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
+    <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">📏</div>
+    <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">🔺</div>
+    <div class="floating-element" style="top: 35%; right: 10%; animation-delay: 3s;">🔷</div>
+    <div class="floating-element" style="top: 45%; left: 5%; animation-delay: 4s;">⭕</div>
+    <div class="floating-element" style="top: 55%; right: 7%; animation-delay: 5s;">📊</div>
+    <div class="floating-element" style="top: 65%; left: 12%; animation-delay: 6s;">🧮</div>
+    <div class="floating-element" style="top: 75%; right: 9%; animation-delay: 7s;">✏️</div>
+    <div class="floating-element" style="top: 20%; left: 20%; animation-delay: 0.5s;">👐</div>
+    <div class="floating-element" style="top: 40%; right: 22%; animation-delay: 1.5s;">👐</div>
+    <div class="floating-element" style="top: 60%; left: 30%; animation-delay: 2.5s;">👐</div>
+    <div class="floating-element" style="top: 30%; right: 32%; animation-delay: 3.5s;">👐</div>
+    <div class="floating-element" style="top: 50%; left: 40%; animation-delay: 4.5s;">👐</div>
+    <div class="floating-element" style="top: 70%; right: 42%; animation-delay: 5.5s;">👐</div>
+
+    <header>
+        <div class="header-content">
+            <div class="child-figure" id="left-child">
+                <div>👦</div>
+            </div>
+            
+            <div class="logo">
+                <span class="logo-icon">👐</span>
+                <h1>Desafíos de Sumas</h1>
+                <span class="logo-icon">👐</span>
+            </div>
+            
+            <div class="child-figure" id="right-child">
+                <div>👧</div>
+            </div>
+        </div>
+        <p class="subtitle">Profesores: Miguel Ubiera y Anna Morán</p>
+    </header>
+
+    <div id="inicio">
+        <h2 style="margin-bottom: 15px; color: var(--primary);">Escribe tu nombre</h2>
+        <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante">
+        <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
+    </div>
+
+    <div id="contenedor">
+        <div id="juego">
+            <div id="estadisticas">
+                <div>Pregunta: <span id="pregunta-actual">0</span>/30</div>
+                <div>Puntuación: <span id="puntuacion-actual">0</span>%</div>
+            </div>
+            <div id="temporizador">Tiempo: 7</div>
+            <div id="problema"></div>
+            
+            <!-- Contenedor para las opciones de selección múltiple -->
+            <div id="opciones-container">
+                <div class="opcion" data-valor="0"></div>
+                <div class="opcion" data-valor="1"></div>
+                <div class="opcion" data-valor="2"></div>
+            </div>
+            
+            <div id="mensaje" aria-live="polite"></div>
+            <div id="resultado-final"></div>
+            <button id="terminar-btn" onclick="terminarPartida()">Terminar Partida</button>
+            <button id="reiniciar-btn" onclick="reiniciarJuego()">Reiniciar Partida</button>
+            <div id="bloques-container"></div>
+        </div>
+        <div id="historial">
+            <h2>Historial de Desempeño</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Puntuación</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-historial"></tbody>
+            </table>
+            <button id="barrer-btn" onclick="barrerHistorial()">Barrer</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+    </footer>
+
+    <script>
+        // Obtener los emojis de los niños
+        const leftChild = document.getElementById('left-child');
+        const rightChild = document.getElementById('right-child');
+        const leftEmoji = leftChild.querySelector('div');
+        const rightEmoji = rightChild.querySelector('div');
+        
+        // Inicializar con animación de entrada
+        leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+        rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+        
+        // Función para alternar entre niño y niña
+        function toggleChildren() {
+            // Desaparecer lentamente durante 3 segundos
+            leftEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
+            rightEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
+            
+            setTimeout(() => {
+                // Cambiar los emojis después de que hayan desaparecido
+                if (leftEmoji.textContent === '👦') {
+                    leftEmoji.textContent = '👧';
+                    rightEmoji.textContent = '👦';
+                } else {
+                    leftEmoji.textContent = '👦';
+                    rightEmoji.textContent = '👧';
+                }
+                
+                // Reaparecer lentamente durante 3 segundos
+                leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+                rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+                
+            }, 3000); // Esperar 3 segundos (duración de fadeOutSlow)
+        }
+        
+        // Iniciar el ciclo cada 10 segundos (3s desaparecer + 3s aparecer + 4s de pausa)
+        setInterval(toggleChildren, 10000);
+
+        let tiempoRestante, temporizador;
+        let num1, num2, puntuacion, preguntaActual;
+        let nombreParticipante = "";
+        let opciones = [0, 0, 0]; // Almacena las opciones de respuesta
+        let opcionCorrectaIndex = 0; // Índice de la opción correcta
+        let respuestaCorrecta = null;
+
+        // Cargar historial desde localStorage
+        let historial = JSON.parse(localStorage.getItem('historialSumas')) || [];
+
+        function iniciarJuego() {
+            nombreParticipante = document.getElementById('nombre-input').value.trim();
+            if (nombreParticipante === "") {
+                alert("Por favor, escribe tu nombre.");
+                return;
+            }
+
+            document.getElementById('inicio').style.display = 'none';
+            document.getElementById('contenedor').style.display = 'flex';
+
+            puntuacion = 0;
+            preguntaActual = 0;
+            actualizarPuntuacion();
+            document.getElementById('pregunta-actual').textContent = preguntaActual;
+            document.getElementById('reiniciar-btn').style.display = 'none';
+            document.getElementById('resultado-final').textContent = '';
+            document.getElementById('mensaje').textContent = '';
+            document.getElementById('bloques-container').innerHTML = '';
+
+            generarProblema();
+        }
+
+        function terminarPartida() {
+            clearInterval(temporizador);
+
+            // Calcular porcentaje
+            const porcentaje = Math.round((puntuacion / 30) * 100);
+
+            // Guardar resultado en el historial
+            historial.push({ nombre: nombreParticipante, puntuacion: porcentaje });
+            historial.sort((a, b) => b.puntuacion - a.puntuacion);
+            localStorage.setItem('historialSumas', JSON.stringify(historial));
+
+            // Actualizar el historial en pantalla
+            actualizarHistorial();
+
+            // Ocultar elementos del juego
+            document.getElementById('temporizador').classList.add('ocultar');
+            document.getElementById('problema').classList.add('ocultar');
+            document.getElementById('opciones-container').classList.add('ocultar');
+            document.getElementById('mensaje').classList.add('ocultar');
+            document.getElementById('terminar-btn').classList.add('ocultar');
+
+            // Mostrar reconocimiento basado en la puntuación
+            const reconocimientoHTML = obtenerReconocimiento(nombreParticipante, puntuacion);
+            document.getElementById('resultado-final').innerHTML = reconocimientoHTML;
+
+            document.getElementById('reiniciar-btn').style.display = 'block';
+        }
+
+        function reiniciarJuego() {
+            clearInterval(temporizador);
+            document.getElementById('inicio').style.display = 'flex';
+            document.getElementById('nombre-input').value = "";
+            document.getElementById('contenedor').style.display = 'none';
+
+            // Restaurar visibilidad de los elementos del juego
+            document.getElementById('temporizador').classList.remove('ocultar');
+            document.getElementById('problema').classList.remove('ocultar');
+            document.getElementById('opciones-container').classList.remove('ocultar');
+            document.getElementById('mensaje').classList.remove('ocultar');
+            document.getElementById('terminar-btn').classList.remove('ocultar');
+        }
+
+        function generarProblema() {
+            if (preguntaActual >= 30) {
+                terminarPartida();
+                return;
+            }
+
+            clearInterval(temporizador);
+            preguntaActual++;
+            document.getElementById('pregunta-actual').textContent = preguntaActual;
+
+            // Generar números cuya suma esté entre 2 y 40
+            // Asegurar que ambos números sean al menos 1
+            num1 = Math.floor(Math.random() * 39) + 1; // 1-39
+            num2 = Math.floor(Math.random() * (40 - num1)) + 1; // Asegurar suma <= 40
+            
+            // Asegurar que la suma sea al menos 2
+            if (num1 + num2 < 2) {
+                num1 = 1;
+                num2 = 1;
+            }
+
+            respuestaCorrecta = num1 + num2;
+            document.getElementById('problema').textContent = `${num1} + ${num2} = ?`;
+
+            // Generar opciones de respuesta
+            generarOpcionesRespuesta();
+            
+            // Limpiar selección anterior
+            document.querySelectorAll('.opcion').forEach(opcion => {
+                opcion.classList.remove('seleccionada');
+            });
+
+            iniciarTemporizador();
+        }
+
+        function generarOpcionesRespuesta() {
+            // Determinar la posición de la respuesta correcta (0, 1 o 2)
+            opcionCorrectaIndex = Math.floor(Math.random() * 3);
+            
+            // Generar dos respuestas incorrectas diferentes entre sí y diferentes a la correcta
+            let opcionesIncorrectas = [];
+            while (opcionesIncorrectas.length < 2) {
+                // Variación de ±5 para las respuestas incorrectas
+                let variacion = Math.floor(Math.random() * 11) - 5;
+                let opcionIncorrecta = respuestaCorrecta + variacion;
+                
+                // Asegurarse de que la opción incorrecta sea diferente a la correcta
+                // y no se repita con otras opciones incorrectas
+                if (opcionIncorrecta !== respuestaCorrecta && 
+                    opcionIncorrecta >= 2 && 
+                    opcionIncorrecta <= 40 && 
+                    !opcionesIncorrectas.includes(opcionIncorrecta)) {
+                    opcionesIncorrectas.push(opcionIncorrecta);
+                }
+            }
+            
+            // Asignar las opciones
+            opciones[opcionCorrectaIndex] = respuestaCorrecta;
+            
+            // Asignar las opciones incorrectas a las otras posiciones
+            let indiceIncorrecto = 0;
+            for (let i = 0; i < 3; i++) {
+                if (i !== opcionCorrectaIndex) {
+                    opciones[i] = opcionesIncorrectas[indiceIncorrecto];
+                    indiceIncorrecto++;
+                }
+            }
+            
+            // Actualizar la visualización de las opciones
+            const elementosOpcion = document.querySelectorAll('.opcion');
+            elementosOpcion.forEach((opcion, index) => {
+                opcion.textContent = opciones[index];
+                opcion.dataset.valor = opciones[index];
+            });
+        }
+
+        function iniciarTemporizador() {
+            tiempoRestante = 7;
+            document.getElementById('temporizador').textContent = `Tiempo: ${tiempoRestante}`;
+
+            temporizador = setInterval(() => {
+                tiempoRestante--;
+                document.getElementById('temporizador').textContent = `Tiempo: ${tiempoRestante}`;
+
+                if (tiempoRestante <= 0) {
+                    clearInterval(temporizador);
+                    generarProblema();
+                }
+            }, 1000);
+        }
+
+        function actualizarPuntuacion() {
+            const porcentaje = Math.round((puntuacion / 30) * 100);
+            document.getElementById('puntuacion-actual').textContent = porcentaje;
+        }
+
+        function agregarBloque() {
+            const bloquesContainer = document.getElementById('bloques-container');
+            const bloque = document.createElement('div');
+            bloque.classList.add('bloque');
+            bloquesContainer.appendChild(bloque);
+        }
+
+        // Manejar la selección de opciones
+        document.querySelectorAll('.opcion').forEach(opcion => {
+            opcion.addEventListener('click', function() {
+                // Quitar selección anterior
+                document.querySelectorAll('.opcion').forEach(op => {
+                    op.classList.remove('seleccionada');
+                });
+                
+                // Marcar como seleccionada
+                this.classList.add('seleccionada');
+                
+                // Obtener la respuesta seleccionada
+                const respuestaUsuario = parseInt(this.dataset.valor);
+                
+                // Verificar si es correcta
+                if (respuestaUsuario === respuestaCorrecta) {
+                    puntuacion++;
+                    actualizarPuntuacion();
+
+                    const emojis = ["😊👍", "🎉", "🌟", "🚀", "😎"];
+                    const mensajes = ["¡Genial!", "¡Excelente!", "¡Muy bien!", "¡Sigue así!", "¡Correcto!"];
+                    const mensajeAleatorio = mensajes[Math.floor(Math.random() * mensajes.length)] + " " + emojis[Math.floor(Math.random() * emojis.length)];
+
+                    const mensajeDiv = document.createElement('div');
+                    mensajeDiv.textContent = mensajeAleatorio;
+                    mensajeDiv.classList.add('burbuja');
+                    document.getElementById('mensaje').appendChild(mensajeDiv);
+
+                    // Agregar un bloque por cada respuesta correcta
+                    agregarBloque();
+
+                    setTimeout(() => {
+                        mensajeDiv.remove();
+                        generarProblema();
+                    }, 1500);
+                } else {
+                    // Respuesta incorrecta
+                    const mensajeDiv = document.createElement('div');
+                    mensajeDiv.textContent = "Intenta de nuevo";
+                    mensajeDiv.classList.add('burbuja');
+                    mensajeDiv.style.backgroundColor = '#e74c3c';
+                    document.getElementById('mensaje').appendChild(mensajeDiv);
+
+                    setTimeout(() => {
+                        mensajeDiv.remove();
+                    }, 1500);
+                }
+            });
+        });
+
+        document.getElementById('nombre-input').addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                iniciarJuego();
+            }
+        });
+
+        function obtenerReconocimiento(nombre, puntuacion) {
+            let mensaje = "";
+            // Ajustar los umbrales para 30 preguntas
+            if (puntuacion >= 28) { // 28/30 ≈ 93%
+                mensaje = `
+                    <div class="reconocimiento">
+                        <h1>Instituto para Sordos Santa Rosa</h1>
+                        <h2>Reconocimiento</h2>
+                        <p><strong>¡Felicidades, ${nombre}!</strong></p>
+                        <p>Tu desempeño ha sido excepcional. Has obtenido una puntuación de <strong>${puntuacion}/30</strong>. ¡Eres un verdadero genio matemático!</p>
+                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                    </div>
+                `;
+            } else if (puntuacion >= 20) { // 20/30 ≈ 67%
+                mensaje = `
+                    <div class="reconocimiento">
+                        <h1>Instituto para Sordos Santa Rosa</h1>
+                        <h2>Reconocimiento</h2>
+                        <p><strong>¡Bien hecho, ${nombre}!</strong></p>
+                        <p>Tu desempeño ha sido muy bueno. Has obtenido una puntuación de <strong>${puntuacion}/30</strong>. ¡Sigue practicando para alcanzar la perfección!</p>
+                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                    </div>
+                `;
+            } else if (puntuacion >= 15) { // 15/30 = 50%
+                mensaje = `
+                    <div class="reconocimiento">
+                        <h1>Instituto para Sordos Santa Rosa</h1>
+                        <h2>Reconocimiento</h2>
+                        <p><strong>¡Buen esfuerzo, ${nombre}!</strong></p>
+                        <p>Tu desempeño ha sido aceptable. Has obtenido una puntuación de <strong>${puntuacion}/30</strong>. ¡Con más práctica, mejorarás rápidamente!</p>
+                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                    </div>
+                `;
+            } else {
+                mensaje = `
+                    <div class="reconocimiento">
+                        <h1>Instituto para Sordos Santa Rosa</h1>
+                        <h2>Reconocimiento</h2>
+                        <p><strong>¡Ánimo, ${nombre}!</strong></p>
+                        <p>Tu desempeño ha sido bajo. Has obtenido una puntuación de <strong>${puntuacion}/30</strong>. No te rindas, sigue intentando y mejorarás.</p>
+                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                    </div>
+                `;
+            }
+            return mensaje;
+        }
+
+        function actualizarHistorial() {
+            const listaHistorial = document.getElementById('lista-historial');
+            listaHistorial.innerHTML = '';
+
+            historial.forEach(participante => {
+                const tr = document.createElement('tr');
+                const tdNombre = document.createElement('td');
+                tdNombre.textContent = participante.nombre;
+                const tdPuntuacion = document.createElement('td');
+                tdPuntuacion.textContent = `${participante.puntuacion}%`;
+
+                if (participante.puntuacion >= 90) {
+                    tdPuntuacion.classList.add('verde');
+                } else if (participante.puntuacion >= 80) {
+                    tdPuntuacion.classList.add('azul');
+                } else if (participante.puntuacion >= 70) {
+                    tdPuntuacion.classList.add('morado');
+                } else {
+                    tdPuntuacion.classList.add('rojo');
+                }
+
+                tr.appendChild(tdNombre);
+                tr.appendChild(tdPuntuacion);
+                listaHistorial.appendChild(tr);
+            });
+        }
+
+        function barrerHistorial() {
+            if (confirm("¿Estás seguro de que deseas eliminar todo el historial?")) {
+                historial = [];
+                localStorage.setItem('historialSumas', JSON.stringify(historial));
+                actualizarHistorial();
+            }
+        }
+
+        // Inicializar el historial al cargar la página
+        actualizarHistorial();
+    </script>
+</body>
+</html>
