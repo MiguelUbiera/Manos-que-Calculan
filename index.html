@@ -788,6 +788,10 @@
                         <div class="tool-icon">⏱️</div>
                         <div class="tool-name">Suma A 3s</div>
                     </div>
+                    <div class="tool-card" onclick="window.open('Suma B 7s.html', '_blank')">
+                        <div class="tool-icon">⏳</div>
+                        <div class="tool-name">Suma B 7s</div>
+                    </div>
                     <div class="tool-card" onclick="window.open('División A 2-6.html', '_blank')">
                         <div class="tool-icon">➗</div>
                         <div class="tool-name">División A 2-6</div>
@@ -981,9 +985,35 @@
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 
-                // Aquí se implementará la lógica de búsqueda cuando se agreguen actividades
-                console.log('Buscando:', searchTerm);
-                // En el futuro, esto filtrará las actividades mostradas
+                // Si el campo de búsqueda está vacío, mostrar el contenido actual
+                if (searchTerm === '') {
+                    categoryContents.forEach(content => {
+                        if (content.classList.contains('active')) {
+                            content.style.display = 'block';
+                        } else {
+                            content.style.display = 'none';
+                        }
+                    });
+                    return;
+                }
+                
+                // Ocultar todos los contenidos
+                categoryContents.forEach(content => content.style.display = 'none');
+                
+                // Buscar en todas las categorías
+                categoryContents.forEach(content => {
+                    const textContent = content.textContent.toLowerCase();
+                    if (textContent.includes(searchTerm)) {
+                        content.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Inicializar barras de progreso
+            const progressBars = document.querySelectorAll('.progress-bar-fill');
+            progressBars.forEach(bar => {
+                const randomProgress = Math.floor(Math.random() * 100) + 1;
+                bar.style.width = `${randomProgress}%`;
             });
         });
     </script>
