@@ -804,6 +804,10 @@
                         <div class="tool-icon">⚡</div>
                         <div class="tool-name">Resta A 3s</div>
                     </div>
+                    <div class="tool-card" onclick="window.open('Ordena B 15s.html', '_blank')">
+                        <div class="tool-icon">🔀</div>
+                        <div class="tool-name">Ordena B 15s</div>
+                    </div>
                 </div>
             </div>
             
@@ -974,51 +978,57 @@
                     
                     // Mostrar el contenido correspondiente a la categoría seleccionada
                     const category = this.getAttribute('data-category');
-                    const contentToShow = document.getElementById(`${category}-content`);
+                    const targetContent = document.getElementById(`${category}-content`);
                     
-                    if (contentToShow) {
-                        contentToShow.classList.add('active');
-                    } else {
-                        // Si no hay contenido específico, mostrar el contenido por defecto
-                        defaultContent.style.display = 'block';
+                    if (targetContent) {
+                        targetContent.classList.add('active');
                     }
                 });
             });
             
-            // Funcionalidad de búsqueda
+            // Manejo de búsqueda
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 
-                // Si el campo de búsqueda está vacío, mostrar el contenido actual
+                // Si no hay término de búsqueda, mostrar contenido según categoría seleccionada
                 if (searchTerm === '') {
-                    categoryContents.forEach(content => {
-                        if (content.classList.contains('active')) {
-                            content.style.display = 'block';
-                        } else {
-                            content.style.display = 'none';
-                        }
-                    });
+                    const activeCategory = document.querySelector('.category-btn.active');
+                    if (activeCategory) {
+                        activeCategory.click();
+                    }
                     return;
                 }
                 
-                // Ocultar todos los contenidos
-                categoryContents.forEach(content => content.style.display = 'none');
+                // Ocultar contenido por defecto
+                defaultContent.style.display = 'none';
                 
-                // Buscar en todas las categorías
-                categoryContents.forEach(content => {
-                    const textContent = content.textContent.toLowerCase();
-                    if (textContent.includes(searchTerm)) {
-                        content.style.display = 'block';
-                    }
-                });
+                // Ocultar todos los contenidos de categoría
+                categoryContents.forEach(content => content.classList.remove('active'));
+                
+                // Mostrar resultados de búsqueda
+                // En una implementación real, aquí se filtrarían los recursos
+                // Por ahora, mostramos un mensaje de búsqueda
+                const searchResults = document.createElement('div');
+                searchResults.className = 'category-content active';
+                searchResults.innerHTML = `
+                    <h2>🔍 Resultados de búsqueda</h2>
+                    <p>Buscando: "${searchTerm}"</p>
+                    <p><small>Función de búsqueda en desarrollo</small></p>
+                `;
+                
+                // Reemplazar contenido existente
+                const mainContent = document.querySelector('.main-content');
+                const existingResults = document.querySelector('.search-results');
+                if (existingResults) {
+                    existingResults.remove();
+                }
+                
+                searchResults.classList.add('search-results');
+                mainContent.appendChild(searchResults);
             });
             
-            // Inicializar barras de progreso
-            const progressBars = document.querySelectorAll('.progress-bar-fill');
-            progressBars.forEach(bar => {
-                const randomProgress = Math.floor(Math.random() * 100) + 1;
-                bar.style.width = `${randomProgress}%`;
-            });
+            // Inicializar con la categoría "Colección" activa
+            document.querySelector('.category-btn[data-category="coleccion"]').click();
         });
     </script>
 </body>
