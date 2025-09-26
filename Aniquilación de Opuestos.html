@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Aniquilación de Opuestos - Instituto Santa Rosa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --secondary: #f50057;
+            --accent: #00bcd4;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --negative: #d32f2f;
+            --positive: #1565c0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+        
+        .floating-element {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            animation: floatElement 20s infinite ease-in-out;
+        }
+        
+        @keyframes floatElement {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
+            25% { transform: translate(30px, -20px) rotate(8deg); opacity: 0.18; }
+            50% { transform: translate(-20px, 15px) rotate(-8deg); opacity: 0.15; }
+            75% { transform: translate(15px, 25px) rotate(5deg); opacity: 0.18; }
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            width: 100%;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .child-figure {
+            font-size: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
+        
+        .child-figure div {
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 0.3rem 0 0;
+        }
+
+        #inicio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .instrucciones {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .instrucciones h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        #nombre-input {
+            font-size: 20px;
+            padding: 15px;
+            width: 280px;
+            margin: 15px;
+            border: 3px solid var(--primary);
+            border-radius: 12px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        #nombre-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        #comenzar-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
+        
+        #comenzar-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        }
+
+        #contenedor {
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 20px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 20px;
+            flex-grow: 1; 
+        }
+
+        #panel-izquierdo {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            width: 280px;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #juego {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        #estadisticas {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            color: var(--dark);
+        }
+
+        #area-juego {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            border: 3px dashed var(--primary);
+            overflow: hidden;
+            margin: 10px 0;
+            min-height: 500px;
+        }
+
+        .numero {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .numero:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+
+        .numero.positivo {
+            background: linear-gradient(135deg, var(--positive), #1976d2);
+        }
+
+        .numero.negativo {
+            background: linear-gradient(135deg, var(--negative), #e53935);
+        }
+
+        @keyframes aparicion {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes desintegracion {
+            from { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0px); }
+            to { opacity: 0; transform: scale(0) rotate(360deg); filter: blur(10px); }
+        }
+
+        .numero {
+            animation: aparicion 0.5s ease-out;
+        }
+
+        .numero.desintegrando {
+            animation: desintegracion 0.3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: linear-gradient(135deg, var(--primary), #5c6bc0);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 8px 0;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        
+        #terminar-btn {
+            background: linear-gradient(135deg, var(--secondary), #f06292);
+        }
+
+        #reiniciar-btn {
+            display: none;
+            background: linear-gradient(135deg, var(--success), #66bb6a);
+        }
+
+        #historial {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            width: 300px;
+            min-width: 280px;
+        }
+        
+        #historial h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        #historial table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        #historial th, #historial td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        #historial th {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .iniciado { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #c62828; }
+        .competente { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #ef6c00; }
+        .experto { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #2e7d32; }
+        .elite { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
+
+        .reconocimiento {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            min-height: 500px;
+        }
+        .reconocimiento h2 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        .reconocimiento p {
+            font-size: 1.2rem;
+            margin: 8px 0;
+            color: var(--dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--dark);
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        footer p {
+            margin: 0.3rem 0;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 1024px) {
+            #contenedor { flex-direction: column; padding: 15px; height: auto; }
+            #panel-izquierdo { width: 100%; flex-direction: row; justify-content: space-around; align-items: center; }
+            #estadisticas { flex-direction: row; gap: 20px; margin-bottom: 0; }
+            #historial { width: 100%; margin-top: 20px; }
+            .header-content { flex-direction: column; gap: 0.5rem; }
+            .child-figure { display: none; }
+            h1 { font-size: 1.4rem; }
+            #area-juego, .reconocimiento { min-height: 400px; }
+            .numero { width: 60px; height: 60px; font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-element" style="top: 8%; left: 5%; animation-delay: 0s;">➕</div>
+    <div class="floating-element" style="top: 18%; right: 7%; animation-delay: 1s;">➖</div>
+    <div class="floating-element" style="top: 28%; left: 10%; animation-delay: 2s;">🔢</div>
+    <div class="floating-element" style="top: 38%; right: 12%; animation-delay: 3s;">⚡</div>
+    <div class="floating-element" style="top: 48%; left: 8%; animation-delay: 4s;">🎯</div>
+    <div class="floating-element" style="top: 58%; right: 9%; animation-delay: 5s;">💥</div>
+    <div class="floating-element" style="top: 68%; left: 15%; animation-delay: 6s;">🏆</div>
+    <div class="floating-element" style="top: 78%; right: 11%; animation-delay: 7s;">⭐</div>
+
+    <header>
+        <div class="header-content">
+            <div class="child-figure" id="left-child"><div>👦</div></div>
+            <div class="logo">
+                <span class="logo-icon">💥</span>
+                <h1>Aniquilación de Opuestos</h1>
+                <span class="logo-icon">💥</span>
+            </div>
+            <div class="child-figure" id="right-child"><div>👧</div></div>
+        </div>
+        <p class="subtitle">Profesores: Miguel Ubiera y Anna Morán</p>
+    </header>
+
+    <div id="inicio">
+        <div class="instrucciones">
+            <h2>¡Bienvenido al Juego de Aniquilación!</h2>
+        </div>
+        <input type="text" id="nombre-input" placeholder="Escribe tu nombre" autofocus>
+        <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar Juego</button>
+    </div>
+
+    <div id="contenedor">
+        <div id="panel-izquierdo">
+            <div id="estadisticas">
+                <div class="stat-item">
+                    <div class="stat-label">Aniquilaciones</div>
+                    <div class="stat-value" id="aniquilaciones">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Tiempo</div>
+                    <div class="stat-value" id="temporizador">180</div>
+                </div>
+            </div>
+            <div>
+                <button id="terminar-btn" onclick="terminarPartida()">Terminar Partida</button>
+                <button id="reiniciar-btn" onclick="reiniciarJuego()">Reiniciar Juego</button>
+            </div>
+        </div>
+
+        <div id="juego">
+            <div id="area-juego"></div>
+        </div>
+        
+        <div id="historial">
+            <h2>Historial de Desempeño</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Aniquilaciones</th>
+                        <th>Jerarquía</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-historial"></tbody>
+            </table>
+            <button onclick="barrerHistorial()" style="margin-top: 10px; background: #6c757d;">Barrer Historial</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+    </footer>
+
+    <script>
+        let tiempoRestante = 180;
+        let temporizador;
+        let aniquilaciones = 0;
+        let nombreParticipante = "";
+        let historial = [];
+        let juegoActivo = false;
+        let numeroId = 0;
+        let aparicionTimer;
+        let numerosEnPantalla = [];
+        let numeroArrastrandose = null;
+        let areaJuego;
+
+        function iniciarJuego() {
+            nombreParticipante = document.getElementById('nombre-input').value.trim();
+            if (nombreParticipante === "") {
+                alert("Por favor, escribe tu nombre.");
+                return;
+            }
+
+            document.getElementById('inicio').style.display = 'none';
+            document.getElementById('contenedor').style.display = 'flex';
+            
+            areaJuego = document.getElementById('area-juego');
+
+            aniquilaciones = 0;
+            tiempoRestante = 180;
+            juegoActivo = true;
+            numerosEnPantalla = [];
+            numeroId = 0;
+            areaJuego.innerHTML = '';
+
+            actualizarEstadisticas();
+            document.getElementById('reiniciar-btn').style.display = 'none';
+            document.getElementById('terminar-btn').style.display = 'block';
+
+            temporizador = setInterval(() => {
+                tiempoRestante--;
+                actualizarEstadisticas();
+                if (tiempoRestante <= 0) {
+                    terminarPartida();
+                }
+            }, 1000);
+
+            aparicionTimer = setInterval(generarPareja, 3000);
+            
+            rellenarAreaJuego(5);
+        }
+
+        function rellenarAreaJuego(cantidadParejas) {
+            if (!juegoActivo) return;
+            const posiciones = obtenerPosicionesLibres(cantidadParejas * 2);
+
+            for (let i = 0; i < Math.floor(posiciones.length / 2); i++) {
+                const numero = Math.floor(Math.random() * 100) + 1;
+                crearNumero(numero, posiciones[i * 2], true);
+                crearNumero(-numero, posiciones[i * 2 + 1], false);
+            }
+        }
+
+        function generarPareja() {
+            if (!juegoActivo) return;
+            const numero = Math.floor(Math.random() * 100) + 1;
+            const posiciones = obtenerPosicionesLibres(2);
+            if (posiciones.length >= 2) {
+                crearNumero(numero, posiciones[0], true);
+                crearNumero(-numero, posiciones[1], false);
+            }
+        }
+
+        function obtenerPosicionesLibres(cantidad) {
+            const posiciones = [];
+            const areaRect = areaJuego.getBoundingClientRect();
+            const margen = 80;
+            const intentosMaximos = 50;
+
+            for (let i = 0; i < cantidad; i++) {
+                let intentos = 0;
+                let posicionValida = false;
+                while (!posicionValida && intentos < intentosMaximos) {
+                    const x = Math.random() * (areaRect.width - 70);
+                    const y = Math.random() * (areaRect.height - 70);
+                    let superpone = [...numerosEnPantalla, ...posiciones].some(punto => Math.abs(punto.x - x) < margen && Math.abs(punto.y - y) < margen);
+                    if (!superpone) {
+                        posiciones.push({ x, y });
+                        posicionValida = true;
+                    }
+                    intentos++;
+                }
+            }
+            return posiciones;
+        }
+
+        function crearNumero(valor, posicion, esPositivo) {
+            const numeroEl = document.createElement('div');
+            numeroEl.className = `numero ${esPositivo ? 'positivo' : 'negativo'}`;
+            numeroEl.textContent = esPositivo ? `+${valor}` : valor;
+            numeroEl.style.left = `${posicion.x}px`;
+            numeroEl.style.top = `${posicion.y}px`;
+            numeroEl.dataset.valor = valor;
+            numeroEl.dataset.id = numeroId++;
+            configurarArrastre(numeroEl);
+            areaJuego.appendChild(numeroEl);
+            numerosEnPantalla.push({ id: numeroEl.dataset.id, valor, elemento: numeroEl, x: posicion.x, y: posicion.y });
+        }
+
+        function configurarArrastre(elemento) {
+            let startX, startY, isDragging = false;
+
+            const iniciarArrastre = (e) => {
+                if (!juegoActivo) return;
+                isDragging = true;
+                numeroArrastrandose = elemento;
+                const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+                startX = clientX - elemento.offsetLeft;
+                startY = clientY - elemento.offsetTop;
+                e.preventDefault();
+            };
+            const arrastrar = (e) => {
+                if (!isDragging || numeroArrastrandose !== elemento) return;
+                const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+                elemento.style.left = `${clientX - startX}px`;
+                elemento.style.top = `${clientY - startY}px`;
+            };
+            const terminarArrastre = () => {
+                if (!isDragging || numeroArrastrandose !== elemento) return;
+                isDragging = false;
+                numeroArrastrandose = null;
+                verificarColision(elemento);
+            };
+
+            elemento.addEventListener('mousedown', iniciarArrastre);
+            document.addEventListener('mousemove', arrastrar);
+            document.addEventListener('mouseup', terminarArrastre);
+            elemento.addEventListener('touchstart', iniciarArrastre, { passive: false });
+            document.addEventListener('touchmove', arrastrar, { passive: false });
+            document.addEventListener('touchend', terminarArrastre);
+        }
+
+        function verificarColision(elementoArrastrado) {
+            const rect1 = elementoArrastrado.getBoundingClientRect();
+            const valor1 = parseInt(elementoArrastrado.dataset.valor);
+            const id1 = elementoArrastrado.dataset.id;
+
+            for (const numeroObj of numerosEnPantalla) {
+                if (numeroObj.id === id1) continue;
+                const rect2 = numeroObj.elemento.getBoundingClientRect();
+                if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) {
+                    if (valor1 + parseInt(numeroObj.elemento.dataset.valor) === 0) {
+                        aniquilar(elementoArrastrado, numeroObj.elemento);
+                        return;
+                    }
+                }
+            }
+        }
+
+        function aniquilar(elemento1, elemento2) {
+            const id1 = elemento1.dataset.id;
+            const id2 = elemento2.dataset.id;
+            elemento1.classList.add('desintegrando');
+            elemento2.classList.add('desintegrando');
+            setTimeout(() => { elemento1.remove(); elemento2.remove(); }, 300);
+            numerosEnPantalla = numerosEnPantalla.filter(n => n.id !== id1 && n.id !== id2);
+            aniquilaciones++;
+            actualizarEstadisticas();
+            if (juegoActivo && numerosEnPantalla.length === 0) {
+                setTimeout(() => rellenarAreaJuego(5), 400);
+            }
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('aniquilaciones').textContent = aniquilaciones;
+            document.getElementById('temporizador').textContent = tiempoRestante;
+        }
+
+        function terminarPartida() {
+            clearInterval(temporizador);
+            clearInterval(aparicionTimer);
+            juegoActivo = false;
+            const jerarquia = obtenerJerarquia(aniquilaciones);
+            historial.push({ nombre: nombreParticipante, aniquilaciones, jerarquia });
+            historial.sort((a, b) => b.aniquilaciones - a.aniquilaciones);
+            actualizarHistorial();
+            mostrarResultadoFinal();
+        }
+
+        function obtenerJerarquia(puntuacion) {
+            if (puntuacion >= 101) return "Élite";
+            if (puntuacion >= 71) return "Experto";
+            if (puntuacion >= 31) return "Competente";
+            return "Iniciado";
+        }
+
+        function mostrarResultadoFinal() {
+            const jerarquia = obtenerJerarquia(aniquilaciones);
+            const mensajes = {
+                "Élite": `<h2>🏆 Reconocimiento 🏆</h2><p><strong>¡Felicidades, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Rendimiento excepcional!</p>`,
+                "Experto": `<h2>🌟 Reconocimiento 🌟</h2><p><strong>¡Excelente trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Muy buen desempeño!</p>`,
+                "Competente": `<h2>⭐ Reconocimiento ⭐</h2><p><strong>¡Buen trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Sigue practicando!</p>`,
+                "Iniciado": `<h2>🎯 Reconocimiento 🎯</h2><p><strong>¡Ánimo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡La práctica hace la perfección!</p>`
+            };
+            
+            document.getElementById('juego').innerHTML = `<div class="reconocimiento">${mensajes[jerarquia]}</div>`;
+            document.getElementById('reiniciar-btn').style.display = 'block';
+            document.getElementById('terminar-btn').style.display = 'none';
+        }
+
+        function reiniciarJuego() {
+            clearInterval(temporizador);
+            clearInterval(aparicionTimer);
+
+            document.getElementById('juego').innerHTML = '<div id="area-juego"></div>';
+
+            document.getElementById('inicio').style.display = 'flex';
+            document.getElementById('nombre-input').value = "";
+            document.getElementById('contenedor').style.display = 'none';
+        }
+
+        function actualizarHistorial() {
+            const listaHistorial = document.getElementById('lista-historial');
+            listaHistorial.innerHTML = '';
+            historial.forEach(p => {
+                const clase = p.jerarquia.toLowerCase().replace('é', 'e');
+                listaHistorial.innerHTML += `<tr><td>${p.nombre}</td><td class="${clase}">${p.aniquilaciones}</td><td class="${clase}">${p.jerarquia}</td></tr>`;
+            });
+        }
+
+        function barrerHistorial() {
+            if (confirm("¿Estás seguro de que deseas eliminar todo el historial?")) {
+                historial = [];
+                actualizarHistorial();
+            }
+        }
+        
+        document.getElementById('nombre-input').addEventListener('keydown', (e) => e.key === "Enter" && iniciarJuego());
+        document.addEventListener('dragstart', (e) => e.preventDefault());
+    </script>
+</body>
+</html>
