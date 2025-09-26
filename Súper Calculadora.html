@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Súper Calculadora - Instituto Santa Rosa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --secondary: #f50057;
+            --accent: #00bcd4;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden; /* Prevenir scroll horizontal por los elementos flotantes */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            zoom: 0.95;
+            position: relative;
+        }
+
+        /* 2. Objetos levitando en el fondo (código adaptado del ejemplo) */
+        .floating-element {
+            position: fixed;
+            font-size: 2.5rem;
+            opacity: 0.1; /* Opacidad reducida para ser un fondo sutil */
+            z-index: -1; /* Detrás de todo el contenido */
+            pointer-events: none;
+            animation: floatElement 20s infinite ease-in-out;
+        }
+        
+        @keyframes floatElement {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
+            25% { transform: translate(30px, -20px) rotate(8deg); opacity: 0.18; }
+            50% { transform: translate(-20px, 15px) rotate(-8deg); opacity: 0.15; }
+            75% { transform: translate(15px, 25px) rotate(5deg); opacity: 0.18; }
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @keyframes recede-and-return {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.1); opacity: 0; }
+        }
+        .child-figure {
+            font-size: 2.5rem;
+            animation: recede-and-return 7s ease-in-out infinite;
+        }
+        #right-child {
+            animation-delay: -3.5s;
+        }
+        
+        .child-figure div {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .child-figure.feliz div {
+            transform: translateY(-15px) scale(1.1);
+        }
+
+        .child-figure.triste {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes shake {
+          10%, 90% { transform: translate3d(-1px, 0, 0); }
+          20%, 80% { transform: translate3d(2px, 0, 0); }
+          30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+          40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 0.3rem 0 0;
+        }
+        
+        .header-emoji {
+            font-size: 1.8rem;
+        }
+
+        .emoji-pulso {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #inicio {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        #contenedor {
+            flex-grow: 1;
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 20px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        .instrucciones h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        #nombre-input {
+            font-size: 20px;
+            padding: 15px;
+            width: 280px;
+            margin: 15px;
+            border: 3px solid var(--primary);
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        #comenzar-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
+        
+        #panel-izquierdo {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            width: 300px;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #juego {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+            position: relative;
+        }
+        
+        #respuesta-display {
+            width: 80%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 30px;
+            padding: 15px;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: right;
+            border: 3px solid #ccc;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            height: 70px;
+            color: var(--dark);
+        }
+
+        #area-operacion {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            gap: 15px;
+        }
+
+        .caja-numero, .caja-operacion {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .caja-numero {
+            background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        }
+
+        .caja-operacion {
+            cursor: pointer;
+            transform: scale(1.1);
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+        }
+        .caja-operacion:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .op-suma { background: linear-gradient(135deg, #66bb6a, #43a047); }
+        .op-resta { background: linear-gradient(135deg, #ef5350, #e53935); }
+        .op-multiplicacion { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
+
+
+        #estadisticas {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+            padding: 8px; 
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .stat-label { font-size: 11px; color: var(--primary); margin-bottom: 4px; }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+        }
+        #puntos { color: #2e7d32; }
+        #temporizador { color: #d84315; }
+
+        #teclado-contenedor { text-align: center; }
+        .teclado-numerico {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .tecla {
+            padding: 18px 0;
+            font-size: 30px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .tecla:hover {
+            background: linear-gradient(135deg, #e0e0e0, #bdbdbd);
+            transform: translateY(-2px);
+        }
+        .tecla.cero {
+             grid-column: span 2;
+        }
+        .tecla.borrar { background: linear-gradient(135deg, var(--warning), #f57c00); color: white; }
+
+        #controles-juego button {
+            width: 100%; padding: 12px 24px; font-size: 16px; color: white; border: none;
+            border-radius: 10px; cursor: pointer; margin-top: 15px; font-weight: bold;
+        }
+        #terminar-btn { background: linear-gradient(135deg, var(--secondary), #f06292); }
+        #reiniciar-btn { display: none; background: linear-gradient(135deg, var(--success), #66bb6a); }
+
+        #historial {
+            background: white; padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); width: 300px;
+        }
+        #historial h2 { text-align: center; color: var(--primary); }
+        #historial table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        #historial th, #historial td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        #historial th { background: #f2f2f2; }
+        .iniciado { background-color: #ffebee; }
+        .competente { background-color: #fff3e0; }
+        .experto { background-color: #e8f5e9; }
+        .elite { background-color: #e3f2fd; }
+        
+        #feedback-mensaje {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -20px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+
+        #feedback-mensaje.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        .certificado-container { padding: 20px; border: 5px solid var(--primary); border-radius: 15px; background-color: #fdfdfd; }
+        .certificado-header h2 { color: var(--primary); }
+        .certificado-header h3 { color: var(--dark); margin: 10px 0; }
+        .certificado-body { margin: 30px 0; }
+        .certificado-nombre { font-size: 2rem; font-weight: bold; color: var(--secondary); }
+        .certificado-mensaje { margin: 20px 0; font-size: 1.1rem; }
+        .certificado-footer { margin-top: 40px; }
+        
+        .firma-cursiva {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        footer { text-align: center; padding: 1rem; background: var(--dark); color: white; }
+
+        @media (max-width: 1024px) {
+            .header-content { flex-direction: column; gap: 0.5rem; }
+            .child-figure { display: none; }
+            #contenedor { flex-direction: column; }
+            #panel-izquierdo, #historial { width: 100%; }
+            .caja-numero, .caja-operacion { width: 90px; height: 90px; font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-element" style="top: 8%; left: 5%; animation-delay: 0s;">➕</div>
+    <div class="floating-element" style="top: 18%; right: 7%; animation-delay: 1s;">➖</div>
+    <div class="floating-element" style="top: 28%; left: 10%; animation-delay: 2s;">🔢</div>
+    <div class="floating-element" style="top: 38%; right: 12%; animation-delay: 3s;">✖️</div>
+    <div class="floating-element" style="top: 48%; left: 8%; animation-delay: 4s;">🧠</div>
+    <div class="floating-element" style="top: 58%; right: 9%; animation-delay: 5s;">💡</div>
+    <div class="floating-element" style="top: 68%; left: 15%; animation-delay: 6s;">🏆</div>
+    <div class="floating-element" style="top: 78%; right: 11%; animation-delay: 7s;">⭐</div>
+
+    <header>
+        <div class="header-content">
+            <div class="child-figure" id="left-child"><div>👦</div></div>
+            <div class="logo-container">
+                <span class="header-emoji emoji-pulso" style="font-size: 2rem; margin: 0;">🧮</span>
+                <h1>Súper Calculadora</h1>
+                <span class="header-emoji emoji-pulso" style="font-size: 2rem; margin: 0;">🧮</span>
+            </div>
+            <div class="child-figure" id="right-child"><div>👧</div></div>
+        </div>
+        <p class="subtitle" style="text-align: center;">Profesores: Miguel Ubiera y Anna Morán</p>
+    </header>
+
+    <main>
+        <div id="inicio">
+            <div class="emoji-pulso">🧏🧒</div>
+            <div class="instrucciones">
+                <h2>¡Bienvenido a la Súper Calculadora!</h2>
+            </div>
+            <input type="text" id="nombre-input" placeholder="Escribe tu nombre" autofocus>
+            <button id="comenzar-btn">Comenzar Juego</button>
+        </div>
+
+        <div id="contenedor">
+            <div id="panel-izquierdo">
+                <div id="estadisticas">
+                    <div class="stat-item"><div class="stat-label">Puntos</div><div class="stat-value" id="puntos">0</div></div>
+                    <div class="stat-item"><div class="stat-label">Tiempo</div><div class="stat-value" id="temporizador">180</div></div>
+                </div>
+                <div id="teclado-contenedor">
+                    <div class="teclado-numerico">
+                        <button class="tecla">7</button><button class="tecla">8</button><button class="tecla">9</button>
+                        <button class="tecla">4</button><button class="tecla">5</button><button class="tecla">6</button>
+                        <button class="tecla">1</button><button class="tecla">2</button><button class="tecla">3</button>
+                        <button class="tecla borrar">←</button>
+                        <button class="tecla cero">0</button>
+                    </div>
+                </div>
+                <div id="controles-juego">
+                    <button id="terminar-btn">Terminar Partida</button>
+                    <button id="reiniciar-btn">Reiniciar Juego</button>
+                </div>
+            </div>
+
+            <div id="juego">
+                <div id="feedback-mensaje"></div>
+                <div id="respuesta-display"></div>
+                <div id="area-operacion">
+                    <div id="numero-izquierda" class="caja-numero"></div>
+                    <div id="operacion-centro" class="caja-operacion"></div>
+                    <div id="numero-derecha" class="caja-numero"></div>
+                </div>
+            </div>
+            
+            <div id="historial">
+                <h2>Historial de Desempeño</h2>
+                <table>
+                    <thead><tr><th>Nombre</th><th>Puntos</th><th>Jerarquía</th></tr></thead>
+                    <tbody id="lista-historial"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+    </footer>
+
+    <script>
+        let tiempoRestante = 180;
+        let temporizador;
+        let puntos = 0;
+        let nombreParticipante = "";
+        let historial = [];
+        let juegoActivo = false;
+        let operacionEnProgreso = false;
+
+        let numeroIzquierda, numeroDerecha, operacionActual, respuestaCorrecta;
+        let respuestaUsuario = "";
+
+        const nombreInput = document.getElementById('nombre-input');
+        const comenzarBtn = document.getElementById('comenzar-btn');
+        const leftChild = document.querySelector('#left-child');
+        const rightChild = document.querySelector('#right-child');
+        
+        const feedbackPositivo = ["¡Excelente! ✨", "¡Muy bien! 🎉", "¡Sigue así! 👍", "¡Enhorabuena! 🥳", "¡Buen trabajo! ⭐"];
+        const feedbackNegativo = ["¡Casi! Intenta de nuevo 🤔", "¡No te rindas! 💪", "Revisa la operación 🧐", "¡Tú puedes! 👍"];
+        
+        function iniciarJuego() {
+            nombreParticipante = nombreInput.value.trim();
+            if (nombreParticipante === "") {
+                alert("Por favor, escribe tu nombre.");
+                return;
+            }
+
+            document.getElementById('inicio').style.display = 'none';
+            document.getElementById('contenedor').style.display = 'flex';
+            
+            puntos = 0;
+            tiempoRestante = 180;
+            juegoActivo = true;
+            operacionEnProgreso = false;
+            respuestaUsuario = "";
+            actualizarDisplay();
+            actualizarEstadisticas();
+
+            document.getElementById('reiniciar-btn').style.display = 'none';
+            document.getElementById('terminar-btn').style.display = 'block';
+            
+            document.getElementById('operacion-centro').addEventListener('click', mostrarPista);
+
+            temporizador = setInterval(() => {
+                tiempoRestante--;
+                actualizarEstadisticas();
+                if (tiempoRestante <= 0) {
+                    terminarPartida();
+                }
+            }, 1000);
+
+            generarNuevaOperacion();
+        }
+
+        function terminarPartida() {
+            clearInterval(temporizador);
+            juegoActivo = false;
+            const jerarquia = obtenerJerarquia(puntos);
+            historial.push({ nombre: nombreParticipante, puntos, jerarquia });
+            historial.sort((a, b) => b.puntos - a.puntos);
+            actualizarHistorial();
+            mostrarResultadoFinal();
+        }
+
+        function reiniciarJuego() {
+            clearInterval(temporizador);
+            const juegoDiv = document.querySelector('#contenedor > #juego');
+            juegoDiv.innerHTML = `
+                <div id="feedback-mensaje"></div>
+                <div id="respuesta-display"></div>
+                <div id="area-operacion">
+                    <div id="numero-izquierda" class="caja-numero"></div>
+                    <div id="operacion-centro" class="caja-operacion"></div>
+                    <div id="numero-derecha" class="caja-numero"></div>
+                </div>`;
+            document.getElementById('inicio').style.display = 'flex';
+            nombreInput.value = "";
+            document.getElementById('contenedor').style.display = 'none';
+        }
+
+        function generarNuevaOperacion() {
+            if (!juegoActivo) return;
+
+            const operaciones = ['+', '-', '×'];
+            let resultadoValido = false;
+            let n1, n2, op, res;
+
+            while (!resultadoValido) {
+                op = operaciones[Math.floor(Math.random() * operaciones.length)];
+
+                switch (op) {
+                    case '+':
+                        n1 = Math.floor(Math.random() * 20) + 1;
+                        n2 = Math.floor(Math.random() * 20) + 1;
+                        res = n1 + n2;
+                        resultadoValido = true;
+                        break;
+                    case '-':
+                        n1 = Math.floor(Math.random() * 20) + 1;
+                        n2 = Math.floor(Math.random() * 20) + 1;
+                        if (n1 >= n2) {
+                            res = n1 - n2;
+                            resultadoValido = true;
+                        }
+                        break;
+                    case '×':
+                        n1 = Math.floor(Math.random() * 12) + 1;
+                        n2 = Math.floor(Math.random() * 12) + 1;
+                        res = n1 * n2;
+                        resultadoValido = true;
+                        break;
+                }
+            }
+
+            numeroIzquierda = n1; numeroDerecha = n2; operacionActual = op; respuestaCorrecta = res;
+            
+            const opCentro = document.getElementById('operacion-centro');
+            opCentro.textContent = op;
+            
+            opCentro.className = 'caja-operacion'; 
+            if (op === '+') opCentro.classList.add('op-suma');
+            else if (op === '-') opCentro.classList.add('op-resta');
+            else if (op === '×') opCentro.classList.add('op-multiplicacion');
+
+            document.getElementById('numero-izquierda').textContent = n1;
+            document.getElementById('numero-derecha').textContent = n2;
+            operacionEnProgreso = false;
+        }
+
+        function mostrarFeedback(mensajes, esPositivo) {
+            const feedbackEl = document.getElementById('feedback-mensaje');
+            if (!feedbackEl) return;
+            
+            const mensaje = mensajes[Math.floor(Math.random() * mensajes.length)];
+            feedbackEl.textContent = mensaje;
+            feedbackEl.style.backgroundColor = esPositivo ? 'var(--success)' : 'var(--error)';
+            feedbackEl.style.color = 'white';
+            feedbackEl.style.border = 'none';
+            feedbackEl.style.fontWeight = 'normal';
+            
+            feedbackEl.classList.add('visible');
+            setTimeout(() => {
+                feedbackEl.classList.remove('visible');
+            }, 1500);
+        }
+        
+        function mostrarPista() {
+            if (!juegoActivo || operacionEnProgreso) return;
+            const feedbackEl = document.getElementById('feedback-mensaje');
+            if (!feedbackEl) return;
+
+            feedbackEl.textContent = respuestaCorrecta;
+            feedbackEl.style.backgroundColor = 'transparent';
+            feedbackEl.style.color = 'var(--dark)';
+            feedbackEl.style.fontWeight = 'bold';
+            feedbackEl.style.border = 'none';
+            
+            feedbackEl.classList.add('visible');
+            setTimeout(() => {
+                feedbackEl.classList.remove('visible');
+            }, 1000);
+        }
+
+        function procesarRespuestaCorrecta() {
+            if (operacionEnProgreso) return;
+            operacionEnProgreso = true;
+
+            mostrarFeedback(feedbackPositivo, true);
+            puntos++;
+            actualizarEstadisticas();
+            
+            leftChild.classList.add('feliz');
+            rightChild.classList.add('feliz');
+            setTimeout(() => {
+                leftChild.classList.remove('feliz');
+                rightChild.classList.remove('feliz');
+            }, 400);
+
+            setTimeout(() => {
+                respuestaUsuario = "";
+                actualizarDisplay();
+                generarNuevaOperacion();
+            }, 1600);
+        }
+        
+        document.querySelector('.teclado-numerico').addEventListener('click', (e) => {
+            if (!juegoActivo || operacionEnProgreso || !e.target.classList.contains('tecla')) return;
+            const tecla = e.target.textContent;
+
+            if (!isNaN(tecla)) { 
+                if (respuestaUsuario.length < 5) { 
+                    respuestaUsuario += tecla;
+                    actualizarDisplay();
+                    if (parseInt(respuestaUsuario) === respuestaCorrecta) {
+                        procesarRespuestaCorrecta();
+                    }
+                }
+            } else if (tecla === '←') {
+                respuestaUsuario = respuestaUsuario.slice(0, -1);
+                actualizarDisplay();
+            }
+        });
+
+        function actualizarDisplay() {
+            const display = document.getElementById('respuesta-display');
+            if(display) display.textContent = respuestaUsuario || "0";
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('puntos').textContent = puntos;
+            document.getElementById('temporizador').textContent = tiempoRestante;
+        }
+        
+        function obtenerJerarquia(puntuacion) {
+            if (puntuacion >= 46) return "Élite";
+            if (puntuacion >= 31) return "Experto";
+            if (puntuacion >= 11) return "Competente";
+            return "Iniciado";
+        }
+
+        function mostrarResultadoFinal() {
+            const jerarquia = obtenerJerarquia(puntos);
+            const mensajesJerarquia = {
+                "Élite": `Por su desempeño <strong>Élite</strong>, demostrando una habilidad excepcional y una velocidad impresionante en el cálculo mental.`,
+                "Experto": `Por su destacado desempeño de nivel <strong>Experto</strong>, mostrando gran habilidad y precisión en sus cálculos.`,
+                "Competente": `Por su excelente desempeño <strong>Competente</strong>, demostrando dedicación y un sólido entendimiento de las operaciones.`,
+                "Iniciado": `Por su valiosa participación y esfuerzo, alcanzando el nivel <strong>Iniciado</strong>. ¡La práctica continua es el camino al éxito!`
+            };
+            const juegoDiv = document.querySelector('#contenedor > #juego');
+            juegoDiv.innerHTML = `
+                <div class="certificado-container">
+                    <div class="certificado-header">
+                        <div class="emoji-pulso" style="font-size: 3rem; margin-bottom: 10px;">🧏🧒</div>
+                        <h2>Certificado de Reconocimiento</h2>
+                        <h3>Instituto para Sordos Santa Rosa, Inc.</h3>
+                    </div>
+                    <div class="certificado-body">
+                        <p>Otorga el presente reconocimiento a:</p>
+                        <h1 class="certificado-nombre">${nombreParticipante}</h1>
+                        <p class="certificado-mensaje">${mensajesJerarquia[jerarquia]}</p>
+                        <p><strong>Puntuación Final: ${puntos} puntos</strong></p>
+                    </div>
+                    <div class="certificado-footer">
+                        <p class="firma-cursiva">Miguel Ubiera & Anna Morán</p>
+                        <p>Profesores</p>
+                    </div>
+                </div>`;
+            document.getElementById('reiniciar-btn').style.display = 'block';
+            document.getElementById('terminar-btn').style.display = 'none';
+        }
+
+        function actualizarHistorial() {
+            const listaHistorial = document.getElementById('lista-historial');
+            listaHistorial.innerHTML = '';
+            historial.forEach(p => {
+                const clase = p.jerarquia.toLowerCase().replace('é', 'e');
+                listaHistorial.innerHTML += `<tr><td>${p.nombre}</td><td class="${clase}">${p.puntos}</td><td class="${clase}">${p.jerarquia}</td></tr>`;
+            });
+        }
+        
+        comenzarBtn.addEventListener('click', iniciarJuego);
+        nombreInput.addEventListener('keydown', (e) => e.key === "Enter" && iniciarJuego());
+        document.getElementById('terminar-btn').addEventListener('click', terminarPartida);
+        document.getElementById('reiniciar-btn').addEventListener('click', reiniciarJuego);
+
+    </script>
+</body>
+</html>
