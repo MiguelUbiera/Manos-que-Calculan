@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -252,7 +253,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             user-select: none;
             touch-action: manipulation;
-            position: relative; /* Añadido para mejor control de posición */
+            position: relative;
         }
         
         .numero:hover {
@@ -263,11 +264,11 @@
         .numero.dragging {
             opacity: 0.7;
             transform: scale(1.1);
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
-            transition: none; /* Elimina transición durante el arrastre */
+            z-index: 1000;
+            transition: none;
         }
         
-        .numero.arrastrado {
+        .numero.oculto {
             display: none;
         }
         
@@ -297,6 +298,11 @@
         .espacio.ocupado {
             border: 2px solid var(--accent);
             background-color: rgba(0, 188, 212, 0.1);
+        }
+        
+        .espacio.incorrecto {
+            border: 2px solid #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
         }
         
         .espacio.highlight {
@@ -342,6 +348,11 @@
             padding: 10px;
             margin: 10px;
             border-radius: 8px;
+            display: none; /* Oculto por defecto */
+        }
+        
+        #resultado-final.mostrar {
+            display: block; /* Mostrar cuando tenga la clase 'mostrar' */
         }
         
         #reiniciar-btn, #terminar-btn, #barrer-btn {
@@ -383,33 +394,43 @@
         
         .reconocimiento {
             background-color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             text-align: center;
-            max-width: 450px;
-            margin: 10px auto;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 3px solid var(--accent);
         }
         
         .reconocimiento h1 {
-            font-size: 1.2rem;
-            color: #333;
-            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 0 0 10px 0;
         }
         
         .reconocimiento h2 {
-            font-size: 0.85rem;
+            font-size: 1.1rem;
             color: #555;
-            margin: 3px 0;
+            margin: 5px 0;
         }
         
         .reconocimiento p {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #333;
-            margin: 3px 0;
+            margin: 8px 0;
         }
         
-        .ocultar {
+        .reconocimiento strong {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        .elemento-juego {
+            transition: opacity 0.5s ease;
+        }
+        
+        .elemento-juego.oculto {
             display: none;
         }
         
@@ -540,6 +561,19 @@
                 min-height: 60vh;
                 margin-top: 0.5rem;
             }
+            
+            .reconocimiento {
+                padding: 15px;
+                margin: 10px auto;
+            }
+            
+            .reconocimiento h1 {
+                font-size: 1.3rem;
+            }
+            
+            .reconocimiento h2 {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -559,6 +593,14 @@
             
             #temporizador {
                 font-size: 18px;
+            }
+            
+            .reconocimiento {
+                padding: 10px;
+            }
+            
+            .reconocimiento h1 {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -607,24 +649,28 @@
 
     <div id="contenedor">
         <div id="juego">
-            <div id="estadisticas">
+            <!-- Elementos del juego que se ocultarán al terminar -->
+            <div id="estadisticas" class="elemento-juego">
                 <div>Pregunta: <span id="pregunta-actual">0</span>/15</div>
                 <div>Puntuación: <span id="puntuacion-actual">0</span></div>
             </div>
-            <div id="temporizador">Tiempo: 15</div>
-            <div id="instruccion"></div>
+            <div id="temporizador" class="elemento-juego">Tiempo: 15</div>
+            <div id="instruccion" class="elemento-juego"></div>
             
             <!-- Contenedor para los números a ordenar -->
-            <div id="numeros-container"></div>
+            <div id="numeros-container" class="elemento-juego"></div>
             
             <!-- Contenedor para los espacios de ordenamiento -->
-            <div id="orden-container"></div>
+            <div id="orden-container" class="elemento-juego"></div>
             
-            <div id="mensaje" aria-live="polite"></div>
+            <div id="mensaje" class="elemento-juego" aria-live="polite"></div>
+            
+            <!-- Resultado final (reconocimiento) -->
             <div id="resultado-final"></div>
-            <button id="terminar-btn" onclick="terminarPartida()">Terminar Partida</button>
+            
+            <button id="terminar-btn" class="elemento-juego" onclick="terminarPartida()">Terminar Partida</button>
             <button id="reiniciar-btn" onclick="reiniciarJuego()">Reiniciar Partida</button>
-            <div id="puzzle-container"></div>
+            <div id="puzzle-container" class="elemento-juego"></div>
         </div>
         <div id="historial">
             <h2>Historial de Desempeño</h2>
@@ -690,13 +736,12 @@
         let nombreParticipante = "";
         let historialRespuestas = [];
         let historial = JSON.parse(localStorage.getItem('historialOrdenamiento')) || [];
-        let tipoOrdenActual = ""; // "menor-mayor" o "mayor-menor"
+        let tipoOrdenActual = "";
         let numeros = [];
         let ordenCorrecto = [];
         let espacios = [];
-        let numeroArrastrado = null; // Para guardar referencia al número que se está arrastrando
-        let touchStartX, touchStartY; // Para el control táctil
-        let isDragging = false; // Para controlar si estamos arrastrando
+        let numeroArrastrado = null;
+        let isDragging = false;
 
         function iniciarJuego() {
             nombreParticipante = document.getElementById('nombre-input').value.trim();
@@ -708,6 +753,14 @@
             document.getElementById('inicio').style.display = 'none';
             document.getElementById('contenedor').style.display = 'flex';
 
+            // Mostrar elementos del juego y ocultar resultado final
+            const elementosJuego = document.querySelectorAll('.elemento-juego');
+            elementosJuego.forEach(elemento => {
+                elemento.classList.remove('oculto');
+            });
+            document.getElementById('resultado-final').classList.remove('mostrar');
+            document.getElementById('resultado-final').innerHTML = '';
+
             puntuacion = 0;
             preguntaActual = 0;
             historialRespuestas = [];
@@ -715,7 +768,6 @@
             actualizarPuntuacion();
             document.getElementById('pregunta-actual').textContent = preguntaActual;
             document.getElementById('reiniciar-btn').style.display = 'none';
-            document.getElementById('resultado-final').textContent = '';
             document.getElementById('mensaje').textContent = '';
 
             generarProblema();
@@ -731,16 +783,16 @@
 
             actualizarHistorial();
 
-            document.getElementById('temporizador').classList.add('ocultar');
-            document.getElementById('instruccion').classList.add('ocultar');
-            document.getElementById('numeros-container').classList.add('ocultar');
-            document.getElementById('orden-container').classList.add('ocultar');
-            document.getElementById('mensaje').classList.add('ocultar');
-            document.getElementById('terminar-btn').classList.add('ocultar');
-            document.getElementById('puzzle-container').innerHTML = '';
+            // Ocultar todos los elementos del juego
+            const elementosJuego = document.querySelectorAll('.elemento-juego');
+            elementosJuego.forEach(elemento => {
+                elemento.classList.add('oculto');
+            });
 
-            const reconocimientoHTML = obtenerReconocimiento(nombreParticipante, puntuacion);
+            // Mostrar el reconocimiento
+            const reconocimientoHTML = obtenerReconocimiento(nombreParticipante, puntuacion, jerarquia);
             document.getElementById('resultado-final').innerHTML = reconocimientoHTML;
+            document.getElementById('resultado-final').classList.add('mostrar');
 
             document.getElementById('reiniciar-btn').style.display = 'block';
         }
@@ -750,13 +802,7 @@
             document.getElementById('inicio').style.display = 'flex';
             document.getElementById('nombre-input').value = "";
             document.getElementById('contenedor').style.display = 'none';
-
-            document.getElementById('temporizador').classList.remove('ocultar');
-            document.getElementById('instruccion').classList.remove('ocultar');
-            document.getElementById('numeros-container').classList.remove('ocultar');
-            document.getElementById('orden-container').classList.remove('ocultar');
-            document.getElementById('mensaje').classList.remove('ocultar');
-            document.getElementById('terminar-btn').classList.remove('ocultar');
+            document.getElementById('resultado-final').classList.remove('mostrar');
         }
 
         function generarProblema() {
@@ -773,10 +819,10 @@
                 document.getElementById('instruccion').textContent = "Ordena los números de mayor a menor";
             }
             
-            // Generar 5 números aleatorios del 0 al 99
+            // Generar 5 números aleatorios del 1 al 99
             numeros = [];
             while (numeros.length < 5) {
-                const num = Math.floor(Math.random() * 100); // Números entre 0 y 99
+                const num = Math.floor(Math.random() * 99) + 1;
                 if (!numeros.includes(num)) {
                     numeros.push(num);
                 }
@@ -807,7 +853,7 @@
                 numeroElement.addEventListener('dragstart', manejarInicioArrastre);
                 numeroElement.addEventListener('dragend', manejarFinArrastre);
                 
-                // Eventos para pantallas táctiles - MEJORADO
+                // Eventos para pantallas táctiles
                 numeroElement.addEventListener('touchstart', manejarTouchInicio, { passive: false });
                 numeroElement.addEventListener('touchmove', manejarTouchMove, { passive: false });
                 numeroElement.addEventListener('touchend', manejarTouchFin);
@@ -825,15 +871,13 @@
                 espacioElement.addEventListener('dragover', manejarArrastreSobre);
                 espacioElement.addEventListener('drop', manejarSoltar);
                 
-                // Eventos para pantallas táctiles - MEJORADO
-                espacioElement.addEventListener('touchmove', manejarTouchMoveEspacio, { passive: false });
-                espacioElement.addEventListener('touchend', manejarTouchFinEspacio);
-                espacioElement.addEventListener('touchleave', manejarTouchLeaveEspacio);
+                // Permitir arrastrar números ya colocados
+                espacioElement.addEventListener('dragstart', manejarInicioArrastreDesdeEspacio);
                 
                 document.getElementById('orden-container').appendChild(espacioElement);
                 espacios.push(espacioElement);
                 
-                // Agregar signos de comparación entre espacios (excepto el último)
+                // Agregar signos de comparación entre espacios
                 if (i < 4) {
                     const signoElement = document.createElement('div');
                     signoElement.classList.add('signo');
@@ -873,11 +917,32 @@
         function manejarInicioArrastre(e) {
             e.dataTransfer.setData('text/plain', e.target.dataset.valor);
             e.target.classList.add('dragging');
-            numeroArrastrado = e.target; // Guardar referencia al número que se está arrastrando
+            numeroArrastrado = e.target;
+        }
+
+        function manejarInicioArrastreDesdeEspacio(e) {
+            if (e.target.textContent !== "") {
+                e.dataTransfer.setData('text/plain', e.target.textContent);
+                e.dataTransfer.setData('from-space', 'true');
+                
+                // Crear una imagen de arrastre
+                const dragImage = document.createElement('div');
+                dragImage.textContent = e.target.textContent;
+                dragImage.style.position = 'absolute';
+                dragImage.style.left = '-1000px';
+                document.body.appendChild(dragImage);
+                e.dataTransfer.setDragImage(dragImage, 0, 0);
+                
+                // Eliminar la imagen después del arrastre
+                setTimeout(() => document.body.removeChild(dragImage), 0);
+            }
         }
 
         function manejarFinArrastre(e) {
-            e.target.classList.remove('dragging');
+            if (e.target.classList.contains('numero')) {
+                e.target.classList.remove('dragging');
+            }
+            numeroArrastrado = null;
         }
 
         function manejarArrastreSobre(e) {
@@ -887,45 +952,88 @@
         function manejarSoltar(e) {
             e.preventDefault();
             const numero = e.dataTransfer.getData('text/plain');
+            const fromSpace = e.dataTransfer.getData('from-space') === 'true';
             const espacio = e.target;
             
-            // Verificar si el espacio ya está ocupado
+            // Verificar que el objetivo sea un espacio
+            if (!espacio.classList.contains('espacio')) return;
+            
+            // Si el espacio ya está ocupado, devolver ese número a la lista
             if (espacio.textContent !== "") {
-                return;
+                devolverNumeroALista(espacio.textContent);
             }
             
-            // Colocar el número en el espacio
+            // Colocar el nuevo número en el espacio
             espacio.textContent = numero;
             espacio.classList.add('ocupado');
             
-            // Ocultar el número que se arrastró de la lista original
-            if (numeroArrastrado) {
-                numeroArrastrado.classList.add('arrastrado');
-                numeroArrastrado = null; // Limpiar la referencia
+            // Verificar si la posición es correcta
+            const posicion = parseInt(espacio.dataset.posicion);
+            const esCorrecto = parseInt(numero) === ordenCorrecto[posicion];
+            
+            // Aplicar estilo según si es correcto o no
+            if (esCorrecto) {
+                espacio.classList.remove('incorrecto');
+            } else {
+                espacio.classList.add('incorrecto');
+            }
+            
+            // Si el número viene de la lista (no de otro espacio), ocultarlo
+            if (!fromSpace && numeroArrastrado) {
+                numeroArrastrado.classList.add('oculto');
+            }
+            
+            // Si viene de otro espacio, limpiar ese espacio
+            if (fromSpace) {
+                // Buscar y limpiar el espacio de origen
+                const espaciosOcupados = document.querySelectorAll('.espacio.ocupado');
+                for (let esp of espaciosOcupados) {
+                    if (esp !== espacio && esp.textContent === numero) {
+                        esp.textContent = "";
+                        esp.classList.remove('ocupado', 'incorrecto');
+                        break;
+                    }
+                }
             }
             
             // Verificar si todos los espacios están llenos
-            verificarOrden();
+            verificarOrdenCompleto();
         }
 
-        // Funciones para pantallas táctiles - MEJORADAS
+        function devolverNumeroALista(numero) {
+            const numerosEnLista = document.querySelectorAll('.numero');
+            for (let numElement of numerosEnLista) {
+                if (numElement.dataset.valor === numero && numElement.classList.contains('oculto')) {
+                    numElement.classList.remove('oculto');
+                    break;
+                }
+            }
+        }
+
+        // Funciones para pantallas táctiles
         function manejarTouchInicio(e) {
             e.preventDefault();
             const touch = e.touches[0];
-            const rect = e.target.getBoundingClientRect();
-            
-            // Guardar posición inicial del toque y del elemento
             touchStartX = touch.clientX;
             touchStartY = touch.clientY;
+            
             numeroArrastrado = e.target;
             isDragging = false;
             
-            // Guardar posición original del elemento
-            numeroArrastrado.dataset.originalX = rect.left;
-            numeroArrastrado.dataset.originalY = rect.top;
-            
-            // Preparar para arrastre
-            numeroArrastrado.classList.add('dragging');
+            if (numeroArrastrado.classList.contains('espacio') && numeroArrastrado.textContent !== "") {
+                // Crear un clon para arrastrar desde un espacio
+                const clon = document.createElement('div');
+                clon.textContent = numeroArrastrado.textContent;
+                clon.classList.add('numero', 'dragging');
+                clon.style.position = 'fixed';
+                clon.style.left = touch.clientX - 30 + 'px';
+                clon.style.top = touch.clientY - 30 + 'px';
+                clon.dataset.fromSpace = 'true';
+                document.body.appendChild(clon);
+                numeroArrastrado = clon;
+            } else if (numeroArrastrado.classList.contains('numero')) {
+                numeroArrastrado.classList.add('dragging');
+            }
         }
 
         function manejarTouchMove(e) {
@@ -933,43 +1041,24 @@
             e.preventDefault();
             
             const touch = e.touches[0];
-            const deltaX = touch.clientX - touchStartX;
-            const deltaY = touch.clientY - touchStartY;
+            const deltaX = Math.abs(touch.clientX - touchStartX);
+            const deltaY = Math.abs(touch.clientY - touchStartY);
             
-            // Comenzar arrastre si se ha movido lo suficiente
-            if (!isDragging && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
+            if (!isDragging && (deltaX > 5 || deltaY > 5)) {
                 isDragging = true;
-                
-                // Guardar offset del toque respecto al elemento
-                const rect = numeroArrastrado.getBoundingClientRect();
-                numeroArrastrado.dataset.offsetX = touch.clientX - rect.left;
-                numeroArrastrado.dataset.offsetY = touch.clientY - rect.top;
             }
             
             if (isDragging) {
-                // Mover el elemento siguiendo el dedo
-                const newX = touch.clientX - parseFloat(numeroArrastrado.dataset.offsetX || 0);
-                const newY = touch.clientY - parseFloat(numeroArrastrado.dataset.offsetY || 0);
+                numeroArrastrado.style.left = (touch.clientX - 30) + 'px';
+                numeroArrastrado.style.top = (touch.clientY - 30) + 'px';
                 
-                numeroArrastrado.style.position = 'fixed';
-                numeroArrastrado.style.zIndex = '1000';
-                numeroArrastrado.style.left = newX + 'px';
-                numeroArrastrado.style.top = newY + 'px';
-                
-                // Resaltar espacios cuando el elemento está cerca
+                // Resaltar espacios cercanos
                 espacios.forEach(espacio => {
-                    const espacioRect = espacio.getBoundingClientRect();
-                    const elementoRect = numeroArrastrado.getBoundingClientRect();
+                    const rect = espacio.getBoundingClientRect();
+                    const isNear = touch.clientX >= rect.left - 30 && touch.clientX <= rect.right + 30 &&
+                                  touch.clientY >= rect.top - 30 && touch.clientY <= rect.bottom + 30;
                     
-                    // Verificar si hay superposición
-                    const isOverlapping = !(
-                        elementoRect.right < espacioRect.left ||
-                        elementoRect.left > espacioRect.right ||
-                        elementoRect.bottom < espacioRect.top ||
-                        elementoRect.top > espacioRect.bottom
-                    );
-                    
-                    if (isOverlapping && espacio.textContent === "") {
+                    if (isNear) {
                         espacio.classList.add('highlight');
                     } else {
                         espacio.classList.remove('highlight');
@@ -978,223 +1067,196 @@
             }
         }
 
-        function manejarTouchMoveEspacio(e) {
-            e.preventDefault();
-        }
-
-        function manejarTouchLeaveEspacio(e) {
-            e.target.classList.remove('highlight');
-        }
-
         function manejarTouchFin(e) {
-            if (!numeroArrastrado) return;
+            if (!numeroArrastrado || !isDragging) return;
+            e.preventDefault();
             
-            // Buscar el espacio más cercano
-            let espacioMasCercano = null;
+            const touch = e.changedTouches[0];
+            let espacioCercano = null;
             let minDistancia = Infinity;
             
+            // Encontrar el espacio más cercano
             espacios.forEach(espacio => {
-                if (espacio.textContent === "") {
-                    const espacioRect = espacio.getBoundingClientRect();
-                    const elementoRect = numeroArrastrado.getBoundingClientRect();
-                    
-                    // Calcular distancia entre centros
-                    const espacioCentroX = espacioRect.left + espacioRect.width / 2;
-                    const espacioCentroY = espacioRect.top + espacioRect.height / 2;
-                    const elementoCentroX = elementoRect.left + elementoRect.width / 2;
-                    const elementoCentroY = elementoRect.top + elementoRect.height / 2;
-                    
-                    const distancia = Math.sqrt(
-                        Math.pow(espacioCentroX - elementoCentroX, 2) + 
-                        Math.pow(espacioCentroY - elementoCentroY, 2)
-                    );
-                    
-                    if (distancia < minDistancia) {
-                        minDistancia = distancia;
-                        espacioMasCercano = espacio;
-                    }
+                const rect = espacio.getBoundingClientRect();
+                const centroX = rect.left + rect.width / 2;
+                const centroY = rect.top + rect.height / 2;
+                const distancia = Math.sqrt(
+                    Math.pow(touch.clientX - centroX, 2) + 
+                    Math.pow(touch.clientY - centroY, 2)
+                );
+                
+                if (distancia < minDistancia) {
+                    minDistancia = distancia;
+                    espacioCercano = espacio;
                 }
-            });
-            
-            // Si hay un espacio cercano y está vacío, colocar el número allí
-            if (espacioMasCercano && minDistancia < 100) { // Umbral de 100px
-                espacioMasCercano.textContent = numeroArrastrado.dataset.valor;
-                espacioMasCercano.classList.add('ocupado');
-                espacioMasCercano.classList.remove('highlight');
                 
-                // Ocultar el número que se arrastró de la lista original
-                numeroArrastrado.classList.add('arrastrado');
-                
-                // Verificar si todos los espacios están llenos
-                verificarOrden();
-            } else {
-                // Restaurar posición original si no se soltó en un espacio válido
-                numeroArrastrado.style.position = '';
-                numeroArrastrado.style.zIndex = '';
-                numeroArrastrado.style.left = '';
-                numeroArrastrado.style.top = '';
-            }
-            
-            // Limpiar resaltado de todos los espacios
-            espacios.forEach(espacio => {
                 espacio.classList.remove('highlight');
             });
             
-            numeroArrastrado.classList.remove('dragging');
+            // Si hay un espacio cercano (dentro de 100px)
+            if (espacioCercano && minDistancia < 100) {
+                const numero = numeroArrastrado.textContent;
+                const fromSpace = numeroArrastrado.dataset.fromSpace === 'true';
+                
+                // Si el espacio ya está ocupado, devolver ese número
+                if (espacioCercano.textContent !== "") {
+                    devolverNumeroALista(espacioCercano.textContent);
+                }
+                
+                // Colocar el número en el espacio
+                espacioCercano.textContent = numero;
+                espacioCercano.classList.add('ocupado');
+                
+                // Verificar si es correcto
+                const posicion = parseInt(espacioCercano.dataset.posicion);
+                const esCorrecto = parseInt(numero) === ordenCorrecto[posicion];
+                
+                if (esCorrecto) {
+                    espacioCercano.classList.remove('incorrecto');
+                } else {
+                    espacioCercano.classList.add('incorrecto');
+                }
+                
+                // Ocultar el número de la lista si no viene de otro espacio
+                if (!fromSpace) {
+                    const numerosEnLista = document.querySelectorAll('.numero');
+                    for (let numElement of numerosEnLista) {
+                        if (numElement.dataset.valor === numero && !numElement.classList.contains('oculto')) {
+                            numElement.classList.add('oculto');
+                            break;
+                        }
+                    }
+                }
+                
+                // Si viene de otro espacio, limpiar ese espacio
+                if (fromSpace) {
+                    const espaciosOcupados = document.querySelectorAll('.espacio.ocupado');
+                    for (let esp of espaciosOcupados) {
+                        if (esp !== espacioCercano && esp.textContent === numero) {
+                            esp.textContent = "";
+                            esp.classList.remove('ocupado', 'incorrecto');
+                            break;
+                        }
+                    }
+                }
+                
+                verificarOrdenCompleto();
+            } else {
+                // Si no se soltó en un espacio, devolver a la posición original
+                if (numeroArrastrado.dataset.fromSpace) {
+                    // Si venía de un espacio, buscar uno vacío para devolverlo
+                    for (let esp of espacios) {
+                        if (esp.textContent === "") {
+                            esp.textContent = numeroArrastrado.textContent;
+                            esp.classList.add('ocupado');
+                            // Verificar si es correcto
+                            const posicion = parseInt(esp.dataset.posicion);
+                            const esCorrecto = parseInt(numeroArrastrado.textContent) === ordenCorrecto[posicion];
+                            if (esCorrecto) {
+                                esp.classList.remove('incorrecto');
+                            } else {
+                                esp.classList.add('incorrecto');
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Limpiar
+            if (numeroArrastrado.parentNode && numeroArrastrado.dataset.fromSpace) {
+                numeroArrastrado.parentNode.removeChild(numeroArrastrado);
+            } else if (numeroArrastrado.classList.contains('numero')) {
+                numeroArrastrado.classList.remove('dragging');
+            }
+            
             numeroArrastrado = null;
             isDragging = false;
         }
 
-        function manejarTouchFinEspacio(e) {
-            e.preventDefault();
-        }
-
-        function verificarOrden() {
+        function verificarOrdenCompleto() {
             // Verificar si todos los espacios están ocupados
-            const todosOcupados = espacios.every(espacio => espacio.textContent !== "");
+            const todosOcupados = Array.from(espacios).every(espacio => espacio.textContent !== "");
             
             if (todosOcupados) {
-                // Obtener el orden actual
-                const ordenActual = espacios.map(espacio => parseInt(espacio.textContent));
-                
                 // Verificar si el orden es correcto
+                const ordenActual = espacios.map(espacio => parseInt(espacio.textContent));
                 const esCorrecto = JSON.stringify(ordenActual) === JSON.stringify(ordenCorrecto);
                 
                 if (esCorrecto) {
-                    puntuacion++;
+                    clearInterval(temporizador);
+                    puntuacion += Math.max(1, Math.floor(tiempoRestante / 3));
                     actualizarPuntuacion();
-
-                    const emojis = ["😊👍", "🎉", "🌟", "🚀", "😎"];
-                    const mensajes = ["¡Genial!", "¡Excelente!", "¡Muy bien!", "¡Sigue así!", "¡Correcto!"];
-                    const mensajeAleatorio = mensajes[Math.floor(Math.random() * mensajes.length)] + " " + emojis[Math.floor(Math.random() * emojis.length)];
-
-                    const mensajeDiv = document.createElement('div');
-                    mensajeDiv.textContent = mensajeAleatorio;
-                    mensajeDiv.classList.add('burbuja');
-                    document.getElementById('mensaje').appendChild(mensajeDiv);
-
+                    
+                    mostrarMensaje("¡Correcto! +" + Math.max(1, Math.floor(tiempoRestante / 3)) + " puntos", true);
+                    
                     historialRespuestas.push({
-                        pregunta: `Pregunta ${preguntaActual}: ${tipoOrdenActual === "menor-mayor" ? "Menor a mayor" : "Mayor a menor"}`,
+                        pregunta: `Pregunta ${preguntaActual}: ${tipoOrdenActual}`,
                         correcta: true,
                         respuestaUsuario: ordenActual.join(", "),
                         respuestaCorrecta: ordenCorrecto.join(", ")
                     });
-
-                    addPuzzlePiece();
-
-                    setTimeout(() => {
-                        mensajeDiv.remove();
-                        
-                        if (preguntaActual >= 15) {
-                            terminarPartida();
-                        } else {
-                            generarProblema();
-                        }
-                    }, 1500);
-                } else {
-                    // Orden incorrecto
-                    const mensajeDiv = document.createElement('div');
-                    mensajeDiv.textContent = "Intenta de nuevo";
-                    mensajeDiv.classList.add('burbuja');
-                    mensajeDiv.style.backgroundColor = '#e74c3c';
-                    document.getElementById('mensaje').appendChild(mensajeDiv);
-
-                    setTimeout(() => {
-                        mensajeDiv.remove();
-                        // Limpiar espacios para intentar de nuevo
-                        espacios.forEach(espacio => {
-                            espacio.textContent = "";
-                            espacio.classList.remove('ocupado');
-                        });
-                        
-                        // Mostrar todos los números nuevamente
-                        document.querySelectorAll('.numero').forEach(numero => {
-                            numero.classList.remove('arrastrado');
-                            numero.style.position = '';
-                            numero.style.zIndex = '';
-                            numero.style.left = '';
-                            numero.style.top = '';
-                        });
-                    }, 1500);
+                    
+                    agregarPiezaPuzzle();
+                    
+                    if (preguntaActual >= 15) {
+                        setTimeout(terminarPartida, 1500);
+                    } else {
+                        setTimeout(generarProblema, 1500);
+                    }
                 }
             }
+        }
+
+        function mostrarMensaje(mensaje, esExito) {
+            const mensajeDiv = document.getElementById('mensaje');
+            const burbuja = document.createElement('div');
+            burbuja.classList.add('burbuja');
+            burbuja.textContent = mensaje;
+            burbuja.style.backgroundColor = esExito ? '#4caf50' : '#f44336';
+            mensajeDiv.appendChild(burbuja);
+            
+            setTimeout(() => {
+                if (burbuja.parentNode) {
+                    burbuja.parentNode.removeChild(burbuja);
+                }
+            }, 3000);
+        }
+
+        function agregarPiezaPuzzle() {
+            const puzzleContainer = document.getElementById('puzzle-container');
+            const pieza = document.createElement('div');
+            pieza.classList.add('puzzle-piece');
+            puzzleContainer.appendChild(pieza);
         }
 
         function actualizarPuntuacion() {
             document.getElementById('puntuacion-actual').textContent = puntuacion;
         }
 
-        function addPuzzlePiece() {
-            const puzzleContainer = document.getElementById('puzzle-container');
-            const piece = document.createElement('div');
-            piece.classList.add('puzzle-piece');
-            puzzleContainer.appendChild(piece);
-        }
-
-        document.getElementById('nombre-input').addEventListener('keydown', function(event) {
-            if (event.key === "Enter") {
-                iniciarJuego();
-            }
-        });
-
         function obtenerJerarquia(puntuacion) {
-            if (puntuacion >= 13) {
-                return "Élite";
-            } else if (puntuacion >= 10) {
-                return "Experto";
-            } else if (puntuacion >= 7) {
-                return "Entrenado";
-            } else {
-                return "Iniciado";
-            }
+            if (puntuacion >= 40) return "Élite";
+            if (puntuacion >= 30) return "Experto";
+            if (puntuacion >= 20) return "Entrenado";
+            return "Iniciado";
         }
 
-        function obtenerReconocimiento(nombre, puntuacion) {
-            let mensaje = "";
-            let categoria = obtenerJerarquia(puntuacion);
-
-            if (puntuacion >= 13) {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Ordenando Números</h2>
-                        <p><strong>¡Felicidades, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} aciertos.</p>
-                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
-                    </div>
-                `;
-            } else if (puntuacion >= 10) {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Ordenando Números</h2>
-                        <p><strong>¡Bien hecho, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} aciertos.</p>
-                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
-                    </div>
-                `;
-            } else if (puntuacion >= 7) {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Ordenando Números</h2>
-                        <p><strong>¡Buen esfuerzo, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} aciertos.</p>
-                        <p>Profesores: Miguel Ubiera and Anna Morán</p>
-                    </div>
-                `;
-            } else {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Ordenando Números</h2>
-                        <p><strong>¡Ánimo, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} aciertos.</p>
-                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
-                    </div>
-                `;
-            }
-            return mensaje;
+        function obtenerReconocimiento(nombre, puntuacion, jerarquia) {
+            const fecha = new Date().toLocaleDateString('es-ES');
+            
+            return `
+                <div class="reconocimiento">
+                    <h1>🏆 Reconocimiento de Desempeño 🏆</h1>
+                    <h2>Instituto para Sordos Santa Rosa, Inc.</h2>
+                    <p>Se otorga este reconocimiento a:</p>
+                    <h2 style="font-size: 1.4rem; color: var(--primary);">${nombre}</h2>
+                    <p>Por su destacada participación en la actividad de ordenamiento numérico.</p>
+                    <p>Puntuación alcanzada: <strong>${puntuacion} puntos</strong></p>
+                    <p>Jerarquía: <strong class="${jerarquia.toLowerCase()}">${jerarquia}</strong></p>
+                    <p>Fecha: ${fecha}</p>
+                    <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                </div>
+            `;
         }
 
         function actualizarHistorial() {
@@ -1203,30 +1265,11 @@
 
             historial.forEach(participante => {
                 const tr = document.createElement('tr');
-                const tdNombre = document.createElement('td');
-                tdNombre.textContent = participante.nombre;
-                const tdPuntuacion = document.createElement('td');
-                tdPuntuacion.textContent = `${participante.puntuacion} aciertos`;
-                const tdJerarquia = document.createElement('td');
-                tdJerarquia.textContent = participante.jerarquia;
-
-                if (participante.puntuacion >= 13) {
-                    tdPuntuacion.classList.add('elite');
-                    tdJerarquia.classList.add('elite');
-                } else if (participante.puntuacion >= 10) {
-                    tdPuntuacion.classList.add('experto');
-                    tdJerarquia.classList.add('experto');
-                } else if (participante.puntuacion >= 7) {
-                    tdPuntuacion.classList.add('entrenado');
-                    tdJerarquia.classList.add('entrenado');
-                } else {
-                    tdPuntuacion.classList.add('iniciado');
-                    tdJerarquia.classList.add('iniciado');
-                }
-
-                tr.appendChild(tdNombre);
-                tr.appendChild(tdPuntuacion);
-                tr.appendChild(tdJerarquia);
+                tr.innerHTML = `
+                    <td>${participante.nombre}</td>
+                    <td>${participante.puntuacion}</td>
+                    <td class="${participante.jerarquia.toLowerCase()}">${participante.jerarquia}</td>
+                `;
                 listaHistorial.appendChild(tr);
             });
         }
@@ -1241,6 +1284,12 @@
 
         // Inicializar el historial al cargar la página
         actualizarHistorial();
+
+        document.getElementById('nombre-input').addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                iniciarJuego();
+            }
+        });
     </script>
 </body>
 </html>
