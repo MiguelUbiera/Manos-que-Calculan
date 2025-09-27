@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <title>Calculadora Humana - Instituto Santa Rosa</title>
@@ -29,7 +29,6 @@
             flex-direction: column;
         }
         
-        /* Elementos flotantes de fondo */
         .floating-element {
             position: fixed;
             font-size: 2rem;
@@ -58,7 +57,6 @@
             }
         }
 
-        /* Encabezado */
         header {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
@@ -116,7 +114,6 @@
             margin: 0.2rem 0 0;
         }
 
-        /* Animaciones para niños */
         @keyframes fadeOutSlow {
             0% {
                 opacity: 1;
@@ -139,7 +136,6 @@
             }
         }
 
-        /* Contenido principal - Ajustado para menos espacio */
         #inicio {
             display: flex;
             flex-direction: column;
@@ -149,6 +145,12 @@
             width: 100%;
             padding: 1rem;
             margin-top: 1rem;
+        }
+        
+        .start-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2.5s infinite ease-in-out;
         }
         
         #nombre-input {
@@ -226,7 +228,6 @@
             50% { opacity: 0.5; }
         }
         
-        /* Estilos para las opciones de selección múltiple */
         #opciones-container {
             display: flex;
             justify-content: center;
@@ -330,35 +331,39 @@
         }
         
         .reconocimiento {
-            background-color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #fff, #f5f5f5);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             text-align: center;
             max-width: 450px;
             margin: 10px auto;
+            border: 3px solid var(--accent);
         }
         
         .reconocimiento h1 {
-            font-size: 1.2rem;
-            color: #333;
-            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .reconocimiento h2 {
-            font-size: 0.85rem;
+            font-size: 1.1rem;
             color: #555;
-            margin: 3px 0;
+            margin: 8px 0;
         }
         
         .reconocimiento p {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #333;
-            margin: 3px 0;
+            margin: 8px 0;
+            line-height: 1.4;
         }
         
-        .ocultar {
-            display: none;
+        .reconocimiento strong {
+            color: var(--secondary);
+            font-size: 1.1rem;
         }
         
         #historial h2 {
@@ -512,7 +517,6 @@
     </style>
 </head>
 <body>
-    <!-- Elementos flotantes en el fondo -->
     <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
     <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">📏</div>
     <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">🔺</div>
@@ -548,6 +552,7 @@
     </header>
 
     <div id="inicio">
+        <div class="start-emoji">🧏🧒</div>
         <h2 style="margin-bottom: 15px; color: var(--primary);">Escribe tu nombre</h2>
         <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante">
         <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
@@ -563,7 +568,6 @@
             <div id="temporizador">Tiempo: 120</div>
             <div id="problema"></div>
             
-            <!-- Contenedor para las opciones de selección múltiple -->
             <div id="opciones-container">
                 <div class="opcion" data-valor="0"></div>
                 <div class="opcion" data-valor="1"></div>
@@ -598,24 +602,19 @@
     </footer>
 
     <script>
-        // Obtener los emojis de los niños
         const leftChild = document.getElementById('left-child');
         const rightChild = document.getElementById('right-child');
         const leftEmoji = leftChild.querySelector('div');
         const rightEmoji = rightChild.querySelector('div');
         
-        // Inicializar con animación de entrada
         leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
         rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
         
-        // Función para alternar entre niño y niña
         function toggleChildren() {
-            // Desaparecer lentamente durante 3 segundos
             leftEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
             rightEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
             
             setTimeout(() => {
-                // Cambiar los emojis después de que hayan desaparecido
                 if (leftEmoji.textContent === '👦') {
                     leftEmoji.textContent = '👧';
                     rightEmoji.textContent = '👦';
@@ -624,14 +623,12 @@
                     rightEmoji.textContent = '👧';
                 }
                 
-                // Reaparecer lentamente durante 3 segundos
                 leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
                 rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
                 
-            }, 3000); // Esperar 3 segundos (duración de fadeOutSlow)
+            }, 3000);
         }
         
-        // Iniciar el ciclo cada 10 segundos (3s desaparecer + 3s aparecer + 4s de pausa)
         setInterval(toggleChildren, 10000);
 
         let tiempoRestante, temporizador;
@@ -643,8 +640,8 @@
         let ultimaOperacion = null;
         let operacionConsecutivaCount = { suma: 0, resta: 0, multiplicacion: 0 };
         let respuestaCorrecta = null;
-        let opciones = [0, 0, 0]; // Almacena las opciones de respuesta
-        let opcionCorrectaIndex = 0; // Índice de la opción correcta
+        let opciones = [0, 0, 0];
+        let opcionCorrectaIndex = 0;
 
         function iniciarJuego() {
             nombreParticipante = document.getElementById('nombre-input').value.trim();
@@ -655,6 +652,17 @@
 
             document.getElementById('inicio').style.display = 'none';
             document.getElementById('contenedor').style.display = 'flex';
+            
+            // --- MOSTRAR ELEMENTOS DEL JUEGO AL INICIAR ---
+            document.getElementById('estadisticas').style.display = 'block';
+            document.getElementById('temporizador').style.display = 'block';
+            document.getElementById('problema').style.display = 'block';
+            document.getElementById('opciones-container').style.display = 'flex';
+            document.getElementById('mensaje').style.display = 'flex';
+            document.getElementById('terminar-btn').style.display = 'inline-block';
+            document.getElementById('operacion-actual').style.display = 'block';
+            document.getElementById('resultado-final').innerHTML = '';
+
 
             puntuacion = 0;
             currentResult = 1;
@@ -665,9 +673,7 @@
             actualizarPuntuacion();
             document.getElementById('paso-actual').textContent = puntuacion;
             document.getElementById('reiniciar-btn').style.display = 'none';
-            document.getElementById('resultado-final').textContent = '';
-            document.getElementById('mensaje').textContent = '';
-
+            
             tiempoRestante = 120;
             document.getElementById('temporizador').textContent = `Tiempo: ${tiempoRestante}`;
             temporizador = setInterval(() => {
@@ -676,12 +682,6 @@
 
                 if (tiempoRestante <= 0) {
                     clearInterval(temporizador);
-                    historialRespuestas.push({
-                        pregunta: document.getElementById('problema').textContent,
-                        correcta: false,
-                        respuestaUsuario: "Tiempo agotado",
-                        respuestaCorrecta: respuestaCorrecta
-                    });
                     terminarPartida();
                 }
             }, 1000);
@@ -699,18 +699,20 @@
 
             actualizarHistorial();
 
-            document.getElementById('temporizador').classList.add('ocultar');
-            document.getElementById('problema').classList.add('ocultar');
-            document.getElementById('opciones-container').classList.add('ocultar');
-            document.getElementById('mensaje').classList.add('ocultar');
-            document.getElementById('terminar-btn').classList.add('ocultar');
-            document.getElementById('operacion-actual').classList.add('ocultar');
+            // --- OCULTAR ELEMENTOS DEL JUEGO CON ESTILO DIRECTO ---
+            document.getElementById('estadisticas').style.display = 'none';
+            document.getElementById('temporizador').style.display = 'none';
+            document.getElementById('problema').style.display = 'none';
+            document.getElementById('opciones-container').style.display = 'none';
+            document.getElementById('mensaje').style.display = 'none';
+            document.getElementById('terminar-btn').style.display = 'none';
+            document.getElementById('operacion-actual').style.display = 'none';
             document.getElementById('puzzle-container').innerHTML = '';
 
             const reconocimientoHTML = obtenerReconocimiento(nombreParticipante, puntuacion);
             document.getElementById('resultado-final').innerHTML = reconocimientoHTML;
 
-            document.getElementById('reiniciar-btn').style.display = 'block';
+            document.getElementById('reiniciar-btn').style.display = 'inline-block';
         }
 
         function reiniciarJuego() {
@@ -718,13 +720,6 @@
             document.getElementById('inicio').style.display = 'flex';
             document.getElementById('nombre-input').value = "";
             document.getElementById('contenedor').style.display = 'none';
-
-            document.getElementById('temporizador').classList.remove('ocultar');
-            document.getElementById('problema').classList.remove('ocultar');
-            document.getElementById('opciones-container').classList.remove('ocultar');
-            document.getElementById('mensaje').classList.remove('ocultar');
-            document.getElementById('terminar-btn').classList.remove('ocultar');
-            document.getElementById('operacion-actual').classList.remove('ocultar');
         }
 
         function generarProblema() {
@@ -742,7 +737,7 @@
             document.getElementById('tipo-operacion').textContent = operacion.charAt(0).toUpperCase() + operacion.slice(1);
 
             if (operacion === 'suma') {
-                num2 = Math.min(20 - currentResult, 19); // Ensure result <= 20
+                num2 = Math.min(20 - currentResult, 19);
                 if (num2 <= 0) num2 = 1;
                 num2 = Math.floor(Math.random() * num2) + 1;
                 respuestaCorrecta = currentResult + num2;
@@ -752,9 +747,9 @@
                 operacionConsecutivaCount['resta'] = 0;
                 operacionConsecutivaCount['multiplicacion'] = 0;
             } else if (operacion === 'resta') {
-                num2 = Math.floor(Math.random() * currentResult) + 1; // Ensure num2 <= currentResult
+                num2 = Math.floor(Math.random() * currentResult) + 1;
                 if (currentResult === 0) {
-                    num2 = 0; // If currentResult is 0, subtraction should be 0 - 0
+                    num2 = 0;
                 }
                 respuestaCorrecta = currentResult - num2;
                 document.getElementById('problema').textContent = `${currentResult} - ${num2} = ?`;
@@ -763,11 +758,11 @@
                 operacionConsecutivaCount['suma'] = 0;
                 operacionConsecutivaCount['multiplicacion'] = 0;
             } else if (operacion === 'multiplicacion') {
-                let maxFactor = Math.min(Math.floor(20 / currentResult), 10); // Ensure result <= 20
+                let maxFactor = Math.min(Math.floor(20 / currentResult), 10);
                 if (maxFactor < 2) maxFactor = 2;
                 num2 = Math.floor(Math.random() * (maxFactor - 1)) + 2;
                 if (currentResult * num2 > 20) num2 = Math.floor(20 / currentResult);
-                if (currentResult === 0) num2 = 1; // Avoid 0 × 0 ambiguity
+                if (currentResult === 0) num2 = 1;
                 respuestaCorrecta = currentResult * num2;
                 document.getElementById('problema').textContent = `${currentResult} × ${num2} = ?`;
                 ultimaOperacion = 'multiplicacion';
@@ -776,41 +771,26 @@
                 operacionConsecutivaCount['resta'] = 0;
             }
 
-            // Generar opciones de respuesta
             generarOpcionesRespuesta();
             
-            // Limpiar selección anterior
             document.querySelectorAll('.opcion').forEach(opcion => {
                 opcion.classList.remove('seleccionada');
             });
             
-            document.getElementById('mensaje').innerHTML = ''; // Clear previous messages
+            document.getElementById('mensaje').innerHTML = '';
         }
 
         function generarOpcionesRespuesta() {
-            // Determinar la posición de la respuesta correcta (0, 1 o 2)
             opcionCorrectaIndex = Math.floor(Math.random() * 3);
-            
-            // Generar dos respuestas incorrectas diferentes entre sí y diferentes a la correcta
             let opcionesIncorrectas = [];
             while (opcionesIncorrectas.length < 2) {
-                // Variación de ±5 para las respuestas incorrectas
                 let variacion = Math.floor(Math.random() * 10) - 5;
                 let opcionIncorrecta = respuestaCorrecta + variacion;
-                
-                // Asegurarse de que la opción incorrecta sea diferente a la correcta
-                // y no se repita con otras opciones incorrectas
-                if (opcionIncorrecta !== respuestaCorrecta && 
-                    opcionIncorrecta >= 0 && 
-                    !opcionesIncorrectas.includes(opcionIncorrecta)) {
+                if (opcionIncorrecta !== respuestaCorrecta && opcionIncorrecta >= 0 && !opcionesIncorrectas.includes(opcionIncorrecta)) {
                     opcionesIncorrectas.push(opcionIncorrecta);
                 }
             }
-            
-            // Asignar las opciones
             opciones[opcionCorrectaIndex] = respuestaCorrecta;
-            
-            // Asignar las opciones incorrectas a las otras posiciones
             let indiceIncorrecto = 0;
             for (let i = 0; i < 3; i++) {
                 if (i !== opcionCorrectaIndex) {
@@ -818,8 +798,6 @@
                     indiceIncorrecto++;
                 }
             }
-            
-            // Actualizar la visualización de las opciones
             const elementosOpcion = document.querySelectorAll('.opcion');
             elementosOpcion.forEach((opcion, index) => {
                 opcion.textContent = opciones[index];
@@ -839,56 +817,36 @@
             puzzleContainer.appendChild(piece);
         }
 
-        // Manejar la selección de opciones
         document.querySelectorAll('.opcion').forEach(opcion => {
             opcion.addEventListener('click', function() {
-                // Quitar selección anterior
                 document.querySelectorAll('.opcion').forEach(op => {
                     op.classList.remove('seleccionada');
                 });
-                
-                // Marcar como seleccionada
                 this.classList.add('seleccionada');
-                
-                // Obtener la respuesta seleccionada
                 const respuestaUsuario = parseInt(this.dataset.valor);
                 
-                // Verificar si es correcta
                 if (respuestaUsuario === respuestaCorrecta) {
                     puntuacion++;
                     currentResult = respuestaCorrecta;
                     actualizarPuntuacion();
-
                     const emojis = ["😊👍", "🎉", "🌟", "🚀", "😎"];
                     const mensajes = ["¡Genial!", "¡Excelente!", "¡Muy bien!", "¡Sigue así!", "¡Correcto!"];
                     const mensajeAleatorio = mensajes[Math.floor(Math.random() * mensajes.length)] + " " + emojis[Math.floor(Math.random() * emojis.length)];
-
                     const mensajeDiv = document.createElement('div');
                     mensajeDiv.textContent = mensajeAleatorio;
                     mensajeDiv.classList.add('burbuja');
                     document.getElementById('mensaje').appendChild(mensajeDiv);
-
-                    historialRespuestas.push({
-                        pregunta: document.getElementById('problema').textContent,
-                        correcta: true,
-                        respuestaUsuario: respuestaUsuario,
-                        respuestaCorrecta: respuestaCorrecta
-                    });
-
                     addPuzzlePiece();
-
                     setTimeout(() => {
                         mensajeDiv.remove();
                         generarProblema();
                     }, 1500);
                 } else {
-                    // Respuesta incorrecta
                     const mensajeDiv = document.createElement('div');
                     mensajeDiv.textContent = "Intenta de nuevo";
                     mensajeDiv.classList.add('burbuja');
                     mensajeDiv.style.backgroundColor = '#e74c3c';
                     document.getElementById('mensaje').appendChild(mensajeDiv);
-
                     setTimeout(() => {
                         mensajeDiv.remove();
                     }, 1500);
@@ -903,63 +861,29 @@
         });
 
         function obtenerJerarquia(puntuacion) {
-            if (puntuacion >= 35) {
-                return "Élite";
-            } else if (puntuacion >= 25) {
-                return "Experto";
-            } else if (puntuacion >= 15) {
-                return "Entrenado";
-            } else {
-                return "Iniciado";
-            }
+            if (puntuacion >= 35) return "Élite";
+            if (puntuacion >= 25) return "Experto";
+            if (puntuacion >= 15) return "Entrenado";
+            return "Iniciado";
         }
 
         function obtenerReconocimiento(nombre, puntuacion) {
-            let mensaje = "";
-            let categoria = obtenerJerarquia(puntuacion);
-
-            if (puntuacion >= 35) {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Calculadora Humana</h2>
-                        <p><strong>¡Felicidades, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} pasos.</p>
-                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
-                    </div>
-                `;
-            } else if (puntuacion >= 25) {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Calculadora Humana</h2>
-                        <p><strong>¡Bien hecho, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} pasos.</p>
-                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
-                    </div>
-                `;
-            } else if (puntuacion >= 15) {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Calculadora Humana</h2>
-                        <p><strong>¡Buen esfuerzo, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} pasos.</p>
-                        <p>Profesores: Miguel Ubiera and Anna Morán</p>
-                    </div>
-                `;
-            } else {
-                mensaje = `
-                    <div class="reconocimiento">
-                        <h1>Instituto para Sordos Santa Rosa</h1>
-                        <h2>Reconocimiento Calculadora Humana</h2>
-                        <p><strong>¡Ánimo, ${nombre}!</strong></p>
-                        <p>Participante ${categoria} con ${puntuacion} pasos.</p>
-                        <p>Profesores: Miguel Ubiera y Anna Morán</p>
-                    </div>
-                `;
-            }
-            return mensaje;
+            const categoria = obtenerJerarquia(puntuacion);
+            const fecha = new Date().toLocaleDateString('es-ES');
+            return `
+                <div class="reconocimiento">
+                    <div class="start-emoji" style="font-size: 3rem; margin-bottom: 10px;">🧏🧒</div>
+                    <h1>Reconocimiento de Desempeño</h1>
+                    <h2>Instituto para Sordos Santa Rosa</h2>
+                    <p>Se otorga este reconocimiento a:</p>
+                    <h2 style="color: var(--primary);">${nombre}</h2>
+                    <p>Por su destacada participación en la actividad de Calculadora Humana.</p>
+                    <p>Puntuación alcanzada: <strong>${puntuacion} pasos</strong></p>
+                    <p>Jerarquía: <strong class="${categoria.toLowerCase()}">${categoria}</strong></p>
+                    <p>Fecha: ${fecha}</p>
+                    <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                </div>
+            `;
         }
 
         function actualizarHistorial() {
@@ -975,19 +899,8 @@
                 const tdJerarquia = document.createElement('td');
                 tdJerarquia.textContent = participante.jerarquia;
 
-                if (participante.puntuacion >= 35) {
-                    tdPuntuacion.classList.add('elite');
-                    tdJerarquia.classList.add('elite');
-                } else if (participante.puntuacion >= 25) {
-                    tdPuntuacion.classList.add('experto');
-                    tdJerarquia.classList.add('experto');
-                } else if (participante.puntuacion >= 15) {
-                    tdPuntuacion.classList.add('entrenado');
-                    tdJerarquia.classList.add('entrenado');
-                } else {
-                    tdPuntuacion.classList.add('iniciado');
-                    tdJerarquia.classList.add('iniciado');
-                }
+                tdPuntuacion.classList.add(participante.jerarquia.toLowerCase());
+                tdJerarquia.classList.add(participante.jerarquia.toLowerCase());
 
                 tr.appendChild(tdNombre);
                 tr.appendChild(tdPuntuacion);
@@ -1003,8 +916,7 @@
                 actualizarHistorial();
             }
         }
-
-        // Inicializar el historial al cargar la página
+        
         actualizarHistorial();
     </script>
 </body>
