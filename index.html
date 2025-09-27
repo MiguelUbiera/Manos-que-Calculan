@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -106,6 +107,15 @@
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
+            }
+        }
+        
+        @keyframes gentle-float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
             }
         }
 
@@ -554,7 +564,8 @@
         /* Estilos para la cuadrícula de herramientas */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            /* --- TAMAÑO MODIFICADO PARA 5 TARJETAS --- */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
@@ -566,27 +577,32 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
-            padding: 1.5rem 1rem;
+            /* --- PADDING MODIFICADO --- */
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            animation: gentle-float 4s infinite ease-in-out;
         }
 
         .tool-card:hover {
+            animation-play-state: paused;
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
         .tool-icon {
-            font-size: 3rem;
+            /* --- TAMAÑO DE ÍCONO MODIFICADO --- */
+            font-size: 2.5rem;
             margin-bottom: 1rem;
         }
 
         .tool-name {
             font-weight: 500;
-            font-size: 1.1rem;
+            /* --- TAMAÑO DE FUENTE MODIFICADO --- */
+            font-size: 1rem;
             color: var(--dark);
         }
 
@@ -608,7 +624,8 @@
             }
             
             .activities-grid, .tools-grid {
-                grid-template-columns: 1fr;
+                /* --- AJUSTE PARA MÓVILES --- */
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
             
             .floating-element, .header-floating-element {
@@ -781,6 +798,22 @@
                         <div class="tool-icon">🧠</div>
                         <div class="tool-name">Calculadora B 120s</div>
                     </div>
+                    <div class="tool-card" onclick="window.open('División A 2-6.html', '_blank')">
+                        <div class="tool-icon">➗</div>
+                        <div class="tool-name">División A 2-6</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Mosaico Numérico.html', '_blank')">
+                        <div class="tool-icon">🧩</div>
+                        <div class="tool-name">Mosaico Numérico</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Ordena B 15s.html', '_blank')">
+                        <div class="tool-icon">🔀</div>
+                        <div class="tool-name">Ordena B 15s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Resta A 3s.html', '_blank')">
+                        <div class="tool-icon">⚡</div>
+                        <div class="tool-name">Resta A 3s</div>
+                    </div>
                     <div class="tool-card" onclick="window.open('Suma A 3s.html', '_blank')">
                         <div class="tool-icon">⏱️</div>
                         <div class="tool-name">Suma A 3s</div>
@@ -793,21 +826,9 @@
                         <div class="tool-icon">🔢</div>
                         <div class="tool-name">Suma triple 7s</div>
                     </div>
-                    <div class="tool-card" onclick="window.open('División A 2-6.html', '_blank')">
-                        <div class="tool-icon">➗</div>
-                        <div class="tool-name">División A 2-6</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Resta A 3s.html', '_blank')">
-                        <div class="tool-icon">⚡</div>
-                        <div class="tool-name">Resta A 3s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Ordena B 15s.html', '_blank')">
-                        <div class="tool-icon">🔀</div>
-                        <div class="tool-name">Ordena B 15s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Mosaico Numérico.html', '_blank')">
-                        <div class="tool-icon">🧩</div>
-                        <div class="tool-name">Mosaico Numérico</div>
+                    <div class="tool-card super-calculadora" onclick="window.open('Súper Calculadora.html', '_blank')">
+                        <div class="tool-icon">🦸</div>
+                        <div class="tool-name">Súper Calculadora</div>
                     </div>
                 </div>
             </div>
@@ -817,39 +838,33 @@
                 <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
                 
                 <div class="tools-grid">
-                    <div class="tool-card" onclick="window.open('sorteo.html', '_blank')">
-                        <div class="tool-icon">🎲</div>
-                        <div class="tool-name">Sorteo de Estudiantes</div>
-                    </div>
-                    
-                    <div class="tool-card" onclick="window.open('Elecciones.html', '_blank')">
-                        <div class="tool-icon">🗳️</div>
-                        <div class="tool-name">Elecciones</div>
-                    </div>
-                    
-                    <div class="tool-card" onclick="window.open('Cronómetro.html', '_blank')">
-                        <div class="tool-icon">⏱️</div>
-                        <div class="tool-name">Cronómetro</div>
-                    </div>
-                    
                     <div class="tool-card">
                         <div class="tool-icon">🧮</div>
                         <div class="tool-name">Calculadora</div>
                     </div>
-                    
-                    <div class="tool-card">
-                        <div class="tool-icon">📊</div>
-                        <div class="tool-name">Gráficas</div>
+                    <div class="tool-card" onclick="window.open('Cronómetro.html', '_blank')">
+                        <div class="tool-icon">⏱️</div>
+                        <div class="tool-name">Cronómetro</div>
                     </div>
-                    
+                    <div class="tool-card" onclick="window.open('Elecciones.html', '_blank')">
+                        <div class="tool-icon">🗳️</div>
+                        <div class="tool-name">Elecciones</div>
+                    </div>
                     <div class="tool-card">
                         <div class="tool-icon">📐</div>
                         <div class="tool-name">Geometría</div>
                     </div>
-                    
+                    <div class="tool-card">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-name">Gráficas</div>
+                    </div>
                     <div class="tool-card">
                         <div class="tool-icon">🔢</div>
                         <div class="tool-name">Números</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('sorteo.html', '_blank')">
+                        <div class="tool-icon">🎲</div>
+                        <div class="tool-name">Sorteo de Estudiantes</div>
                     </div>
                 </div>
             </div>
@@ -859,24 +874,21 @@
                 <p>Actividades relacionadas con números enteros.</p>
                 
                 <div class="tools-grid">
-                    <div class="tool-card">
-                        <div class="tool-icon">➕</div>
-                        <div class="tool-name">Suma de Enteros</div>
+                    <div class="tool-card" onclick="window.open('Aniquilación de Opuestos.html', '_blank')">
+                        <div class="tool-icon">💥</div>
+                        <div class="tool-name">Aniquilación de Opuestos</div>
                     </div>
-                    
-                    <div class="tool-card">
-                        <div class="tool-icon">➖</div>
-                        <div class="tool-name">Resta de Enteros</div>
-                    </div>
-                    
                     <div class="tool-card">
                         <div class="tool-icon">✖️</div>
                         <div class="tool-name">Multiplicación</div>
                     </div>
-
-                    <div class="tool-card" onclick="window.open('Aniquilación de Opuestos.html', '_blank')">
-                        <div class="tool-icon">💥</div>
-                        <div class="tool-name">Aniquilación de Opuestos</div>
+                    <div class="tool-card">
+                        <div class="tool-icon">➖</div>
+                        <div class="tool-name">Resta de Enteros</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">➕</div>
+                        <div class="tool-name">Suma de Enteros</div>
                     </div>
                 </div>
             </div>
