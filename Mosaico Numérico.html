@@ -113,10 +113,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 70vh;
             width: 100%;
             padding: 1rem;
             margin-top: 1rem;
+            flex-grow: 1;
+        }
+
+        .start-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2.5s infinite ease-in-out;
         }
         
         #nombre-input {
@@ -160,6 +166,7 @@
             margin-left: auto;
             margin-right: auto;
             gap: 15px;
+            flex-grow: 1;
         }
         
         #panel-izquierdo {
@@ -413,8 +420,8 @@
         }
 
         .bloque-acierto {
-            width: 18px; /* Tamaño reducido */
-            height: 18px; /* Tamaño reducido */
+            width: 18px;
+            height: 18px;
             background-color: var(--success);
             border-radius: 4px;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
@@ -547,6 +554,7 @@
     </header>
 
     <div id="inicio">
+        <div class="start-emoji">🧏🧒</div>
         <h2 style="margin-bottom: 15px; color: var(--primary);">Escribe tu nombre</h2>
         <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante">
         <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
@@ -827,7 +835,8 @@
             const fecha = new Date().toLocaleDateString('es-ES');
             return `
                 <div class="reconocimiento">
-                    <h1>🏆 Reconocimiento de Desempeño</h1>
+                    <div class="start-emoji" style="font-size: 3rem; margin-bottom: 10px;">🧏🧒</div>
+                    <h1>Reconocimiento de Desempeño</h1>
                     <h2>Instituto para Sordos Santa Rosa, Inc.</h2>
                     <p>Se otorga este reconocimiento a:</p>
                     <h2 style="color: var(--primary);">${nombre}</h2>
@@ -865,3 +874,4 @@
     </script>
 </body>
 </html>
+}
