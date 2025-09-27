@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <title>Aniquilación de Opuestos - Instituto Santa Rosa</title>
@@ -68,12 +68,21 @@
             margin: 0 auto;
         }
 
+        /* 2. Transiciones para los emojis del niño y niña */
+        @keyframes recede-and-return {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.1); opacity: 0; }
+        }
         .child-figure {
             font-size: 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-width: 50px;
+            animation: recede-and-return 7s ease-in-out infinite;
+        }
+        #right-child {
+            animation-delay: -3.5s; /* Desincronizar la animación */
         }
         
         .child-figure div {
@@ -87,6 +96,7 @@
             gap: 0.8rem;
         }
         
+        /* 3. Pulsación para el fuego en el encabezado */
         .logo-icon {
             font-size: 1.8rem;
             animation: pulse 3s infinite;
@@ -108,6 +118,12 @@
             opacity: 0.9;
             margin: 0.3rem 0 0;
         }
+        
+        .start-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2.5s infinite ease-in-out;
+        }
 
         #inicio {
             display: flex;
@@ -117,6 +133,7 @@
             min-height: 70vh;
             width: 100%;
             padding: 2rem;
+            flex-grow: 1; /* Para empujar el footer hacia abajo */
         }
 
         .instrucciones {
@@ -395,7 +412,6 @@
             background: var(--dark);
             color: white;
             width: 100%;
-            margin-top: 20px;
         }
         
         footer p {
@@ -440,6 +456,7 @@
     </header>
 
     <div id="inicio">
+        <div class="start-emoji">🧏🧒</div>
         <div class="instrucciones">
             <h2>¡Bienvenido al Juego de Aniquilación!</h2>
         </div>
@@ -561,8 +578,8 @@
         }
 
         function obtenerPosicionesLibres(cantidad) {
-            const posiciones = [];
             const areaRect = areaJuego.getBoundingClientRect();
+            const posiciones = [];
             const margen = 80;
             const intentosMaximos = 50;
 
@@ -687,11 +704,12 @@
 
         function mostrarResultadoFinal() {
             const jerarquia = obtenerJerarquia(aniquilaciones);
+            // 1. Agrega el emojic del niño sordo en el reconocimiento
             const mensajes = {
-                "Élite": `<h2>🏆 Reconocimiento 🏆</h2><p><strong>¡Felicidades, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Rendimiento excepcional!</p>`,
-                "Experto": `<h2>🌟 Reconocimiento 🌟</h2><p><strong>¡Excelente trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Muy buen desempeño!</p>`,
-                "Competente": `<h2>⭐ Reconocimiento ⭐</h2><p><strong>¡Buen trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Sigue practicando!</p>`,
-                "Iniciado": `<h2>🎯 Reconocimiento 🎯</h2><p><strong>¡Ánimo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡La práctica hace la perfección!</p>`
+                "Élite": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Felicidades, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Rendimiento excepcional!</p>`,
+                "Experto": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Excelente trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Muy buen desempeño!</p>`,
+                "Competente": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Buen trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Sigue practicando!</p>`,
+                "Iniciado": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Ánimo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡La práctica hace la perfección!</p>`
             };
             
             document.getElementById('juego').innerHTML = `<div class="reconocimiento">${mensajes[jerarquia]}</div>`;
