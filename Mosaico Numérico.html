@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <title>Mosaico Numérico - Instituto Santa Rosa</title>
@@ -326,6 +326,21 @@
             background-color: #303f9f;
             transform: translateY(-2px);
         }
+
+        #reset-mosaico-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        #reset-mosaico-btn:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
         
         #reiniciar-btn { display: none; }
         #terminar-btn { background-color: var(--secondary); }
@@ -648,14 +663,13 @@
             document.getElementById('contenedor').style.display = 'flex';
 
             document.getElementById('juego').innerHTML = `
+                <button id="reset-mosaico-btn" onclick="reiniciarMosaico()" title="Reiniciar Mosaico">🔄</button>
                 <div id="mosaico-container"></div>
                 <div id="mensaje"></div>
                 <div id="asistente-suma"></div>
             `;
             
             puntuacion = 0;
-            sumaActual = 0;
-            celdasSeleccionadas = [];
             document.getElementById('bloques-progreso-container').innerHTML = '';
             document.getElementById('reiniciar-btn').style.display = 'none';
             document.getElementById('terminar-btn').style.display = 'block';
@@ -668,8 +682,7 @@
                 if (tiempoRestante <= 0) terminarPartida();
             }, 1000);
 
-            generarObjetivo();
-            generarMosaico();
+            prepararNuevoRound();
         }
 
         function terminarPartida() {
@@ -695,19 +708,46 @@
             document.getElementById('contenedor').style.display = 'none';
         }
 
-        function generarMosaico() {
-            const mosaicoContainer = document.getElementById('mosaico-container');
-            mosaicoContainer.innerHTML = '';
-            numerosMosaico = [];
-            
-            for (let i = 0; i < 16; i++) {
-                let nuevoNumero;
-                do {
-                    nuevoNumero = Math.floor(Math.random() * 15) + 1;
-                } while (nuevoNumero === objetivo);
-                numerosMosaico.push(nuevoNumero);
+        // --- FUNCIÓN CORREGIDA PARA PREPARAR EL JUEGO CON LÍMITES ---
+        function prepararNuevoRound() {
+            let combinationFound = false;
+            let attempts = 0;
+
+            // Bucle para encontrar una combinación válida que sume entre 2 y 25
+            while (!combinationFound && attempts < 100) {
+                numerosMosaico = [];
+                for (let i = 0; i < 16; i++) {
+                    numerosMosaico.push(Math.floor(Math.random() * 15) + 1);
+                }
+
+                const numAddends = Math.floor(Math.random() * 3) + 2; // 2, 3, o 4 números
+                const indices = new Set();
+                while (indices.size < numAddends) {
+                    indices.add(Math.floor(Math.random() * numerosMosaico.length));
+                }
+                
+                let potentialObjective = 0;
+                indices.forEach(index => {
+                    potentialObjective += numerosMosaico[index];
+                });
+
+                // Comprobar si el objetivo está en el rango deseado (2-25)
+                if (potentialObjective >= 2 && potentialObjective <= 25) {
+                    objetivo = potentialObjective;
+                    combinationFound = true;
+                }
+                attempts++;
             }
             
+            // Si después de muchos intentos no se encuentra, forzar una solución simple
+            if (!combinationFound) {
+                numerosMosaico.fill(5, 0, 4); // Llena con algunos 5 para asegurar
+                objetivo = 10; // Un objetivo simple
+            }
+
+            const mosaicoContainer = document.getElementById('mosaico-container');
+            if (!mosaicoContainer) return;
+            mosaicoContainer.innerHTML = '';
             numerosMosaico.forEach((numero, i) => {
                 const celda = document.createElement('div');
                 celda.className = 'celda';
@@ -717,20 +757,16 @@
                 celda.addEventListener('click', () => manejarSeleccionCelda(celda));
                 mosaicoContainer.appendChild(celda);
             });
-        }
 
-        function generarObjetivo() {
-            objetivo = Math.floor(Math.random() * 21) + 5;
             document.getElementById('objetivo').textContent = objetivo;
             sumaActual = 0;
             celdasSeleccionadas = [];
-            if(document.getElementById('asistente-suma')) {
-                actualizarAsistente();
-            }
-            const celdas = document.querySelectorAll('.celda');
-            if(celdas) {
-                celdas.forEach(celda => celda.classList.remove('seleccionada'));
-            }
+            actualizarAsistente();
+        }
+
+        function reiniciarMosaico() {
+            mostrarMensaje("Mosaico y objetivo reiniciados", false);
+            prepararNuevoRound();
         }
 
         function manejarSeleccionCelda(celda) {
@@ -754,13 +790,10 @@
             
             actualizarAsistente();
 
-            if (sumaActual === objetivo) {
+            if (sumaActual === objetivo && celdasSeleccionadas.length >= 2) {
                 registrarAcierto();
                 mostrarMensaje("¡Correcto! +1", true);
-                setTimeout(() => {
-                    generarObjetivo();
-                    reemplazarNumerosMosaico();
-                }, 1500);
+                setTimeout(prepararNuevoRound, 1500);
             } else if (sumaActual > objetivo) {
                 mostrarMensaje("Demasiado alto, intenta de nuevo", false);
                 document.querySelectorAll('.celda.seleccionada').forEach(c => c.classList.remove('seleccionada'));
@@ -785,29 +818,6 @@
             asistente.classList.toggle('visible', sumaActual > 0);
         }
 
-        function reemplazarNumerosMosaico() {
-            const indicesAReemplazar = new Set();
-            while (indicesAReemplazar.size < 4) {
-                indicesAReemplazar.add(Math.floor(Math.random() * 16));
-            }
-            
-            indicesAReemplazar.forEach(indice => {
-                let nuevoNumero;
-                do {
-                    nuevoNumero = Math.floor(Math.random() * 15) + 1;
-                } while (nuevoNumero === objetivo);
-                
-                numerosMosaico[indice] = nuevoNumero;
-                const celda = document.querySelector(`.celda[data-index="${indice}"]`);
-                if(celda) {
-                    celda.textContent = nuevoNumero;
-                    celda.dataset.valor = nuevoNumero;
-                    celda.classList.add('nueva');
-                    setTimeout(() => celda.classList.remove('nueva'), 500);
-                }
-            });
-        }
-
         function mostrarMensaje(mensaje, esExito) {
             const mensajeDiv = document.getElementById('mensaje');
             if (!mensajeDiv) return;
@@ -819,15 +829,10 @@
             setTimeout(() => burbuja.remove(), 3000);
         }
 
-        // === CÓDIGO MODIFICADO ===
         function obtenerJerarquia(p) {
-            // Jerarquía: Élite (41 en adelante)
             if (p >= 41) return "Élite";
-            // Jerarquía: Experto (26 a 40)
             if (p >= 26) return "Experto";
-            // Jerarquía: Competente (11 a 25)
             if (p >= 11) return "Competente";
-            // Jerarquía: Iniciado (0 a 10)
             return "Iniciado";
         }
 
