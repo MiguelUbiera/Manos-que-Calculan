@@ -1,3 +1,4 @@
+
  <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -244,7 +245,10 @@
             aciertos = 0; tiempoRestante = 180; juegoActivo = true;
             actualizarEstadisticas();
             const areaJuego = document.getElementById('juego');
-            areaJuego.innerHTML = `<div id="reto-palabra"></div><input type="text" id="calculadora-input" inputmode="numeric" pattern="[0-9]*" oninput="verificarRespuesta(this.value)"><div id="teclado-numerico"><button onclick="manejarTeclaTeclado('7')">7</button><button onclick="manejarTeclaTeclado('8')">8</button><button onclick="manejarTeclaTeclado('9')">9</button><button onclick="manejarTeclaTeclado('4')">4</button><button onclick="manejarTeclaTeclado('5')">5</button><button onclick="manejarTeclaTeclado('6')">6</button><button onclick="manejarTeclaTeclado('1')">1</button><button onclick="manejarTeclaTeclado('2')">2</button><button onclick="manejarTeclaTeclado('3')">3</button><button class="cero-btn" onclick="manejarTeclaTeclado('0')">0</button><button onclick="manejarTeclaTeclado('borrar')">&#9003;</button></div>`;
+            // ===== INICIO DE LA CORRECCIÓN 1 =====
+            // Se agrega 'readonly' al input y se eliminan 'inputmode', 'pattern' y 'oninput'
+            areaJuego.innerHTML = `<div id="reto-palabra"></div><input type="text" id="calculadora-input" readonly><div id="teclado-numerico"><button onclick="manejarTeclaTeclado('7')">7</button><button onclick="manejarTeclaTeclado('8')">8</button><button onclick="manejarTeclaTeclado('9')">9</button><button onclick="manejarTeclaTeclado('4')">4</button><button onclick="manejarTeclaTeclado('5')">5</button><button onclick="manejarTeclaTeclado('6')">6</button><button onclick="manejarTeclaTeclado('1')">1</button><button onclick="manejarTeclaTeclado('2')">2</button><button onclick="manejarTeclaTeclado('3')">3</button><button class="cero-btn" onclick="manejarTeclaTeclado('0')">0</button><button onclick="manejarTeclaTeclado('borrar')">&#9003;</button></div>`;
+            // ===== FIN DE LA CORRECCIÓN 1 =====
             document.getElementById('reiniciar-btn').style.display = 'none';
             document.getElementById('terminar-btn').style.display = 'block';
             temporizador = setInterval(() => {
@@ -255,12 +259,19 @@
             generarNuevoReto();
         }
         
+        // ===== INICIO DE LA CORRECCIÓN 2 =====
+        // Se modifica la función para llamar a 'verificarRespuesta' directamente
         function manejarTeclaTeclado(valor) {
             if (!juegoActivo) return;
             const input = document.getElementById('calculadora-input');
-            if (valor === 'borrar') { input.value = input.value.slice(0, -1); } else { input.value += valor; }
-            input.dispatchEvent(new Event('input'));
+            if (valor === 'borrar') {
+                input.value = input.value.slice(0, -1);
+            } else {
+                input.value += valor;
+            }
+            verificarRespuesta(input.value);
         }
+        // ===== FIN DE LA CORRECCIÓN 2 =====
 
         function generarNuevoReto() {
             if (!juegoActivo) return;
