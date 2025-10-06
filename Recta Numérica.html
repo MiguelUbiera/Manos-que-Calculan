@@ -1,0 +1,603 @@
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Recta Numérica - Instituto Santa Rosa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ESTILOS GENERALES (BASADOS EN EL EJEMPLO) */
+        :root {
+            --primary: #3f51b5;
+            --secondary: #f50057;
+            --accent: #00bcd4;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
+            --danger: #f44336;
+            --elite: #ff9800;
+            --experto: #9c27b0;
+            --competente: #2196f3;
+            --iniciado: #f44336;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; -webkit-user-select: none;
+            -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
+        
+        body {
+            margin: 0; padding: 0; background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            min-height: 100vh; display: flex; flex-direction: column;
+            touch-action: manipulation;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; padding: 0.6rem; text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); width: 100%;
+        }
+        
+        .header-content {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px; margin: 0 auto;
+        }
+        
+        .child-figure {
+            font-size: 1.8rem; display: flex; flex-direction: column;
+            align-items: center; min-width: 40px;
+        }
+        
+        .child-figure div { transition: opacity 0.5s, transform 0.5s; }
+        
+        .logo { display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+        
+        .logo-icon { font-size: 1.6rem; animation: pulse 2s infinite; }
+        
+        h1 { margin: 0; font-size: 1.4rem; }
+        
+        .subtitle { font-size: 0.85rem; opacity: 0.9; margin: 0.2rem 0 0; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); }
+        }
+        @keyframes fadeInSlow { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOutSlow { from { opacity: 1; } to { opacity: 0; } }
+        
+        #inicio {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; width: 100%; padding: 1rem;
+            margin-top: 1rem; flex-grow: 1;
+        }
+
+        .start-emoji {
+            font-size: 4rem; margin-bottom: 20px;
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+        
+        #nombre-input {
+            font-size: 18px; padding: 12px; width: 280px; margin: 15px;
+            border: 2px solid var(--primary); border-radius: 8px; text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #comenzar-btn {
+            padding: 12px 24px; font-size: 16px; background-color: var(--primary);
+            color: white; border: none; border-radius: 8px; cursor: pointer;
+            transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        #comenzar-btn:hover { background-color: #303f9f; transform: translateY(-2px); }
+        
+        #contenedor {
+            display: none; flex-direction: row; align-items: flex-start; padding: 15px;
+            width: 100%; box-sizing: border-box; margin-top: 1rem;
+            max-width: 1400px; 
+            margin-left: auto; margin-right: auto;
+            gap: 15px; flex-grow: 1;
+        }
+        
+        #panel-izquierdo, #juego, #historial {
+            background-color: white; padding: 15px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); text-align: center;
+            display: flex; flex-direction: column; min-height: 500px;
+        }
+
+        #panel-izquierdo { width: 25%; border: 3px solid var(--primary); }
+        #juego { 
+            width: 50%; 
+            border: 3px solid var(--primary); 
+            justify-content: center; 
+            align-items: center;
+        }
+        #historial { width: 25%; border: 2px solid var(--accent); }
+
+        #terminar-btn, #reiniciar-btn, #barrer-btn {
+            padding: 10px 20px; font-size: 16px; color: white; border: none;
+            border-radius: 8px; cursor: pointer; transition: all 0.3s; margin: 5px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        }
+        #terminar-btn { background-color: var(--secondary); }
+        #reiniciar-btn { background-color: var(--primary); display: none; }
+        #barrer-btn { background-color: #6c757d; }
+        
+        /* --- CORRECCIÓN: Centrado definitivo del contenedor de botones --- */
+        .botones-container { 
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .info-panel {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #ddd;
+        }
+        .info-panel h3 { margin: 0 0 5px 0; color: var(--primary); font-size: 1rem; }
+        .info-panel p { margin: 5px 0; font-size: 1.3rem; color: #333; font-weight: bold; }
+        #temporizador-pregunta { color: var(--secondary); }
+        
+        #historial h2 { font-size: 1.15rem; margin-bottom: 10px; color: var(--primary); }
+        #historial table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        
+        #historial th, #historial td { 
+            border: 1px solid #ddd; 
+            padding: 8px 12px; 
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        #historial th { 
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef); 
+            color: var(--primary); 
+        }
+
+        .elite { background-color: #fff3e0; color: #e65100; } .experto { background-color: #f3e5f5; color: #7b1fa2; }
+        .competente { background-color: #e3f2fd; color: #1565c0; } .iniciado { background-color: #ffebee; color: #c62828; }
+        
+        .reconocimiento { 
+            padding: 20px; 
+            border-radius: 12px; 
+            width: 100%; 
+            max-width: 450px;
+            text-align: center;
+        }
+        .reconocimiento h1 { font-size: 1.5rem; color: var(--primary); }
+        .reconocimiento h2 { font-size: 1.1rem; color: #555; margin: 8px 0; }
+        .reconocimiento p { font-size: 1rem; color: #333; margin: 8px 0; }
+        .reconocimiento strong { color: var(--secondary); font-size: 1.1rem; }
+
+        footer {
+            text-align: center; padding: 0.8rem; background: var(--dark);
+            color: white; width: 100%; margin-top: auto;
+        }
+
+        /* ESTILOS ESPECÍFICOS DE LA ACTIVIDAD */
+        #numero-objetivo-container {
+            background: linear-gradient(135deg, var(--primary), #5c6bc0); color: white;
+            padding: 20px; border-radius: 15px; margin-bottom: 40px; min-height: 100px;
+            width: 80%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2); border: 3px solid white;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #numero-objetivo {
+            font-size: 2.5rem; font-weight: bold; text-align: center;
+            animation: aparecer 0.5s ease-out;
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); }
+        }
+
+        #recta-numerica-container {
+            width: 100%; padding: 20px 10px; display: flex; flex-direction: column;
+            align-items: center; position: relative;
+            margin-top: 20px;
+        }
+
+        .linea-horizontal {
+            width: 100%; height: 4px; background-color: var(--primary);
+            position: relative; border-radius: 2px;
+        }
+
+        .marcas-container {
+            display: flex; justify-content: space-between; width: 100%;
+            position: absolute; top: 50%; left: 0; transform: translateY(-50%);
+        }
+
+        .marca-wrapper {
+            display: flex; flex-direction: column;
+            align-items: center; position: relative;
+            justify-content: center; height: 60px;
+        }
+
+        .marca-linea { width: 3px; height: 20px; background-color: var(--primary); }
+        
+        .numero-label {
+            margin-top: 28px;
+            font-size: 1rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .punto-recta {
+            width: 30px; height: 30px;
+            cursor: pointer; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); display: flex;
+            align-items: center; justify-content: center;
+        }
+        
+        .punto-recta::before {
+            content: ''; width: 14px; height: 14px;
+            background-color: var(--primary); border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .punto-recta:hover::before {
+            background-color: var(--accent); transform: scale(1.3);
+        }
+
+        .feedback-visual {
+            position: absolute; top: 50%; left: 50%; font-size: 5rem;
+            transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none;
+        }
+        .feedback-visual.correcto { color: var(--success); animation: feedback-anim 0.8s ease-out; }
+        .feedback-visual.incorrecto { color: var(--danger); animation: feedback-anim 0.8s ease-out; }
+
+        @keyframes feedback-anim {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        #texto-feedback {
+            margin-top: 25px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            height: 40px;
+            transition: opacity 0.4s ease-in-out;
+            opacity: 1;
+        }
+
+        @media (max-width: 1024px) {
+            #contenedor { flex-direction: column; max-width: 800px; }
+            #panel-izquierdo, #juego, #historial { width: 100%; margin-bottom: 15px; min-height: auto;}
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 0.4rem; }
+            .child-figure { display: none; }
+            #numero-objetivo { font-size: 2rem; }
+            .punto-recta::before { width: 12px; height: 12px; }
+            .numero-label { font-size: 0.8rem; margin-top: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="child-figure" id="left-child"><div>👦</div></div>
+            <div class="logo">
+                <span class="logo-icon">🎯</span>
+                <h1>Recta Numérica</h1>
+                <span class="logo-icon">🎯</span>
+            </div>
+            <div class="child-figure" id="right-child"><div>👧</div></div>
+        </div>
+        <p class="subtitle">Profesores: Miguel Ubiera y Anna Morán</p>
+    </header>
+
+    <div id="inicio">
+        <div class="start-emoji">🧏🧒</div>
+        <h2 style="margin-bottom: 15px; color: var(--primary);">Escribe tu nombre</h2>
+        <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus>
+        <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
+    </div>
+
+    <div id="contenedor">
+        <div id="panel-izquierdo">
+            <div class="info-panel">
+                <h3>⏳ Tiempo de Pregunta</h3>
+                <p id="temporizador-pregunta">10s</p>
+            </div>
+            <div class="info-panel">
+                <h3>✔️ Aciertos</h3>
+                <p id="puntuacion">0</p>
+            </div>
+            <div class="info-panel">
+                <h3>🚩 Intentos Restantes</h3>
+                <p id="intentos-restantes">30</p>
+            </div>
+            <div class="botones-container">
+                <button id="terminar-btn" onclick="terminarPartida()">Terminar Partida</button>
+                <button id="reiniciar-btn" onclick="reiniciarJuego()">Jugar de Nuevo</button>
+            </div>
+        </div>
+        
+        <div id="juego"></div>
+        
+        <div id="historial">
+            <h2>🏆 Historial de Desempeño</h2>
+            <table>
+                <thead>
+                    <tr><th>Nombre</th><th>Aciertos</th><th>Jerarquía</th></tr>
+                </thead>
+                <tbody id="lista-historial"></tbody>
+            </table>
+            <div style="margin-top: auto; padding-top: 10px;">
+                <button id="barrer-btn" onclick="barrerHistorial()">Barrer Historial</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+    </footer>
+
+    <script>
+        // --- SCRIPT DEL ENCABEZADO ---
+        const leftChild = document.getElementById('left-child').querySelector('div');
+        const rightChild = document.getElementById('right-child').querySelector('div');
+        
+        function swapAndAnimateChildren() {
+            if (!leftChild || !rightChild) return;
+            leftChild.style.animation = 'fadeOutSlow 1.5s ease-in forwards';
+            rightChild.style.animation = 'fadeOutSlow 1.5s ease-in forwards';
+            
+            setTimeout(() => {
+                [leftChild.textContent, rightChild.textContent] = [rightChild.textContent, leftChild.textContent];
+                leftChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+                rightChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+            }, 1500);
+        }
+        if (leftChild && rightChild) {
+            leftChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+            rightChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+            setInterval(swapAndAnimateChildren, 6000);
+        }
+        // --- FIN SCRIPT ENCABEZADO ---
+
+        const TOTAL_INTENTOS = 30;
+        const TIEMPO_POR_PREGUNTA = 10;
+
+        let nombreParticipante = "";
+        let historial = JSON.parse(localStorage.getItem('historialRecta')) || [];
+        
+        let puntuacion = 0;
+        let intentosActuales = 0;
+        let tiempoRestantePregunta = TIEMPO_POR_PREGUNTA;
+        let preguntaActual = {};
+        let temporizadorPregunta;
+        let juegoActivo = false;
+        
+        const mensajesPositivos = [
+            "¡Bien hecho! 👍",
+            "¡Excelente! 🎉",
+            "¡Sigue así! 😊",
+            "¡Buen trabajo! ✅",
+            "¡Enhorabuena! 🥳",
+            "¡Correcto! 🙌"
+        ];
+
+        const numerosEnLetras = {
+            "-10": "negativo diez", "-9": "negativo nueve", "-8": "negativo ocho",
+            "-7": "negativo siete", "-6": "negativo seis", "-5": "negativo cinco",
+            "-4": "negativo cuatro", "-3": "negativo tres", "-2": "negativo dos",
+            "-1": "negativo uno", "0": "cero", "1": "positivo uno", "2": "positivo dos",
+            "3": "positivo tres", "4": "positivo cuatro", "5": "positivo cinco",
+            "6": "positivo seis", "7": "positivo siete", "8": "positivo ocho",
+            "9": "positivo nueve", "10": "positivo diez"
+        };
+        const opcionesNumericas = Object.keys(numerosEnLetras).map(Number);
+        const opcionesTexto = Object.values(numerosEnLetras);
+        const todasLasOpciones = [...opcionesNumericas, ...opcionesTexto];
+
+        function iniciarJuego() {
+            nombreParticipante = document.getElementById('nombre-input').value.trim();
+            if (nombreParticipante === "") {
+                alert("Por favor, escribe tu nombre."); return;
+            }
+
+            document.getElementById('inicio').style.display = 'none';
+            document.getElementById('contenedor').style.display = 'flex';
+            
+            puntuacion = 0; intentosActuales = 0;
+
+            document.getElementById('puntuacion').textContent = '0';
+            document.getElementById('intentos-restantes').textContent = TOTAL_INTENTOS;
+            document.getElementById('reiniciar-btn').style.display = 'none';
+            document.getElementById('terminar-btn').style.display = 'block';
+
+            renderizarEstructuraJuego();
+            generarNuevaPregunta();
+        }
+
+        function renderizarEstructuraJuego() {
+            const juegoContainer = document.getElementById('juego');
+            juegoContainer.innerHTML = `
+                <div id="numero-objetivo-container">
+                    <span id="numero-objetivo"></span>
+                </div>
+                <div id="recta-numerica-container">
+                    <div class="linea-horizontal"></div>
+                    <div class="marcas-container"></div>
+                </div>
+                <div class="feedback-visual"></div>
+                <div id="texto-feedback"></div>
+            `;
+            
+            const marcasContainer = document.querySelector('.marcas-container');
+            for (let i = -10; i <= 10; i++) {
+                const marcaWrapper = document.createElement('div');
+                marcaWrapper.className = 'marca-wrapper';
+                
+                const marcaLinea = document.createElement('div');
+                marcaLinea.className = 'marca-linea';
+                
+                const punto = document.createElement('div');
+                punto.className = 'punto-recta';
+                punto.dataset.valor = i;
+                punto.addEventListener('click', manejarSeleccion);
+                
+                const numeroLabel = document.createElement('span');
+                numeroLabel.className = 'numero-label';
+                numeroLabel.textContent = i;
+
+                marcaWrapper.appendChild(marcaLinea);
+                marcaWrapper.appendChild(punto);
+                marcaWrapper.appendChild(numeroLabel); 
+                marcasContainer.appendChild(marcaWrapper);
+            }
+        }
+        
+        function generarNuevaPregunta() {
+            if (intentosActuales >= TOTAL_INTENTOS) { terminarPartida(); return; }
+
+            intentosActuales++;
+            document.getElementById('intentos-restantes').textContent = TOTAL_INTENTOS - intentosActuales + 1;
+            
+            const opcionAleatoria = todasLasOpciones[Math.floor(Math.random() * todasLasOpciones.length)];
+            
+            if (typeof opcionAleatoria === 'number') {
+                preguntaActual = { valor: opcionAleatoria, texto: String(opcionAleatoria) };
+            } else {
+                const valorNumerico = Object.keys(numerosEnLetras).find(key => numerosEnLetras[key] === opcionAleatoria);
+                preguntaActual = { valor: Number(valorNumerico), texto: opcionAleatoria };
+            }
+
+            document.getElementById('numero-objetivo').textContent = preguntaActual.texto;
+            juegoActivo = true;
+            iniciarTemporizadorPregunta();
+        }
+
+        function iniciarTemporizadorPregunta() {
+            clearInterval(temporizadorPregunta);
+            tiempoRestantePregunta = TIEMPO_POR_PREGUNTA;
+            document.getElementById('temporizador-pregunta').textContent = `${tiempoRestantePregunta}s`;
+            
+            temporizadorPregunta = setInterval(() => {
+                tiempoRestantePregunta--;
+                document.getElementById('temporizador-pregunta').textContent = `${tiempoRestantePregunta}s`;
+                if (tiempoRestantePregunta <= 0) {
+                    clearInterval(temporizadorPregunta);
+                    if (juegoActivo) {
+                        juegoActivo = false;
+                        mostrarFeedback(false);
+                    }
+                }
+            }, 1000);
+        }
+
+        function manejarSeleccion(evento) {
+            if (!juegoActivo) return;
+            juegoActivo = false;
+            
+            clearInterval(temporizadorPregunta);
+            const valorSeleccionado = Number(evento.currentTarget.dataset.valor);
+            const esCorrecto = valorSeleccionado === preguntaActual.valor;
+            
+            if (esCorrecto) {
+                puntuacion++;
+                document.getElementById('puntuacion').textContent = puntuacion;
+            }
+            mostrarFeedback(esCorrecto);
+        }
+
+        function mostrarFeedback(esCorrecto) {
+            const feedbackEl = document.querySelector('.feedback-visual');
+            const textoFeedbackEl = document.getElementById('texto-feedback');
+            
+            feedbackEl.textContent = esCorrecto ? '✔️' : '❌';
+
+            feedbackEl.classList.remove('correcto', 'incorrecto');
+            void feedbackEl.offsetWidth;
+            feedbackEl.classList.add(esCorrecto ? 'correcto' : 'incorrecto');
+
+            if (esCorrecto) {
+                const mensaje = mensajesPositivos[Math.floor(Math.random() * mensajesPositivos.length)];
+                textoFeedbackEl.textContent = mensaje;
+                textoFeedbackEl.style.color = 'var(--success)';
+            } else {
+                textoFeedbackEl.textContent = '';
+            }
+
+            setTimeout(() => {
+                textoFeedbackEl.textContent = '';
+                generarNuevaPregunta();
+            }, 1500);
+        }
+
+        function terminarPartida() {
+            juegoActivo = false; 
+            clearInterval(temporizadorPregunta);
+            const jerarquia = obtenerJerarquia(puntuacion);
+            historial.push({ nombre: nombreParticipante, puntuacion: puntuacion, jerarquia: jerarquia });
+            historial.sort((a, b) => b.puntuacion - a.puntuacion);
+            localStorage.setItem('historialRecta', JSON.stringify(historial));
+            actualizarHistorial();
+
+            const juegoContainer = document.getElementById('juego');
+            juegoContainer.innerHTML = obtenerReconocimiento(nombreParticipante, puntuacion, jerarquia);
+
+            document.getElementById('reiniciar-btn').style.display = 'block';
+            document.getElementById('terminar-btn').style.display = 'none';
+        }
+
+        function reiniciarJuego() {
+            document.getElementById('inicio').style.display = 'flex';
+            document.getElementById('nombre-input').value = "";
+            document.getElementById('contenedor').style.display = 'none';
+        }
+
+        function obtenerJerarquia(p) {
+            if (p >= 26) return "Élite";
+            if (p >= 21) return "Experto";
+            if (p >= 10) return "Competente";
+            return "Iniciado";
+        }
+
+        function obtenerReconocimiento(nombre, p, jerarquia) {
+            const fecha = new Date().toLocaleDateString('es-ES');
+            return `
+                <div class="reconocimiento">
+                    <div class="start-emoji" style="font-size: 3rem; margin-bottom: 10px;">🧏🧒</div>
+                    <h1>Reconocimiento de Desempeño</h1>
+                    <h2>Instituto para Sordos Santa Rosa, Inc.</h2>
+                    <p>Se otorga este reconocimiento a:</p>
+                    <h2 style="color: var(--primary);">${nombre}</h2>
+                    <p>Por su destacada participación en la actividad de Recta Numérica.</p>
+                    <p>Puntuación alcanzada: <strong>${p} aciertos</strong></p>
+                    <p>Jerarquía: <strong class="${jerarquia.toLowerCase()}">${jerarquia}</strong></p>
+                    <p>Fecha: ${fecha}</p>
+                    <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                </div>`;
+        }
+        
+        function actualizarHistorial() {
+            const listaHistorial = document.getElementById('lista-historial');
+            if (!listaHistorial) return;
+            listaHistorial.innerHTML = '';
+            historial.forEach(reg => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${reg.nombre}</td><td>${reg.puntuacion}</td><td class="${reg.jerarquia.toLowerCase()}">${reg.jerarquia}</td>`;
+                listaHistorial.appendChild(tr);
+            });
+        }
+
+        function barrerHistorial() {
+            if (confirm("¿Estás seguro de que quieres borrar todo el historial?")) {
+                historial = []; localStorage.removeItem('historialRecta');
+                actualizarHistorial();
+            }
+        }
+        
+        actualizarHistorial();
+
+        document.getElementById('nombre-input').addEventListener('keydown', (e) => {
+            if (e.key === "Enter") iniciarJuego();
+        });
+    </script>
+</body>
+</html>
