@@ -1,1059 +1,1062 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instituto para Sordos Santa Rosa, Inc. - Actividades Matemáticas</title>
-    <style>
-        :root {
-            --primary: #3f51b5;
-            --secondary: #f50057;
-            --accent: #00bcd4;
-            --light: #f5f5f5;
-            --dark: #212121;
-            --success: #4caf50;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f9f9f9;
-            color: var(--dark);
-            line-height: 1.6;
-            position: relative;
-            overflow-x: hidden;
-            min-height: 100vh;
-            padding-bottom: 5rem;
-        }
-
-        /* Animaciones globales */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes floatElement {
-            0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.1;
-            }
-            25% {
-                transform: translate(20px, -15px) rotate(5deg);
-                opacity: 0.15;
-            }
-            50% {
-                transform: translate(-15px, 10px) rotate(-5deg);
-                opacity: 0.12;
-            }
-            to {
-                transform: translate(10px, 20px) rotate(3deg);
-                opacity: 0.15;
-            }
-        }
-
-        @keyframes fadeInRight {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 1;
-            }
-            20% {
-                transform: scale(25, 25);
-                opacity: 1;
-            }
-            to {
-                transform: scale(50, 50);
-                opacity: 0;
-            }
-        }
-
-        /* Animación lenta para desaparecer (5 segundos) */
-        @keyframes fadeOutSlow {
-            0% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: scale(0.9) translateY(5px);
-            }
-        }
-
-        /* Animación lenta para aparecer (5 segundos) */
-        @keyframes fadeInSlow {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(5px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-        
-        @keyframes gentle-float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-4px);
-            }
-        }
-
-        /* Elementos flotantes de fondo - Aumentada densidad */
-        .floating-element {
-            position: fixed;
-            font-size: 2.5rem;
-            opacity: 0.1;
-            z-index: -1;
-            pointer-events: none;
-            animation: floatElement 18s infinite ease-in-out;
-        }
-
-        /* Elementos flotantes en la franja azul */
-        .header-floating-element {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.15;
-            z-index: 1;
-            pointer-events: none;
-            animation: floatElement 15s infinite ease-in-out;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 0.8rem;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 1200px;
-            position: relative;
-        }
-
-        .child-figure {
-            font-size: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: none;
-            min-width: 60px;
-            min-height: 60px;
-            user-select: none;
-        }
-
-        .child-figure div {
-            transition: opacity 0.5s, transform 0.5s;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 0.4rem;
-            flex-wrap: wrap;
-        }
-
-        .logo-icon {
-            font-size: 2rem;
-            animation: pulse 2s infinite;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.3rem;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            position: relative;
-        }
-
-        .search-container {
-            margin: 0.5rem auto 1rem auto;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            background: white;
-            border-radius: 25px;
-            padding: 0.6rem 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            width: 300px;
-            min-height: 40px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus-within {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: var(--dark);
-            padding: 0.3rem 0.5rem;
-            font-size: 1rem;
-            outline: none;
-            width: 100%;
-        }
-
-        .search-box input::placeholder {
-            color: rgba(0, 0, 0, 0.5);
-        }
-
-        .search-icon {
-            margin-right: 0.5rem;
-            font-size: 1.1rem;
-            color: var(--primary);
-        }
-
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 0.5rem auto;
-            gap: 2rem;
-            padding: 0 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .sidebar {
-            flex: 0 0 250px;
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            height: 75vh;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            margin-top: 0;
-        }
-
-        .sidebar:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .categories {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .categories h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: var(--primary);
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--light);
-            text-align: center;
-        }
-
-        .category-list-container {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .category-list-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .category-list-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .category-list-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .category-list-container::-webkit-scrollbar-thumb:hover {
-            background: #303f9f;
-        }
-
-        .category-list {
-            list-style: none;
-        }
-
-        .category-item {
-            margin-bottom: 0.3rem;
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: fadeInRight 0.6s ease forwards;
-        }
-
-        .category-item:nth-child(1) { animation-delay: 0.1s; }
-        .category-item:nth-child(2) { animation-delay: 0.2s; }
-        .category-item:nth-child(3) { animation-delay: 0.3s; }
-        .category-item:nth-child(4) { animation-delay: 0.4s; }
-        .category-item:nth-child(5) { animation-delay: 0.5s; }
-        .category-item:nth-child(6) { animation-delay: 0.6s; }
-        .category-item:nth-child(7) { animation-delay: 0.7s; }
-        .category-item:nth-child(8) { animation-delay: 0.8s; }
-        .category-item:nth-child(9) { animation-delay: 0.9s; }
-
-        .category-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            width: 100%;
-            padding: 0.5rem 0.7rem;
-            background: var(--light);
-            border: none;
-            border-radius: 6px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            color: inherit;
-            font-size: 0.8rem;
-        }
-
-        .category-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-            z-index: 1;
-        }
-
-        .category-btn:hover::before {
-            left: 100%;
-        }
-
-        .category-btn:hover {
-            background: #e0e0e0;
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .category-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .math-symbol {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        
-        .math-z { color: #FF5722; }
-
-        .main-content {
-            flex: 1;
-        }
-
-        .activities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .activity-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-            transform: translateY(20px);
-            opacity: 0;
-            animation: fadeInUp 0.6s ease forwards;
-            perspective: 1000px;
-        }
-
-        .activity-card:nth-child(1) { animation-delay: 0.1s; }
-        .activity-card:nth-child(2) { animation-delay: 0.2s; }
-        .activity-card:nth-child(3) { animation-delay: 0.3s; }
-        .activity-card:nth-child(4) { animation-delay: 0.4s; }
-        .activity-card:nth-child(5) { animation-delay: 0.5s; }
-        .activity-card:nth-child(6) { animation-delay: 0.6s; }
-        .activity-card:nth-child(7) { animation-delay: 0.7s; }
-
-        .card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .activity-card:hover .card-inner {
-            transform: rotateY(5deg) rotateX(5deg);
-        }
-
-        .activity-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            padding: 1.2rem;
-            background: var(--primary);
-            color: white;
-            position: relative;
-        }
-
-        .new-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--secondary);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            animation: pulse 2s infinite;
-        }
-
-        .card-body {
-            padding: 1.2rem;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 2px;
-        }
-
-        .card-footer {
-            padding: 1rem 1.2rem;
-            background: var(--light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .open-btn {
-            padding: 0.4rem 0.8rem;
-            background: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            font-size: 0.8rem;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .open-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50);
-            transform-origin: 50% 50%;
-        }
-
-        .open-btn:hover::after {
-            animation: ripple 1s ease-out;
-        }
-
-        .open-btn:hover {
-            background: #c51162;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .open-btn:active {
-            transform: scale(0.95);
-        }
-
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background: var(--dark);
-            color: white;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            z-index: 1;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .category-content {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .category-content.active {
-            display: block;
-        }
-
-        /* Estilos para la cuadrícula de herramientas */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .tool-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            animation: gentle-float 4s infinite ease-in-out;
-        }
-
-        .tool-card:hover {
-            animation-play-state: paused;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .tool-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tool-name {
-            font-weight: 500;
-            font-size: 1rem;
-            color: var(--dark);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                flex: 1;
-                width: 100%;
-                height: auto;
-                margin-bottom: 1rem;
-            }
-            
-            .category-list-container {
-                overflow-y: visible;
-                max-height: none;
-            }
-            
-            .activities-grid, .tools-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .floating-element, .header-floating-element {
-                display: none;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .child-figure {
-                font-size: 2rem;
-            }
-            
-            .logo-icon {
-                font-size: 1.8rem;
-            }
-            
-            .search-container {
-                position: relative;
-                top: auto;
-                right: auto;
-                transform: none;
-                margin: 1rem auto;
-                display: block;
-            }
-            
-            .search-box {
-                width: 90%;
-                max-width: 300px;
-            }
-            
-            footer {
-                position: relative;
-                margin-top: 2rem;
-            }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instituto para Sordos Santa Rosa, Inc. - Actividades Matemáticas</title>
+    <style>
+        :root {
+            --primary: #3f51b5;
+            --secondary: #f50057;
+            --accent: #00bcd4;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 5rem;
+        }
+
+        /* Animaciones globales */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes floatElement {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.1;
+            }
+            25% {
+                transform: translate(20px, -15px) rotate(5deg);
+                opacity: 0.15;
+            }
+            50% {
+                transform: translate(-15px, 10px) rotate(-5deg);
+                opacity: 0.12;
+            }
+            to {
+                transform: translate(10px, 20px) rotate(3deg);
+                opacity: 0.15;
+            }
+        }
+
+        @keyframes fadeInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            to {
+                transform: scale(50, 50);
+                opacity: 0;
+            }
+        }
+
+        /* Animación lenta para desaparecer (5 segundos) */
+        @keyframes fadeOutSlow {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.9) translateY(5px);
+            }
+        }
+
+        /* Animación lenta para aparecer (5 segundos) */
+        @keyframes fadeInSlow {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        @keyframes gentle-float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* Elementos flotantes de fondo - Aumentada densidad */
+        .floating-element {
+            position: fixed;
+            font-size: 2.5rem;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            animation: floatElement 18s infinite ease-in-out;
+        }
+
+        /* Elementos flotantes en la franja azul */
+        .header-floating-element {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            animation: floatElement 15s infinite ease-in-out;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.8rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .child-figure {
+            font-size: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: none;
+            min-width: 60px;
+            min-height: 60px;
+            user-select: none;
+        }
+
+        .child-figure div {
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .search-container {
+            margin: 0.5rem auto 1rem auto;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            width: 300px;
+            min-height: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--dark);
+            padding: 0.3rem 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .search-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0.5rem auto;
+            gap: 2rem;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            flex: 0 0 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: 75vh;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            margin-top: 0;
+        }
+
+        .sidebar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .categories {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .categories h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+            text-align: center;
+        }
+
+        .category-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .category-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .category-list-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .category-list-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .category-list-container::-webkit-scrollbar-thumb:hover {
+            background: #303f9f;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 0.3rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: fadeInRight 0.6s ease forwards;
+        }
+
+        .category-item:nth-child(1) { animation-delay: 0.1s; }
+        .category-item:nth-child(2) { animation-delay: 0.2s; }
+        .category-item:nth-child(3) { animation-delay: 0.3s; }
+        .category-item:nth-child(4) { animation-delay: 0.4s; }
+        .category-item:nth-child(5) { animation-delay: 0.5s; }
+        .category-item:nth-child(6) { animation-delay: 0.6s; }
+        .category-item:nth-child(7) { animation-delay: 0.7s; }
+        .category-item:nth-child(8) { animation-delay: 0.8s; }
+        .category-item:nth-child(9) { animation-delay: 0.9s; }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.5rem 0.7rem;
+            background: var(--light);
+            border: none;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            font-size: 0.8rem;
+        }
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+            z-index: 1;
+        }
+
+        .category-btn:hover::before {
+            left: 100%;
+        }
+
+        .category-btn:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .math-symbol {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .math-z { color: #FF5722; }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+            perspective: 1000px;
+        }
+
+        .activity-card:nth-child(1) { animation-delay: 0.1s; }
+        .activity-card:nth-child(2) { animation-delay: 0.2s; }
+        .activity-card:nth-child(3) { animation-delay: 0.3s; }
+        .activity-card:nth-child(4) { animation-delay: 0.4s; }
+        .activity-card:nth-child(5) { animation-delay: 0.5s; }
+        .activity-card:nth-child(6) { animation-delay: 0.6s; }
+        .activity-card:nth-child(7) { animation-delay: 0.7s; }
+
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .activity-card:hover .card-inner {
+            transform: rotateY(5deg) rotateX(5deg);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 1.2rem;
+            background: var(--primary);
+            color: white;
+            position: relative;
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            animation: pulse 2s infinite;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 2px;
+        }
+
+        .card-footer {
+            padding: 1rem 1.2rem;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .open-btn {
+            padding: 0.4rem 0.8rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .open-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50);
+            transform-origin: 50% 50%;
+        }
+
+        .open-btn:hover::after {
+            animation: ripple 1s ease-out;
+        }
+
+        .open-btn:hover {
+            background: #c51162;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .open-btn:active {
+            transform: scale(0.95);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--dark);
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-content {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        /* Estilos para la cuadrícula de herramientas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            animation: gentle-float 4s infinite ease-in-out;
+        }
+
+        .tool-card:hover {
+            animation-play-state: paused;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-name {
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: 1;
+                width: 100%;
+                height: auto;
+                margin-bottom: 1rem;
+            }
+            
+            .category-list-container {
+                overflow-y: visible;
+                max-height: none;
+            }
+            
+            .activities-grid, .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .floating-element, .header-floating-element {
+                display: none;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .child-figure {
+                font-size: 2rem;
+            }
+            
+            .logo-icon {
+                font-size: 1.8rem;
+            }
+            
+            .search-container {
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                margin: 1rem auto;
+                display: block;
+            }
+            
+            .search-box {
+                width: 90%;
+                max-width: 300px;
+            }
+            
+            footer {
+                position: relative;
+                margin-top: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
-    <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">📏</div>
-    <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">🔺</div>
-    <div class="floating-element" style="top: 35%; right: 10%; animation-delay: 3s;">🔷</div>
-    <div class="floating-element" style="top: 45%; left: 5%; animation-delay: 4s;">⭕</div>
-    <div class="floating-element" style="top: 55%; right: 7%; animation-delay: 5s;">📊</div>
-    <div class="floating-element" style="top: 65%; left: 12%; animation-delay: 6s;">🧮</div>
-    <div class="floating-element" style="top: 75%; right: 9%; animation-delay: 7s;">✏️</div>
-    <div class="floating-element" style="top: 20%; left: 20%; animation-delay: 0.5s;">👐</div>
-    <div class="floating-element" style="top: 40%; right: 22%; animation-delay: 1.5s;">👐</div>
-    <div class="floating-element" style="top: 60%; left: 30%; animation-delay: 2.5s;">👐</div>
-    <div class="floating-element" style="top: 30%; right: 32%; animation-delay: 3.5s;">👐</div>
-    <div class="floating-element" style="top: 50%; left: 40%; animation-delay: 4.5s;">👐</div>
-    <div class="floating-element" style="top: 70%; right: 42%; animation-delay: 5.5s;">👐</div>
-    <div class="floating-element" style="top: 10%; right: 25%; animation-delay: 6.5s;">➕</div>
-    <div class="floating-element" style="top: 80%; left: 25%; animation-delay: 7.5s;">➗</div>
-    <div class="floating-element" style="top: 35%; left: 75%; animation-delay: 0.8s;">🔢</div>
-    <div class="floating-element" style="top: 65%; right: 75%; animation-delay: 1.8s;">➖</div>
+    <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
+    <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">📏</div>
+    <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">🔺</div>
+    <div class="floating-element" style="top: 35%; right: 10%; animation-delay: 3s;">🔷</div>
+    <div class="floating-element" style="top: 45%; left: 5%; animation-delay: 4s;">⭕</div>
+    <div class="floating-element" style="top: 55%; right: 7%; animation-delay: 5s;">📊</div>
+    <div class="floating-element" style="top: 65%; left: 12%; animation-delay: 6s;">🧮</div>
+    <div class="floating-element" style="top: 75%; right: 9%; animation-delay: 7s;">✏️</div>
+    <div class="floating-element" style="top: 20%; left: 20%; animation-delay: 0.5s;">👐</div>
+    <div class="floating-element" style="top: 40%; right: 22%; animation-delay: 1.5s;">👐</div>
+    <div class="floating-element" style="top: 60%; left: 30%; animation-delay: 2.5s;">👐</div>
+    <div class="floating-element" style="top: 30%; right: 32%; animation-delay: 3.5s;">👐</div>
+    <div class="floating-element" style="top: 50%; left: 40%; animation-delay: 4.5s;">👐</div>
+    <div class="floating-element" style="top: 70%; right: 42%; animation-delay: 5.5s;">👐</div>
+    <div class="floating-element" style="top: 10%; right: 25%; animation-delay: 6.5s;">➕</div>
+    <div class="floating-element" style="top: 80%; left: 25%; animation-delay: 7.5s;">➗</div>
+    <div class="floating-element" style="top: 35%; left: 75%; animation-delay: 0.8s;">🔢</div>
+    <div class="floating-element" style="top: 65%; right: 75%; animation-delay: 1.8s;">➖</div>
 
-    <header>
-        <div class="header-floating-element" style="top: 20%; left: 10%; animation-delay: 0s;">👐</div>
-        <div class="header-floating-element" style="top: 60%; right: 15%; animation-delay: 2s;">👐</div>
-        <div class="header-floating-element" style="top: 40%; left: 20%; animation-delay: 4s;">👐</div>
-        <div class="header-floating-element" style="top: 30%; right: 25%; animation-delay: 1s;">👐</div>
-        <div class="header-floating-element" style="top: 70%; left: 30%; animation-delay: 3s;">👐</div>
-        <div class="header-floating-element" style="top: 50%; right: 35%; animation-delay: 5s;">👐</div>
-        
-        <div class="header-content">
-            <div class="child-figure" id="left-child">
-                <div>👦</div>
-            </div>
-            
-            <div class="logo">
-                <span class="logo-icon">👐</span>
-                <h1>Manos que Calculan</h1>
-                <span class="logo-icon">👐</span>
-            </div>
-            
-            <div class="child-figure" id="right-child">
-                <div>👧</div>
-            </div>
-        </div>
-        
-        <p class="subtitle">Explora un ambiente inclusivo y disfruta los recursos que hemos preparado para ti</p>
-    </header>
-    
-    <div class="search-container">
-        <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="Buscar recurso...">
-        </div>
-    </div>
-    
-    <div class="container">
-        <aside class="sidebar">
-            <div class="categories">
-                <h2>Categorías</h2>
-                <div class="category-list-container">
-                    <ul class="category-list">
-                        <li class="category-item">
-                            <a href="#" class="category-btn active" data-category="coleccion">
-                                <span>📚</span> Colección
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="diversion">
-                                <span>🎉</span> Diversión
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="herramientas">
-                                <span>🛠️</span> Herramientas
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="numeros-z">
-                                <span class="math-symbol math-z">ℤ</span> 1ro - Números Z
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="personajes">
-                                <span>👤</span> Personajes
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="materiales">
-                                <span>📋</span> Materiales
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="justicia">
-                                <span>⚖️</span> Justicia
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="joven-sordo">
-                                <span>👨‍🦯</span> Joven sordo
-                            </a>
-                        </li>
-                        <li class="category-item">
-                            <a href="#" class="category-btn" data-category="creadores">
-                                <span>👥</span> Creadores
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </aside>
-        
-        <main class="main-content">
-            <div class="empty-state" id="default-content">
-                <p>📚 Todos los recursos se mostrarán aquí</p>
-                <p>Selecciona una categoría del menú para filtrar los recursos</p>
-                <p><small>Próximamente añadiremos recursos para cada categoría</small></p>
-            </div>
-            
-            <div class="category-content" id="coleccion-content">
-                <h2>📚 Actividades de Colección</h2>
-                <p>Aquí encontrarás todas las actividades de recopilación y organización.</p>
-                <p><small>Contenido en desarrollo</small></p>
-            </div>
-            
-            <div class="category-content" id="diversion-content">
-                <h2>🎉 Actividades Divertidas</h2>
-                <p>Juegos y actividades lúdicas para aprender matemáticas.</p>
-                
-                <div class="tools-grid">
-                    <div class="tool-card" onclick="window.open('Calculadora120s.html', '_blank')">
-                        <div class="tool-icon">🧠</div>
-                        <div class="tool-name">Calculadora B 120s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('División A 2-6.html', '_blank')">
-                        <div class="tool-icon">➗</div>
-                        <div class="tool-name">División A 2-6</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Mosaico Numérico.html', '_blank')">
-                        <div class="tool-icon">🧩</div>
-                        <div class="tool-name">Mosaico Numérico</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Ordena B 15s.html', '_blank')">
-                        <div class="tool-icon">🔀</div>
-                        <div class="tool-name">Ordena B 15s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Resta A 3s.html', '_blank')">
-                        <div class="tool-icon">⚡</div>
-                        <div class="tool-name">Resta A 3s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Suma A 3s.html', '_blank')">
-                        <div class="tool-icon">⏱️</div>
-                        <div class="tool-name">Suma A 3s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Suma B 7s.html', '_blank')">
-                        <div class="tool-icon">⏳</div>
-                        <div class="tool-name">Suma B 7s</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Suma triple 7s.html', '_blank')">
-                        <div class="tool-icon">🔢</div>
-                        <div class="tool-name">Suma triple 7s</div>
-                    </div>
-                    <div class="tool-card super-calculadora" onclick="window.open('Súper Calculadora.html', '_blank')">
-                        <div class="tool-icon">🦸</div>
-                        <div class="tool-name">Súper Calculadora</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Dictado Numérico.html', '_blank')">
-                        <div class="tool-icon">🎤</div>
-                        <div class="tool-name">Dictado Numérico</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Carrera Matemática.html', '_blank')">
-                        <div class="tool-icon">🏁</div>
-                        <div class="tool-name">Carrera Matemática</div>
-                    </div>
-                                        <div class="tool-card" onclick="window.open('Olimpiada de Matemática.html', '_blank')">
-                        <div class="tool-icon">🏆</div>
-                        <div class="tool-name">Olimpiada de Matemática</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="category-content" id="herramientas-content">
-                <h2>🛠️ Herramientas Matemáticas</h2>
-                <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
-                
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <div class="tool-icon">🧮</div>
-                        <div class="tool-name">Calculadora</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Cronómetro.html', '_blank')">
-                        <div class="tool-icon">⏱️</div>
-                        <div class="tool-name">Cronómetro</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Elecciones.html', '_blank')">
-                        <div class="tool-icon">🗳️</div>
-                        <div class="tool-name">Elecciones</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">📐</div>
-                        <div class="tool-name">Geometría</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">📊</div>
-                        <div class="tool-name">Gráficas</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">🔢</div>
-                        <div class="tool-name">Números</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('sorteo.html', '_blank')">
-                        <div class="tool-icon">🎲</div>
-                        <div class="tool-name">Sorteo de Estudiantes</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="category-content" id="numeros-z-content">
-                <h2>ℤ Números Z</h2>
-                <p>Actividades relacionadas con números enteros.</p>
-                
-                <div class="tools-grid">
-                    <div class="tool-card" onclick="window.open('Aniquilación de Opuestos.html', '_blank')">
-                        <div class="tool-icon">💥</div>
-                        <div class="tool-name">Aniquilación de Opuestos</div>
-                    </div>
-                    <div class="tool-card" onclick="window.open('Recta Numérica.html', '_blank')">
-                        <div class="tool-icon">↔️</div>
-                        <div class="tool-name">Recta Numérica</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">✖️</div>
-                        <div class="tool-name">Multiplicación</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">➖</div>
-                        <div class="tool-name">Resta de Enteros</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">➕</div>
-                        <div class="tool-name">Suma de Enteros</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="category-content" id="personajes-content">
-                <h2>👤 Personajes</h2>
-                <p>Biografías de personas relevantes en la comunidad sorda y matemática.</p>
-                <p><small>Contenido en desarrollo</small></p>
-            </div>
-            
-            <div class="category-content" id="materiales-content">
-                <h2>📋 Materiales</h2>
-                <p>Prácticas imprimibles, exámenes e instrumentos de aprendizaje.</p>
-                <p><small>Contenido en desarrollo</small></p>
-            </div>
-            
-            <div class="category-content" id="justicia-content">
-                <h2>⚖️ Justicia</h2>
-                <p>Todo el marco legal que regula los derechos de las personas sordas.</p>
-                <p><small>Contenido en desarrollo</small></p>
-            </div>
-            
-            <div class="category-content" id="joven-sordo-content">
-                <h2>👨‍🦯 Joven sordo</h2>
-                <p>Recursos y testimonios enfocados en la experiencia del joven sordo.</p>
-                <p><small>Contenido en desarrollo</small></p>
-            </div>
+    <header>
+        <div class="header-floating-element" style="top: 20%; left: 10%; animation-delay: 0s;">👐</div>
+        <div class="header-floating-element" style="top: 60%; right: 15%; animation-delay: 2s;">👐</div>
+        <div class="header-floating-element" style="top: 40%; left: 20%; animation-delay: 4s;">👐</div>
+        <div class="header-floating-element" style="top: 30%; right: 25%; animation-delay: 1s;">👐</div>
+        <div class="header-floating-element" style="top: 70%; left: 30%; animation-delay: 3s;">👐</div>
+        <div class="header-floating-element" style="top: 50%; right: 35%; animation-delay: 5s;">👐</div>
+        
+        <div class="header-content">
+            <div class="child-figure" id="left-child">
+                <div>👦</div>
+            </div>
+            
+            <div class="logo">
+                <span class="logo-icon">👐</span>
+                <h1>Manos que Calculan</h1>
+                <span class="logo-icon">👐</span>
+            </div>
+            
+            <div class="child-figure" id="right-child">
+                <div>👧</div>
+            </div>
+        </div>
+        
+        <p class="subtitle">Explora un ambiente inclusivo y disfruta los recursos que hemos preparado para ti</p>
+    </header>
+    
+    <div class="search-container">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Buscar recurso...">
+        </div>
+    </div>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <div class="categories">
+                <h2>Categorías</h2>
+                <div class="category-list-container">
+                    <ul class="category-list">
+                        <li class="category-item">
+                            <a href="#" class="category-btn active" data-category="coleccion">
+                                <span>📚</span> Colección
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="diversion">
+                                <span>🎉</span> Diversión
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="herramientas">
+                                <span>🛠️</span> Herramientas
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="numeros-z">
+                                <span class="math-symbol math-z">ℤ</span> 1ro - Números Z
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="personajes">
+                                <span>👤</span> Personajes
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="materiales">
+                                <span>📋</span> Materiales
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="justicia">
+                                <span>⚖️</span> Justicia
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="joven-sordo">
+                                <span>👨‍🦯</span> Joven sordo
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="#" class="category-btn" data-category="creadores">
+                                <span>👥</span> Creadores
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="empty-state" id="default-content">
+                <p>📚 Todos los recursos se mostrarán aquí</p>
+                <p>Selecciona una categoría del menú para filtrar los recursos</p>
+                <p><small>Próximamente añadiremos recursos para cada categoría</small></p>
+            </div>
+            
+            <div class="category-content" id="coleccion-content">
+                <h2>📚 Actividades de Colección</h2>
+                <p>Aquí encontrarás todas las actividades de recopilación y organización.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="diversion-content">
+                <h2>🎉 Actividades Divertidas</h2>
+                <p>Juegos y actividades lúdicas para aprender matemáticas.</p>
+                
+                <div class="tools-grid">
+                    <div class="tool-card" onclick="window.open('Calculadora120s.html', '_blank')">
+                        <div class="tool-icon">🧠</div>
+                        <div class="tool-name">Calculadora B 120s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('División A 2-6.html', '_blank')">
+                        <div class="tool-icon">➗</div>
+                        <div class="tool-name">División A 2-6</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Mosaico Numérico.html', '_blank')">
+                        <div class="tool-icon">🧩</div>
+                        <div class="tool-name">Mosaico Numérico</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Ordena B 15s.html', '_blank')">
+                        <div class="tool-icon">🔀</div>
+                        <div class="tool-name">Ordena B 15s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Resta A 3s.html', '_blank')">
+                        <div class="tool-icon">⚡</div>
+                        <div class="tool-name">Resta A 3s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Suma A 3s.html', '_blank')">
+                        <div class="tool-icon">⏱️</div>
+                        <div class="tool-name">Suma A 3s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Suma B 7s.html', '_blank')">
+                        <div class="tool-icon">⏳</div>
+                        <div class="tool-name">Suma B 7s</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Suma triple 7s.html', '_blank')">
+                        <div class="tool-icon">🔢</div>
+                        <div class="tool-name">Suma triple 7s</div>
+                    </div>
+                    <div class="tool-card super-calculadora" onclick="window.open('Súper Calculadora.html', '_blank')">
+                        <div class="tool-icon">🦸</div>
+                        <div class="tool-name">Súper Calculadora</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Dictado Numérico.html', '_blank')">
+                        <div class="tool-icon">🎤</div>
+                        <div class="tool-name">Dictado Numérico</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Carrera Matemática.html', '_blank')">
+                        <div class="tool-icon">🏁</div>
+                        <div class="tool-name">Carrera Matemática</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Olimpiada de Matemática.html', '_blank')">
+                        <div class="tool-icon">🏆</div>
+                        <div class="tool-name">Olimpiada de Matemática</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-content" id="herramientas-content">
+                <h2>🛠️ Herramientas Matemáticas</h2>
+                <p>Utilidades y recursos para apoyar tu aprendizaje.</p>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🧮</div>
+                        <div class="tool-name">Calculadora</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Cronómetro.html', '_blank')">
+                        <div class="tool-icon">⏱️</div>
+                        <div class="tool-name">Cronómetro</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Elecciones.html', '_blank')">
+                        <div class="tool-icon">🗳️</div>
+                        <div class="tool-name">Elecciones</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📐</div>
+                        <div class="tool-name">Geometría</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-name">Gráficas</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔢</div>
+                        <div class="tool-name">Números</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('sorteo.html', '_blank')">
+                        <div class="tool-icon">🎲</div>
+                        <div class="tool-name">Sorteo de Estudiantes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-content" id="numeros-z-content">
+                <h2>ℤ Números Z</h2>
+                <p>Actividades relacionadas con números enteros.</p>
+                
+                <div class="tools-grid">
+                    <div class="tool-card" onclick="window.open('Aniquilación de Opuestos.html', '_blank')">
+                        <div class="tool-icon">💥</div>
+                        <div class="tool-name">Aniquilación de Opuestos</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Recta Numérica.html', '_blank')">
+                        <div class="tool-icon">↔️</div>
+                        <div class="tool-name">Recta Numérica</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">✖️</div>
+                        <div class="tool-name">Multiplicación</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">➖</div>
+                        <div class="tool-name">Resta de Enteros</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">➕</div>
+                        <div class="tool-name">Suma de Enteros</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-content" id="personajes-content">
+                <h2>👤 Personajes</h2>
+                <p>Biografías de personas relevantes en la comunidad sorda y matemática.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="materiales-content">
+                <h2>📋 Materiales</h2>
+                <p>Prácticas imprimibles, exámenes e instrumentos de aprendizaje.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="justicia-content">
+                <h2>⚖️ Justicia</h2>
+                <p>Todo el marco legal que regula los derechos de las personas sordas.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="joven-sordo-content">
+                <h2>👨‍🦯 Joven sordo</h2>
+                <p>Novedades sobre lengua de señas y recursos para jóvenes.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="category-content" id="creadores-content">
+                <h2>👥 Creadores</h2>
+                <p>Información sobre las personas que desarrollaron este sitio web.</p>
+                <p><small>Contenido en desarrollo</small></p>
+            </div>
+            
+            <div class="activities-grid" style="display: none;">
+                </div>
+        </main>
+    </div>
+    
+    <footer>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+    </footer>
 
-            <div class="category-content" id="creadores-content">
-                <h2>👥 Creadores</h2>
-                <p>Información sobre los desarrolladores y colaboradores del proyecto.</p>
-                <p><small>Contenido en desarrollo</small></p>
-            </div>
-            
-        </main>
-    </div>
-    
-    <footer>
-        &copy; 2024 Instituto para Sordos Santa Rosa, Inc. | Proyecto Educativo de Matemáticas Inclusivas
-    </footer>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const categoryBtns = document.querySelectorAll('.category-btn');
-            const categoryContents = document.querySelectorAll('.category-content');
-            const defaultContent = document.getElementById('default-content');
-            const searchInput = document.getElementById('search-input');
-            const mainContent = document.querySelector('.main-content');
-            const leftChild = document.getElementById('left-child');
-            const rightChild = document.getElementById('right-child');
-
-            // Función para la animación del encabezado
-            function moveHands(element) {
-                const hands = element.querySelector('div');
-                
-                let state = 0;
-                
-                setInterval(() => {
-                    if (state === 0) {
-                        hands.style.transform = 'translateY(-5px) scale(1.05)';
-                        state = 1;
-                    } else {
-                        hands.style.transform = 'translateY(0) scale(1)';
-                        state = 0;
-                    }
-                }, 2500);
-            }
-
-            if (leftChild) moveHands(leftChild);
-            if (rightChild) moveHands(rightChild);
-
-
-            // Lógica para cambiar entre categorías
-            categoryBtns.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    // Quitar 'active' de todos los botones y contenidos
-                    categoryBtns.forEach(btn => btn.classList.remove('active'));
-                    categoryContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Ocultar resultados de búsqueda si están visibles
-                    const existingResults = document.querySelector('.search-results');
-                    if (existingResults) {
-                        existingResults.remove();
-                    }
-                    
-                    // Añadir 'active' al botón clickeado
-                    button.classList.add('active');
-                    
-                    // Mostrar el contenido de la categoría
-                    const category = button.getAttribute('data-category');
-                    const contentToShow = document.getElementById(category + '-content');
-                    
-                    if (contentToShow) {
-                        defaultContent.style.display = 'none';
-                        contentToShow.classList.add('active');
-                    } else {
-                        // Lógica de fallback para categorías sin contenido fijo
-                        defaultContent.style.display = 'none';
-                        
-                        const placeholder = document.createElement('div');
-                        placeholder.className = 'category-content active';
-                        placeholder.innerHTML = `
-                            <h2>${button.textContent.trim()}</h2>
-                            <p>Esta sección está en desarrollo.</p>
-                            <p><small>Pronto más recursos.</small></p>
-                        `;
-                        
-                        // Limpiar placeholders anteriores
-                        document.querySelectorAll('.main-content > .category-content.active:not([id])').forEach(el => el.remove());
-
-                        mainContent.appendChild(placeholder);
-                    }
-                });
-            });
-            
-            // Lógica para la funcionalidad de búsqueda (al presionar Enter)
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const searchTerm = searchInput.value.trim();
-                    if (searchTerm === '') return;
-
-                    // Desactivar contenido actual
-                    defaultContent.style.display = 'none';
-                    categoryBtns.forEach(btn => btn.classList.remove('active'));
-                    categoryContents.forEach(content => content.classList.remove('active'));
-
-                    // Mostrar resultados de búsqueda (placeholder)
-                    const searchResults = document.createElement('div');
-                    searchResults.className = 'category-content active search-results';
-                    searchResults.innerHTML = `
-                        <h2>🔍 Resultados de búsqueda</h2>
-                        <p>Buscando: "${searchTerm}"</p>
-                        <p><small>Función de búsqueda en desarrollo. Por favor, navegue por las categorías.</small></p>
-                    `;
-
-                    const existingResults = document.querySelector('.search-results');
-                    if (existingResults) {
-                        existingResults.remove();
-                    }
-
-                    mainContent.appendChild(searchResults);
-                    searchInput.value = ''; // Limpiar el campo de búsqueda
-                }
-            });
-            
-            // Inicializar con la categoría "Colección" activa si existe, si no, el default
-            const coleccionBtn = document.querySelector('.category-btn[data-category="coleccion"]');
-            if (coleccionBtn) {
-                coleccionBtn.click();
-            } else {
-                defaultContent.style.display = 'block';
-            }
-        });
-    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const defaultContent = document.getElementById('default-content');
+            const categoryContents = document.querySelectorAll('.category-content');
+            const searchInput = document.getElementById('search-input');
+            const leftChild = document.getElementById('left-child');
+            const rightChild = document.getElementById('right-child');
+            
+            // Obtener los emojis de los niños
+            const leftEmoji = leftChild.querySelector('div');
+            const rightEmoji = rightChild.querySelector('div');
+            
+            // Inicializar con animación de entrada
+            leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+            rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+            
+            // Función para alternar entre niño y niña
+            function toggleChildren() {
+                // Desaparecer lentamente durante 3 segundos
+                leftEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
+                rightEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
+                
+                setTimeout(() => {
+                    // Cambiar los emojis después de que hayan desaparecido
+                    if (leftEmoji.textContent === '👦') {
+                        leftEmoji.textContent = '👧';
+                        rightEmoji.textContent = '👦';
+                    } else {
+                        leftEmoji.textContent = '👦';
+                        rightEmoji.textContent = '👧';
+                    }
+                    
+                    // Reaparecer lentamente durante 3 segundos
+                    leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+                    rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+                    
+                }, 3000); // Esperar 3 segundos (duración of fadeOutSlow)
+            }
+            
+            // Iniciar el ciclo cada 10 segundos (3s desaparecer + 3s aparecer + 4s de pausa)
+            setInterval(toggleChildren, 10000);
+            
+            // Manejo de categorías
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los botones
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Añadir clase active al botón clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar contenido por defecto
+                    defaultContent.style.display = 'none';
+                    
+                    // Ocultar todos los contenidos de categoría
+                    categoryContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Mostrar el contenido correspondiente a la categoría seleccionada
+                    const category = this.getAttribute('data-category');
+                    const targetContent = document.getElementById(`${category}-content`);
+                    
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+            
+            // Manejo de búsqueda
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                // Si no hay término de búsqueda, mostrar contenido según categoría seleccionada
+                if (searchTerm === '') {
+                    const activeCategory = document.querySelector('.category-btn.active');
+                    if (activeCategory) {
+                        activeCategory.click();
+                    }
+                    return;
+                }
+                
+                // Ocultar contenido por defecto
+                defaultContent.style.display = 'none';
+                
+                // Ocultar todos los contenidos de categoría
+                categoryContents.forEach(content => content.classList.remove('active'));
+                
+                // Mostrar resultados de búsqueda
+                // En una implementación real, aquí se filtrarían los recursos
+                // Por ahora, mostramos un mensaje de búsqueda
+                const searchResults = document.createElement('div');
+                searchResults.className = 'category-content active';
+                searchResults.innerHTML = `
+                    <h2>🔍 Resultados de búsqueda</h2>
+                    <p>Buscando: "${searchTerm}"</p>
+                    <p><small>Función de búsqueda en desarrollo</small></p>
+                `;
+                
+                // Reemplazar contenido existente
+                const mainContent = document.querySelector('.main-content');
+                const existingResults = document.querySelector('.search-results');
+                if (existingResults) {
+                    existingResults.remove();
+                }
+                
+                searchResults.classList.add('search-results');
+                mainContent.appendChild(searchResults);
+            });
+            
+            // Inicializar con la categoría "Colección" activa
+            document.querySelector('.category-btn[data-category="coleccion"]').click();
+        });
+    </script>
 </body>
 </html>
