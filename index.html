@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -563,7 +563,6 @@
         /* Estilos para la cuadrícula de herramientas */
         .tools-grid {
             display: grid;
-            /* --- TAMAÑO MODIFICADO PARA 5 TARJETAS --- */
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
@@ -576,7 +575,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
-            /* --- PADDING MODIFICADO --- */
             padding: 1rem;
             display: flex;
             flex-direction: column;
@@ -593,14 +591,12 @@
         }
 
         .tool-icon {
-            /* --- TAMAÑO DE ÍCONO MODIFICADO --- */
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
 
         .tool-name {
             font-weight: 500;
-            /* --- TAMAÑO DE FUENTE MODIFICADO --- */
             font-size: 1rem;
             color: var(--dark);
         }
@@ -623,7 +619,6 @@
             }
             
             .activities-grid, .tools-grid {
-                /* --- AJUSTE PARA MÓVILES --- */
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
             
@@ -836,6 +831,10 @@
                     <div class="tool-card" onclick="window.open('Carrera Matemática.html', '_blank')">
                         <div class="tool-icon">🏁</div>
                         <div class="tool-name">Carrera Matemática</div>
+                    </div>
+                    <div class="tool-card" onclick="window.open('Olimpiada de Matemática.htm', '_blank')">
+                        <div class="tool-icon">🏆</div>
+                        <div class="tool-name">Olimpiada de Matemática</div>
                     </div>
                 </div>
             </div>
