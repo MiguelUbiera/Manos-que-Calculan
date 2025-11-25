@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -58,7 +57,7 @@
             }
             100% {
                 transform: translate(0, 0) rotate(0deg);
-                opacity: 0; /* Desaparece suavemente */
+                opacity: 0;
             }
         }
 
@@ -155,7 +154,65 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             text-align: center;
             flex: 1;
+            display: block; /* Por defecto, visible */
         }
+        
+        #pantalla-inicial {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            min-height: 300px;
+        }
+        
+        #pantalla-sorteo {
+            display: none; /* Inicialmente oculto */
+        }
+
+        /* Tarjetas de Selección */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        
+        .course-card {
+            background-color: var(--light);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            width: 100%;
+            max-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-bottom: 5px solid var(--primary);
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: #e0e0e0;
+        }
+        
+        .course-card h4 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-top: 10px;
+        }
+        
+        .course-card .emoji {
+            font-size: 3rem;
+        }
+
 
         .grado {
             font-size: 1.5rem;
@@ -252,11 +309,14 @@
             #resultado {
                 font-size: 1.5rem;
             }
+            
+            .card-container {
+                gap: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Elementos flotantes en el fondo -->
     <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
     <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">📏</div>
     <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">🔺</div>
@@ -276,7 +336,6 @@
     <div class="floating-element" style="top: 35%; left: 75%; animation-delay: 0.8s;">∑</div>
     <div class="floating-element" style="top: 65%; right: 75%; animation-delay: 1.8s;">∛</div>
 
-    <!-- Encabezado -->
     <div class="encabezado">
         <div class="header-content">
             <div class="child-figure" id="left-child">
@@ -296,16 +355,33 @@
         <h2>Profesores: Miguel Ubiera y Anna Morán</h2>
     </div>
 
-    <!-- Contenedor principal -->
     <div class="container">
-        <div class="grado" id="grado">1ro de Secundaria</div>
-        <div class="controls">
-            <button id="sortearBtn">Comenzar Sorteo</button>
+        
+        <div id="pantalla-inicial">
+            <h2>Selecciona el Curso para el Sorteo</h2>
+            <div class="card-container">
+                <div class="course-card" onclick="iniciarSorteo('1ro')">
+                    <span class="emoji">🍎</span>
+                    <h4>1ro de Secundaria</h4>
+                </div>
+                <div class="course-card" onclick="iniciarSorteo('5to')">
+                    <span class="emoji">🎓</span>
+                    <h4>5to de Secundaria</h4>
+                </div>
+            </div>
+            <button id="regresarBtn" style="display: none; margin-top: 20px;" onclick="mostrarPantallaInicial()">← Regresar a Cursos</button>
         </div>
-        <div id="resultado"></div>
-        <div id="seleccionados">
-            <h3>Estudiantes Seleccionados:</h3>
-            <ul id="listaSeleccionados"></ul>
+
+        <div id="pantalla-sorteo">
+            <div class="grado" id="grado"></div>
+            <div class="controls">
+                <button id="sortearBtn">Comenzar Sorteo</button>
+            </div>
+            <div id="resultado"></div>
+            <div id="seleccionados">
+                <h3>Estudiantes Seleccionados:</h3>
+                <ul id="listaSeleccionados"></ul>
+            </div>
         </div>
     </div>
 
@@ -315,7 +391,8 @@
     </footer>
 
     <script>
-        const curso = {
+        // Estudiantes de 1ro y 5to de Secundaria
+        const estudiantesPorCurso = {
             "1ro": [
                 "Agüero Gómez, Leandro José",
                 "Carrasco Cabrera, Israel",
@@ -324,34 +401,65 @@
                 "Peña Espinal, Luis Ángel",
                 "Poché Pérez, Hillary Nayrelis",
                 "Valdez Liranzo, Nildo Enrique"
+            ],
+            "5to": [
+                "Melissa Bayona Fuentes",
+                "Paula Chanely Carrasco Ogando",
+                "Milagros De Jesús Santana",
+                "Abigail Ariela Gatón Mora",
+                "Génesis Massiel Paula",
+                "Emily Alamna Medrano Figueroa",
+                "Juanes Jesús Mena Bautista",
+                "Rafael Josué Minyetty Torres",
+                "Estrella María Mongouin Reveav",
+                "Jonawersd Prado",
+                "Wesley Ramírez Encarnación",
+                "Edgar Evaristo Serrata Hiraldo",
+                "Moisés Enmanuel Valdez Mateo",
+                "Esmeralda Vásquez Montero",
+                "Miguel Josué Villamán Tejada",
+                "Norkis Camila Reynoso Pérez"
             ]
         };
 
-        let disponibles = [...curso["1ro"]];
-        const seleccionados = [];
-
+        let disponibles = [];
+        let seleccionados = [];
+        let cursoActual = null;
+        
+        // Elementos de la interfaz
+        const pantallaInicial = document.getElementById('pantalla-inicial');
+        const pantallaSorteo = document.getElementById('pantalla-sorteo');
+        const gradoDiv = document.getElementById('grado');
         const sortearBtn = document.getElementById('sortearBtn');
         const resultadoDiv = document.getElementById('resultado');
         const listaSeleccionados = document.getElementById('listaSeleccionados');
+        const regresarBtn = document.getElementById('regresarBtn');
+        
+        // Animación del encabezado
         const leftChild = document.getElementById('left-child');
         const rightChild = document.getElementById('right-child');
-
-        // Obtener los emojis de los niños
         const leftEmoji = leftChild.querySelector('div');
         const rightEmoji = rightChild.querySelector('div');
         
-        // Inicializar con animación de entrada
-        leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
-        rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+        let intervalToggleChildren = null;
+        
+        // Inicializar animación
+        function iniciarAnimacionChildren() {
+            leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+            rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
+            
+            // Asegurarse de que solo haya un intervalo de animación corriendo
+            if (intervalToggleChildren) clearInterval(intervalToggleChildren);
+            
+            intervalToggleChildren = setInterval(toggleChildren, 10000);
+        }
         
         // Función para alternar entre niño y niña
         function toggleChildren() {
-            // Desaparecer lentamente durante 3 segundos
             leftEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
             rightEmoji.style.animation = 'fadeOutSlow 3s ease-in forwards';
             
             setTimeout(() => {
-                // Cambiar los emojis después de que hayan desaparecido
                 if (leftEmoji.textContent === '👦') {
                     leftEmoji.textContent = '👧';
                     rightEmoji.textContent = '👦';
@@ -360,28 +468,55 @@
                     rightEmoji.textContent = '👧';
                 }
                 
-                // Reaparecer lentamente durante 3 segundos
                 leftEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
                 rightEmoji.style.animation = 'fadeInSlow 3s ease-out forwards';
                 
-            }, 3000); // Esperar 3 segundos (duración de fadeOutSlow)
+            }, 3000);
         }
-        
-        // Iniciar el ciclo cada 10 segundos (3s desaparecer + 3s aparecer + 4s de pausa)
-        setInterval(toggleChildren, 10000);
 
+        // --- Lógica de la interfaz ---
+
+        // Muestra la pantalla de selección de curso
+        function mostrarPantallaInicial() {
+            pantallaInicial.style.display = 'flex';
+            pantallaSorteo.style.display = 'none';
+            regresarBtn.style.display = 'none';
+            // Restablecer el botón de sorteo
+            sortearBtn.disabled = false;
+            resultadoDiv.textContent = '';
+            listaSeleccionados.innerHTML = '';
+        }
+
+        // Inicializa el sorteo para el curso seleccionado
+        function iniciarSorteo(curso) {
+            cursoActual = curso;
+            disponibles = [...estudiantesPorCurso[curso]];
+            seleccionados = [];
+            
+            gradoDiv.textContent = `${curso} de Secundaria`;
+            sortearBtn.disabled = false;
+            resultadoDiv.textContent = 'Presiona "Comenzar Sorteo"';
+            actualizarListaSeleccionados();
+
+            pantallaInicial.style.display = 'none';
+            pantallaSorteo.style.display = 'block';
+            regresarBtn.style.display = 'block';
+        }
+
+        // Lógica para el sorteo de un nombre
         sortearBtn.addEventListener('click', () => {
             if (disponibles.length === 0) {
-                resultadoDiv.textContent = "Todos los estudiantes han sido seleccionados.";
+                resultadoDiv.textContent = `¡Todos los estudiantes de ${cursoActual} han sido seleccionados!`;
                 sortearBtn.disabled = true;
                 return;
             }
 
-            // Animación de selección aleatoria
             let intervalId;
             let contador = 0;
-            const duracionAnimacion = 2000; // 2 segundos
+            const duracionAnimacion = 2000;
             const tiempoPorIteracion = 50;
+
+            sortearBtn.disabled = true; // Desactivar durante la animación
 
             intervalId = setInterval(() => {
                 const indiceAleatorio = Math.floor(Math.random() * disponibles.length);
@@ -391,26 +526,21 @@
                 if (contador >= duracionAnimacion) {
                     clearInterval(intervalId);
 
-                    // Finalizar selección
                     const indiceFinal = Math.floor(Math.random() * disponibles.length);
                     const estudianteSeleccionado = disponibles[indiceFinal];
 
-                    // Actualizar listas
                     seleccionados.push(estudianteSeleccionado);
                     disponibles.splice(indiceFinal, 1);
 
-                    // Mostrar resultados
                     resultadoDiv.textContent = `${estudianteSeleccionado}`;
                     actualizarListaSeleccionados();
 
-                    // Desactivar botón si no quedan estudiantes disponibles
-                    if (disponibles.length === 0) {
-                        sortearBtn.disabled = true;
-                    }
+                    sortearBtn.disabled = disponibles.length === 0;
                 }
             }, tiempoPorIteracion);
         });
 
+        // Actualiza la lista visible de seleccionados
         function actualizarListaSeleccionados() {
             listaSeleccionados.innerHTML = '';
             seleccionados.forEach(estudiante => {
@@ -419,6 +549,12 @@
                 listaSeleccionados.appendChild(li);
             });
         }
+        
+        // Ejecutar al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            iniciarAnimacionChildren();
+            mostrarPantallaInicial(); // Mostrar la pantalla de selección al cargar
+        });
     </script>
 </body>
 </html>
