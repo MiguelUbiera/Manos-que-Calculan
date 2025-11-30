@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Cuadro de Signos - Instituto Santa Rosa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #5c6bc0; /* Azul más suave */
+            --secondary: #ff7043; /* Naranja para tiempo */
+            --accent: #00bcd4;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #66bb6a; /* Verde para acierto */
+            --elite: #ff9800;
+            --experto: #9c27b0;
+            --competente: #2196f3;
+            --iniciado: #f44336;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* --- Definiciones de Keyframes para Emojis (AÑADIDO) --- */
+        @keyframes fadeOutSlow {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.8); }
+        }
+
+        @keyframes fadeInSlow {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        /* ---------------------------------------------------- */
+
+        /* --- Elementos Flotantes --- */
+        .floating-element {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            animation: floatElement 18s infinite ease-in-out;
+        }
+        
+        @keyframes floatElement {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
+            25% { transform: translate(20px, -15px) rotate(5deg); opacity: 0.15; }
+            50% { transform: translate(-15px, 10px) rotate(-5deg); opacity: 0.12; }
+            75% { transform: translate(10px, 20px) rotate(3deg); opacity: 0.15; }
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.6rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .child-figure {
+            font-size: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 40px;
+        }
+        
+        /* Se quita la transición global para no interferir con la animación CSS */
+        .child-figure div { /*transition: opacity 0.5s, transform 0.5s; */ }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        
+        .logo-icon {
+            font-size: 1.6rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        h1 { margin: 0; font-size: 1.4rem; }
+        
+        .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin: 0.2rem 0 0;
+        }
+
+        /* --- Diseño General de Contenido --- */
+        #contenedor {
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 15px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 1rem auto;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        
+        #panel-izquierdo {
+            background-color: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 20%; 
+            min-width: 200px;
+            border: 3px solid var(--primary);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        #juego {
+            background-color: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            border: 3px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 500px;
+            position: relative;
+        }
+        
+        #historial {
+            background-color: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 30%; 
+            min-width: 250px;
+            border: 2px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            text-align: center;
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .info-panel h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
+        
+        #temporizador {
+            font-size: 24px;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        #progreso-info {
+            font-size: 18px;
+            color: var(--dark);
+            font-weight: bold;
+        }
+
+        /* ESTILOS DE PARTICIPANTE Y TIEMPO */
+        #nombre-display {
+            font-size: 24px;
+            color: black;
+            font-weight: bold;
+        }
+        
+        /* --- Estilos del Cuadro de Signos --- */
+        #cuadro-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 1px;
+            margin: 20px auto;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .celda {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: #e8eaf6;
+            border: 2px solid #c5cae9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--dark);
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        /* Estilo específico para la celda de la multiplicación (celda-inicio) */
+        .celda-inicio {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            font-family: Arial, sans-serif;
+        }
+        
+        /* --- Estilos de Historial --- */
+        #historial h2 { font-size: 1.3rem; margin-bottom: 10px; color: var(--primary); }
+        #historial table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+        #historial th, #historial td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 14px; }
+        #historial th { background: #e8eaf6; color: var(--primary); }
+        
+        #historial thead tr th:nth-child(1) { width: 40%; } 
+        #historial thead tr th:nth-child(2) { width: 25%; } 
+        #historial thead tr th:nth-child(3) { width: 35%; } 
+
+        #lista-historial .nombre-celda { color: black; font-weight: bold; }
+        #lista-historial .acierto-celda { color: black; font-weight: bold; }
+
+        .elite { background-color: #fff3e0; color: #e65100; font-weight: bold; }
+        .experto { background-color: #f3e5f5; color: #7b1fa2; font-weight: bold; }
+        .competente { background-color: #e3f2fd; color: #1565c0; font-weight: bold; }
+        .iniciado-jerarquia { background-color: #ffebee; color: #c62828; font-weight: bold; }
+
+        .celda-vacia { background-color: white; border: 2px solid #9fa8da; cursor: pointer; }
+        .celda-vacia:hover { background-color: #f0f4c3; transform: scale(1.05); }
+        .celda-vacia.activa { 
+            box-shadow: 0 0 0 3px var(--accent); 
+            transform: scale(1.08); 
+            /* Animación suave para la navegación automática */
+            animation: pulse-active 0.3s ease-out; 
+        }
+
+        @keyframes pulse-active {
+            0% { transform: scale(1); box-shadow: 0 0 0 0px var(--accent); }
+            50% { transform: scale(1.08); box-shadow: 0 0 0 5px rgba(0, 189, 212, 0.5); }
+            100% { transform: scale(1.08); box-shadow: 0 0 0 3px var(--accent); }
+        }
+
+        .celda-fila-signo.resaltada, .celda-columna-signo.resaltada { box-shadow: 0 0 0 3px var(--secondary); z-index: 10; }
+        .respuesta-correcta { background-color: var(--success); color: white; }
+        .respuesta-incorrecta { background-color: var(--iniciado); color: white; }
+        
+        #teclado-respuestas {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: none; 
+            display: flex; gap: 20px; padding: 10px; background-color: #fff;
+            border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); z-index: 20;
+        }
+
+        .btn-respuesta { padding: 12px 25px; font-size: 28px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #btn-positivo { background-color: var(--success); color: white; }
+        #btn-positivo:hover { background-color: #388e3c; }
+        #btn-negativo { background-color: var(--iniciado); color: white; }
+        #btn-negativo:hover { background-color: #d32f2f; }
+        
+        .botones-container { margin-top: auto; display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        #terminar-btn, #barrer-btn, #reiniciar-entrada-btn { 
+            padding: 10px 20px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; 
+            transition: all 0.3s; box-shadow: 0 3px 5px rgba(0,0,0,0.1); width: 100%; 
+        }
+        #terminar-btn { background-color: var(--secondary); color: white; }
+        #terminar-btn:hover { background-color: #e64a19; }
+        #barrer-btn { background-color: #6c757d; color: white; }
+        #barrer-btn:hover { background-color: #5a6268; }
+        
+        #reiniciar-entrada-btn { background-color: var(--primary); color: white; }
+        #reiniciar-entrada-btn:hover { background-color: #455a64; }
+
+        #inicio { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 1rem; flex-grow: 1; }
+        #nombre-input { font-size: 18px; padding: 12px; width: 280px; margin: 15px; border: 2px solid var(--primary); border-radius: 8px; text-align: center; }
+        #comenzar-btn { padding: 12px 24px; font-size: 18px; background-color: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        
+        .reconocimiento-wrapper { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; animation: aparecer 0.5s ease-out; }
+        @keyframes aparecer { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+
+        .reconocimiento { background: linear-gradient(135deg, #fff, #f5f5f5); padding: 20px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); text-align: center; width: 90%; max-width: 450px; border: 3px solid var(--accent); }
+        .reconocimiento h1 { font-size: 1.5rem; color: var(--primary); margin: 0 0 10px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .reconocimiento h2 { font-size: 1.1rem; color: #555; margin: 8px 0; }
+        .reconocimiento p { font-size: 1rem; color: #333; margin: 8px 0; line-height: 1.4; }
+        .reconocimiento strong { color: var(--secondary); font-size: 1.1rem; }
+        .start-emoji { font-size: 4rem; margin-bottom: 20px; animation: pulse 2.5s infinite ease-in-out; }
+        
+        footer { text-align: center; padding: 0.8rem; background: var(--dark); color: white; width: 100%; margin-top: auto; }
+        footer p { margin: 0.3rem 0; font-size: 0.8rem; }
+        
+        @media (max-width: 1024px) {
+            #contenedor { flex-direction: column; max-width: 600px; }
+            #panel-izquierdo, #juego, #historial { width: 100%; margin-bottom: 15px; }
+            #panel-izquierdo { order: 1; min-height: auto; }
+            #juego { order: 2; }
+            #historial { order: 3; min-height: auto; }
+            #cuadro-container { max-width: 450px; }
+            .celda { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">➕</div>
+    <div class="floating-element" style="top: 15%; right: 5%; animation-delay: 1s;">➖</div>
+    <div class="floating-element" style="top: 25%; left: 8%; animation-delay: 2s;">✖️</div>
+    <div class="floating-element" style="top: 35%; right: 10%; animation-delay: 3s;">➗</div>
+    <div class="floating-element" style="top: 45%; left: 5%; animation-delay: 4s;">➕</div>
+    <div class="floating-element" style="top: 55%; right: 7%; animation-delay: 5s;">➖</div>
+    <div class="floating-element" style="top: 65%; left: 12%; animation-delay: 6s;">✖️</div>
+    <div class="floating-element" style="top: 75%; right: 9%; animation-delay: 7s;">➗</div>
+
+
+    <header>
+        <div class="header-content">
+            <div class="child-figure" id="left-child"><div>👦</div></div>
+            <div class="logo">
+                <span class="logo-icon">✖️</span>
+                <h1>Cuadro de Signos</h1>
+                <span class="logo-icon">➗</span>
+            </div>
+            <div class="child-figure" id="right-child"><div>👧</div></div>
+        </div>
+        <p class="subtitle">Profesores: Miguel Ubiera y Anna Morán</p>
+    </header>
+
+    <div id="inicio">
+        <div class="start-emoji">🧏🧒</div>
+        <h2 style="margin-bottom: 15px; color: var(--primary);">Bienvenido al Cuadro de Signos</h2>
+        <input type="text" id="nombre-input" placeholder="Escribe tu nombre" autofocus aria-label="Nombre del participante">
+        <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
+    </div>
+
+    <div id="contenedor">
+        <div id="panel-izquierdo">
+            
+            <div class="info-panel">
+                <h3>👤 Participante</h3>
+                <div id="nombre-display"></div>
+            </div>
+
+            <div class="info-panel">
+                <h3>⏱️ Tiempo</h3>
+                <div id="temporizador">200 segundos</div>
+            </div>
+            <div class="info-panel">
+                <h3>✅ Aciertos</h3>
+                <div id="progreso-info">0 / 49</div>
+            </div>
+
+            <div class="botones-container">
+                <button id="terminar-btn" onclick="terminarPartida()" style="display: none;">Terminar Partida</button>
+                <button id="reiniciar-entrada-btn" onclick="reiniciarJuego()" style="display: none;">Reiniciar Juego</button>
+            </div>
+        </div>
+        
+        <div id="juego">
+            <div id="cuadro-container"></div>
+            <div id="teclado-respuestas">
+                <button id="btn-positivo" class="btn-respuesta" onclick="ingresarRespuesta('+')">+</button>
+                <button id="btn-negativo" class="btn-respuesta" onclick="ingresarRespuesta('-')">-</button>
+            </div>
+        </div>
+        
+        <div id="historial">
+            <h2>🏆 Historial de Desempeño</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Aciertos %</th>
+                        <th>Jerarquía</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-historial"></tbody>
+            </table>
+            <div style="margin-top: auto; padding-top: 10px;">
+                <button id="barrer-btn" onclick="barrerHistorial()">Barrer Historial</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+    </footer>
+
+    <script>
+        const TIEMPO_TOTAL = 200;
+        const CELDAS_RESPUESTA = 49; // 7x7
+
+        let tiempoRestante, temporizador;
+        let nombreParticipante = "";
+        let historial = JSON.parse(localStorage.getItem('historialSignos')) || [];
+        let signosFila = [];
+        let signosColumna = [];
+        let respuestasCorrectas = [];
+        let respuestasUsuario = Array(7).fill(0).map(() => Array(7).fill(null));
+        let celdaActiva = null;
+        let aciertos = 0;
+        let celdasRespondidas = 0;
+        let juegoEnCurso = false;
+
+        // --- Lógica de Animación de Emojis (CORREGIDA) ---
+        const leftChild = document.getElementById('left-child').querySelector('div');
+        const rightChild = document.getElementById('right-child').querySelector('div');
+        
+        function swapAndAnimateChildren() {
+            // 1. Iniciar Fade Out (1.5s)
+            leftChild.style.animation = 'fadeOutSlow 1.5s ease-in forwards';
+            rightChild.style.animation = 'fadeOutSlow 1.5s ease-in forwards';
+            
+            // 2. Esperar a que el Fade Out termine
+            setTimeout(() => {
+                // 3. Intercambiar contenido
+                [leftChild.textContent, rightChild.textContent] = [rightChild.textContent, leftChild.textContent];
+                
+                // 4. Iniciar Fade In (1.5s)
+                leftChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+                rightChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+                
+                // 5. Esperar a que el Fade In termine y LIMPIAR la propiedad animation para el siguiente ciclo.
+                setTimeout(() => {
+                    leftChild.style.animation = '';
+                    rightChild.style.animation = '';
+                }, 1500);
+
+            }, 1500);
+        }
+
+        // Animación inicial al cargar (Fade In)
+        leftChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+        rightChild.style.animation = 'fadeInSlow 1.5s ease-out forwards';
+        
+        // Limpiar la animación inicial para no interferir con el setInterval
+        setTimeout(() => {
+            leftChild.style.animation = '';
+            rightChild.style.animation = '';
+        }, 1500);
+
+        // Ciclo de intercambio
+        setInterval(swapAndAnimateChildren, 6000);
+
+        // --- Lógica del Juego ---
+
+        function getNextUnansweredCell(currentFila, currentColumna) {
+            const totalCeldas = 49;
+            const currentIndex = currentFila * 7 + currentColumna;
+            
+            for (let k = 1; k < totalCeldas; k++) {
+                const nextIndex = (currentIndex + k) % totalCeldas;
+                const i = Math.floor(nextIndex / 7);
+                const j = nextIndex % 7;
+                
+                if (respuestasUsuario[i][j] === null) {
+                    return { fila: i, columna: j };
+                }
+            }
+            return null; 
+        }
+
+        function iniciarJuego() {
+            nombreParticipante = document.getElementById('nombre-input').value.trim();
+            if (nombreParticipante === "") {
+                alert("Por favor, escribe tu nombre para comenzar.");
+                return;
+            }
+
+            document.getElementById('inicio').style.display = 'none';
+            document.getElementById('contenedor').style.display = 'flex';
+            document.getElementById('terminar-btn').style.display = 'block';
+            document.getElementById('reiniciar-entrada-btn').style.display = 'none';
+            juegoEnCurso = true;
+
+            document.getElementById('nombre-display').textContent = nombreParticipante;
+
+            // Resetear Variables
+            aciertos = 0;
+            celdasRespondidas = 0;
+            respuestasUsuario = Array(7).fill(0).map(() => Array(7).fill(null));
+            celdaActiva = null;
+            
+            // Regenerar el área de juego
+            document.getElementById('juego').innerHTML = '<div id="cuadro-container"></div>' + 
+                '<div id="teclado-respuestas">' +
+                '<button id="btn-positivo" class="btn-respuesta" onclick="ingresarRespuesta(\'+\')">+</button>' +
+                '<button id="btn-negativo" class="btn-respuesta" onclick="ingresarRespuesta(\'-\')">-</button>' +
+                '</div>';
+            
+            generarCuadro();
+            iniciarTemporizador();
+            actualizarProgreso();
+
+            // Seleccionar la primera celda automáticamente
+            setTimeout(() => {
+                const firstCell = document.querySelector('.celda-vacia[data-fila="0"][data-columna="0"]');
+                if (firstCell) {
+                    manejarSeleccionCelda(firstCell, 0, 0);
+                }
+            }, 100);
+        }
+
+        function generarSigno() {
+            return (Math.random() < 0.5 ? '+' : '-');
+        }
+
+        function generarCuadro() {
+            const container = document.getElementById('cuadro-container');
+            
+            // Generar signos de guía: 7 filas, 7 columnas.
+            // Los signos de fila son aleatorios.
+            signosFila = Array(7).fill(0).map(() => generarSigno());
+            // Los signos de columna se alternan (+, -, +, -...)
+            signosColumna = Array(7).fill(0).map((_, i) => (i % 2 === 0 ? '+' : '-')); 
+            respuestasCorrectas = [];
+
+            // Calcular las respuestas correctas para la cuadrícula 7x7
+            for (let i = 0; i < 7; i++) {
+                respuestasCorrectas[i] = [];
+                for (let j = 0; j < 7; j++) {
+                    const signo1 = signosColumna[i];
+                    const signo2 = signosFila[j];
+                    // Regla de multiplicación de signos: signos iguales dan '+', diferentes dan '-'
+                    respuestasCorrectas[i][j] = (signo1 === signo2) ? '+' : '-';
+                }
+            }
+
+            // Crear el DOM del cuadro (8x8)
+            for (let i = 0; i < 8; i++) { 
+                for (let j = 0; j < 8; j++) { 
+                    const celda = document.createElement('div');
+                    celda.className = 'celda';
+                    
+                    if (i === 0 && j === 0) {
+                        celda.className += ' celda-inicio';
+                        celda.textContent = '×';
+                    } else if (i === 0) { // Fila de signos guía
+                        celda.className += ' celda-fila-signo';
+                        celda.textContent = signosFila[j - 1];
+                        celda.dataset.columnaIndex = j - 1;
+                    } else if (j === 0) { // Columna de signos guía
+                        celda.className += ' celda-columna-signo';
+                        celda.textContent = signosColumna[i - 1];
+                        celda.dataset.filaIndex = i - 1;
+                    } else { // Celdas de respuesta (7x7)
+                        celda.className += ' celda-vacia';
+                        celda.dataset.fila = i - 1;
+                        celda.dataset.columna = j - 1;
+                        
+                        if (respuestasUsuario[i - 1][j - 1] === null) {
+                            celda.addEventListener('click', () => manejarSeleccionCelda(celda, i - 1, j - 1));
+                        }
+                    }
+                    container.appendChild(celda);
+                }
+            }
+        }
+
+        function iniciarTemporizador() {
+            tiempoRestante = TIEMPO_TOTAL;
+            clearInterval(temporizador);
+            document.getElementById('temporizador').textContent = `${tiempoRestante} segundos`;
+            
+            temporizador = setInterval(() => {
+                tiempoRestante--;
+                document.getElementById('temporizador').textContent = `${tiempoRestante} segundos`;
+                
+                if (tiempoRestante <= 0) {
+                    terminarPartida(true);
+                }
+            }, 1000);
+        }
+
+        function manejarSeleccionCelda(celda, fila, columna) {
+            // Limpiar la selección previa
+            document.querySelectorAll('.celda.activa').forEach(c => c.classList.remove('activa'));
+            document.querySelectorAll('.celda-fila-signo').forEach(c => c.classList.remove('resaltada'));
+            document.querySelectorAll('.celda-columna-signo').forEach(c => c.classList.remove('resaltada'));
+            
+            // Verificar si la celda ya tiene una respuesta
+            if (respuestasUsuario[fila][columna] !== null) {
+                celdaActiva = null;
+                document.getElementById('teclado-respuestas').style.display = 'none';
+                return;
+            }
+
+            // Activar la nueva celda
+            celdaActiva = [fila, columna];
+            celda.classList.add('activa');
+
+            // Resaltar signos guía
+            document.querySelector(`.celda-fila-signo[data-columna-index="${columna}"]`).classList.add('resaltada');
+            document.querySelector(`.celda-columna-signo[data-fila-index="${fila}"]`).classList.add('resaltada');
+
+            // Mostrar teclado
+            document.getElementById('teclado-respuestas').style.display = 'flex';
+        }
+
+        function ingresarRespuesta(respuesta) {
+            if (!celdaActiva || !juegoEnCurso) return;
+
+            const [fila, columna] = celdaActiva;
+            const celdaElement = document.querySelector(`.celda-vacia[data-fila="${fila}"][data-columna="${columna}"]`);
+            
+            if (respuestasUsuario[fila][columna] === null) {
+                celdasRespondidas++;
+            }
+            respuestasUsuario[fila][columna] = respuesta;
+            
+            const correcta = respuestasCorrectas[fila][columna];
+            
+            celdaElement.textContent = respuesta;
+            celdaElement.classList.remove('celda-vacia', 'respuesta-correcta', 'respuesta-incorrecta', 'activa');
+
+            if (respuesta === correcta) {
+                celdaElement.classList.add('respuesta-correcta');
+                aciertos++;
+            } else {
+                celdaElement.classList.add('respuesta-incorrecta');
+            }
+            
+            // Deseleccionar la celda actual
+            celdaActiva = null;
+            document.querySelectorAll('.celda-fila-signo').forEach(c => c.classList.remove('resaltada'));
+            document.querySelectorAll('.celda-columna-signo').forEach(c => c.classList.remove('resaltada'));
+
+            actualizarProgreso();
+            
+            if (celdasRespondidas >= CELDAS_RESPUESTA) {
+                // Pequeño retraso para que el usuario vea la última respuesta
+                setTimeout(() => terminarPartida(false), 500); 
+            } else {
+                // Desplazamiento automático a la siguiente celda vacía
+                const nextCellCoords = getNextUnansweredCell(fila, columna);
+                if (nextCellCoords) {
+                    const nextCeldaElement = document.querySelector(`.celda-vacia[data-fila="${nextCellCoords.fila}"][data-columna="${nextCellCoords.columna}"]`);
+                    
+                    setTimeout(() => {
+                        if(nextCeldaElement) {
+                            manejarSeleccionCelda(nextCeldaElement, nextCellCoords.fila, nextCellCoords.columna);
+                        } else {
+                           // Ocultar teclado si no hay más celdas disponibles (debería ser capturado por celdasRespondidas >= CELDAS_RESPUESTA)
+                           document.getElementById('teclado-respuestas').style.display = 'none';
+                        }
+                    }, 50);
+                }
+            }
+        }
+
+        // Listener para las teclas + y -
+        document.addEventListener('keydown', (e) => {
+            // Solo si el juego está activo y no estamos en la pantalla de inicio
+            if (juegoEnCurso && document.getElementById('contenedor').style.display === 'flex' && celdaActiva) {
+                if (e.key === '+' || e.key === 'Add') {
+                    e.preventDefault();
+                    ingresarRespuesta('+');
+                } else if (e.key === '-' || e.key === 'Subtract') {
+                    e.preventDefault();
+                    ingresarRespuesta('-');
+                }
+            }
+        });
+
+        function actualizarProgreso() {
+            const porcentaje = celdasRespondidas > 0 ? ((aciertos / CELDAS_RESPUESTA) * 100).toFixed(1) : 0;
+            document.getElementById('progreso-info').textContent = `${aciertos} / ${CELDAS_RESPUESTA}`;
+        }
+
+        function obtenerJerarquia(porcentaje) {
+            if (porcentaje >= 85) return "Élite";
+            if (porcentaje >= 60) return "Experto";
+            if (porcentaje >= 25) return "Competente";
+            return "Iniciado";
+        }
+
+        function terminarPartida(porTiempo = false) {
+            clearInterval(temporizador);
+            juegoEnCurso = false;
+            
+            document.getElementById('teclado-respuestas').style.display = 'none';
+            document.querySelectorAll('.celda.activa').forEach(c => c.classList.remove('activa'));
+            document.querySelectorAll('.celda-fila-signo').forEach(c => c.classList.remove('resaltada'));
+            document.querySelectorAll('.celda-columna-signo').forEach(c => c.classList.remove('resaltada'));
+            
+            const porcentajeFinal = celdasRespondidas > 0 ? ((aciertos / CELDAS_RESPUESTA) * 100) : 0;
+            const jerarquia = obtenerJerarquia(porcentajeFinal);
+            
+            const juegoContainer = document.getElementById('juego');
+            const reconocimientoHTML = obtenerReconocimiento(nombreParticipante, aciertos, porcentajeFinal.toFixed(1), jerarquia, porTiempo);
+            juegoContainer.innerHTML = `<div class="reconocimiento-wrapper">${reconocimientoHTML}</div>`;
+            
+            historial.push({ nombre: nombreParticipante, aciertos: aciertos, porcentaje: porcentajeFinal.toFixed(1), jerarquia: jerarquia });
+            historial.sort((a, b) => b.porcentaje - a.porcentaje);
+            localStorage.setItem('historialSignos', JSON.stringify(historial));
+            actualizarHistorial();
+
+            document.getElementById('terminar-btn').style.display = 'none';
+            document.getElementById('reiniciar-entrada-btn').style.display = 'block';
+        }
+
+        function obtenerReconocimiento(nombre, aciertos, porcentaje, jerarquia, porTiempo) {
+            const mensajeTiempo = porTiempo ? "¡Se acabó el tiempo!" : "¡Cuadro completado!";
+            const colorJerarquia = jerarquia.toLowerCase().replace('é', 'e');
+            const fecha = new Date().toLocaleDateString('es-ES');
+            
+            return `
+                <div class="reconocimiento">
+                    <div class="start-emoji" style="font-size: 3rem; margin-bottom: 10px;">🧏🧒</div>
+                    <h1>Reconocimiento de Desempeño</h1>
+                    <h2>Instituto para Sordos Santa Rosa, Inc.</h2>
+                    <p>Se otorga este reconocimiento a:</p>
+                    <h2 style="color: var(--primary);">${nombre}</h2>
+                    <p>Por su destacada participación en la actividad de Cuadro de Signos. ${mensajeTiempo}</p>
+                    <p>Aciertos: <strong style="color: var(--success);">${aciertos} / ${CELDAS_RESPUESTA}</strong></p>
+                    <p>Porcentaje: <strong style="color: var(--secondary);">${porcentaje}%</strong></p>
+                    <p>Jerarquía: <strong class="${colorJerarquia} ${colorJerarquia === 'iniciado' ? 'iniciado-jerarquia' : ''}">${jerarquia}</strong></p>
+                    <p>Fecha: ${fecha}</p>
+                    <p>Profesores: Miguel Ubiera y Anna Morán</p>
+                </div>`;
+        }
+        
+        function reiniciarJuego() {
+            clearInterval(temporizador);
+            juegoEnCurso = false;
+            document.getElementById('inicio').style.display = 'flex';
+            document.getElementById('nombre-input').value = "";
+            document.getElementById('contenedor').style.display = 'none';
+            document.getElementById('reiniciar-entrada-btn').style.display = 'none'; 
+            
+            // Resetear el área de juego
+            document.getElementById('juego').innerHTML = '<div id="cuadro-container"></div>' + 
+                '<div id="teclado-respuestas">' +
+                '<button id="btn-positivo" class="btn-respuesta" onclick="ingresarRespuesta(\'+\')">+</button>' +
+                '<button id="btn-negativo" class="btn-respuesta" onclick="ingresarRespuesta(\'-\')">-</button>' +
+                '</div>';
+        }
+
+        function actualizarHistorial() {
+            const listaHistorial = document.getElementById('lista-historial');
+            listaHistorial.innerHTML = '';
+            historial.forEach(p => {
+                const tr = document.createElement('tr');
+                const jerarquiaClass = p.jerarquia.toLowerCase().replace('é', 'e');
+                tr.innerHTML = `<td>${p.nombre}</td><td>${p.porcentaje}%</td><td class="${jerarquiaClass} ${jerarquiaClass === 'iniciado' ? 'iniciado-jerarquia' : ''}">${p.jerarquia}</td>`;
+                listaHistorial.appendChild(tr);
+            });
+        }
+
+        function barrerHistorial() {
+            if (confirm("¿Estás seguro de que quieres borrar todo el historial?")) {
+                historial = [];
+                localStorage.removeItem('historialSignos');
+                actualizarHistorial();
+            }
+        }
+
+        actualizarHistorial();
+
+        document.getElementById('nombre-input').addEventListener('keydown', (e) => {
+            if (e.key === "Enter") iniciarJuego();
+        });
+    </script>
+</body>
+</html>
