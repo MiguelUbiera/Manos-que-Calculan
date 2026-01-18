@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -888,7 +889,12 @@
                         <div class="tool-icon">💥</div>
                         <div class="tool-name">Aniquilación de Opuestos</div>
                     </div>
-                    <div class="tool-card" onclick="window.open('Recta Numérica.html', '_blank')">
+                    <div class="tool-card" onclick="window.open('Anulación.html', '_blank')">
+ <div class="tool-icon">0 = 0</div>
+ <div class="tool-name">Anulación</div>
+ </div>
+ 
+ <div class="tool-card" onclick="window.open('Recta Numérica.html', '_blank')">
                         <div class="tool-icon">↔️</div>
                         <div class="tool-name">Recta Numérica</div>
                     </div>
@@ -1022,47 +1028,115 @@
             });
             
             // Manejo de búsqueda
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                
-                // Si no hay término de búsqueda, mostrar contenido según categoría seleccionada
-                if (searchTerm === '') {
-                    const activeCategory = document.querySelector('.category-btn.active');
-                    if (activeCategory) {
-                        activeCategory.click();
-                    }
-                    return;
-                }
-                
-                // Ocultar contenido por defecto
-                defaultContent.style.display = 'none';
-                
-                // Ocultar todos los contenidos de categoría
-                categoryContents.forEach(content => content.classList.remove('active'));
-                
-                // Mostrar resultados de búsqueda
-                // En una implementación real, aquí se filtrarían los recursos
-                // Por ahora, mostramos un mensaje de búsqueda
-                const searchResults = document.createElement('div');
-                searchResults.className = 'category-content active';
-                searchResults.innerHTML = `
-                    <h2>🔍 Resultados de búsqueda</h2>
-                    <p>Buscando: "${searchTerm}"</p>
-                    <p><small>Función de búsqueda en desarrollo</small></p>
-                `;
-                
-                // Reemplazar contenido existente
-                const mainContent = document.querySelector('.main-content');
-                const existingResults = document.querySelector('.search-results');
-                if (existingResults) {
-                    existingResults.remove();
-                }
-                
-                searchResults.classList.add('search-results');
-                mainContent.appendChild(searchResults);
-            });
-            
-            // Inicializar con la categoría "Colección" activa
+ searchInput.addEventListener('input', function() {
+ const searchTermRaw = this.value;
+ 
+ // Normalizar texto (minúsculas y sin acentos)
+ function normalizeText(str) {
+ return (str || '')
+ .toString()
+ .normalize('NFD')
+ .replace(/[̀-ͯ]/g, '')
+ .toLowerCase();
+ }
+ 
+ // Obtener iniciales de un nombre (ej: "Súper Calculadora" -> "sc")
+ function getInitials(name) {
+ const clean = normalizeText(name).replace(/[^a-z0-9\s]/g, ' ');
+ const parts = clean.trim().split(/\s+/).filter(Boolean);
+ return parts.map(p => p[0]).join('');
+ }
+ 
+ const searchTerm = normalizeText(searchTermRaw).trim();
+ const searchTermNoSpaces = searchTerm.replace(/\s+/g, '');
+ 
+ // Si no hay término de búsqueda, mostrar contenido según categoría seleccionada
+ if (searchTerm === '') {
+ const existingResults = document.querySelector('.search-results');
+ if (existingResults) {
+ existingResults.remove();
+ }
+ const activeCategory = document.querySelector('.category-btn.active');
+ if (activeCategory) {
+ activeCategory.click();
+ }
+ return;
+ }
+ 
+ // Ocultar contenido por defecto
+ defaultContent.style.display = 'none';
+ 
+ // Ocultar todos los contenidos de categoría
+ categoryContents.forEach(content => content.classList.remove('active'));
+ 
+ // Reemplazar/crear resultados de búsqueda
+ const mainContent = document.querySelector('.main-content');
+ const existingResults = document.querySelector('.search-results');
+ if (existingResults) {
+ existingResults.remove();
+ }
+ 
+ const searchResults = document.createElement('div');
+ searchResults.className = 'category-content active search-results';
+ 
+ // Encabezado
+ const title = document.createElement('h2');
+ title.textContent = '🔍 Resultados de búsqueda';
+ const subtitle = document.createElement('p');
+ subtitle.textContent = `Buscando: "${searchTermRaw}"`;
+ 
+ searchResults.appendChild(title);
+ searchResults.appendChild(subtitle);
+ 
+ // Buscar coincidencias en todas las tarjetas (apps/juegos)
+ const allCards = document.querySelectorAll('.category-content .tool-card');
+ const grid = document.createElement('div');
+ grid.className = 'tools-grid';
+ 
+ let matchCount = 0;
+ allCards.forEach(card => {
+ const nameEl = card.querySelector('.tool-name');
+ const iconEl = card.querySelector('.tool-icon');
+ const name = nameEl ? nameEl.textContent : '';
+ const icon = iconEl ? iconEl.textContent : '';
+ const onclick = card.getAttribute('onclick') || '';
+ 
+ const nameNorm = normalizeText(name);
+ const initials = getInitials(name);
+ const haystack = normalizeText(`${name} ${icon} ${onclick}`);
+ 
+ const isMatch =
+ haystack.includes(searchTerm) ||
+ nameNorm.startsWith(searchTerm) ||
+ initials.startsWith(searchTermNoSpaces);
+ 
+ if (isMatch) {
+ matchCount++;
+ grid.appendChild(card.cloneNode(true));
+ }
+ });
+ 
+ if (matchCount === 0) {
+ const empty = document.createElement('p');
+ const smallEmpty = document.createElement('small');
+ smallEmpty.textContent = `No se encontraron resultados para "${searchTermRaw}"`;
+ empty.appendChild(smallEmpty);
+ searchResults.appendChild(empty);
+ } else {
+ const count = document.createElement('p');
+ const smallCount = document.createElement('small');
+ smallCount.textContent = 'Resultados encontrados: ';
+ const boldCount = document.createElement('b');
+ boldCount.textContent = matchCount;
+ smallCount.appendChild(boldCount);
+ count.appendChild(smallCount);
+ searchResults.appendChild(count);
+ searchResults.appendChild(grid);
+ }
+ 
+ mainContent.appendChild(searchResults);
+ });
+ // Inicializar con la categoría "Colección" activa
             document.querySelector('.category-btn[data-category="coleccion"]').click();
         });
     </script>
