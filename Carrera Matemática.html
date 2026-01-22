@@ -1,9 +1,12 @@
- <!DOCTYPE html>
+
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <title>Carrera Matemática - Instituto Santa Rosa</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         :root {
             --primary: #3f51b5;
@@ -14,14 +17,44 @@
             --success: #4caf50;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
         }
-        
+
+        /* =========================================================
+           ✅ ESCALA GLOBAL AUTOMÁTICA (como si el navegador estuviera en 90%)
+           - Chrome/Edge: zoom: 0.9
+           - Firefox: transform: scale(0.9) con compensación de ancho/alto
+           ========================================================= */
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            /* Para navegadores Chromium (Chrome/Edge) */
+            zoom: 0.9;
+        }
+
+        /* Fallback para Firefox y navegadores donde zoom no aplica */
+        @supports not (zoom: 1) {
+            body {
+                zoom: 1; /* neutral */
+                transform: scale(0.9);
+                transform-origin: top left;
+
+                /* Compensación para que no se vea “encogido con márgenes” */
+                width: 111.1111%;
+                min-height: 111.1111vh;
+            }
+        }
+
+        /* ========================================================= */
+
         body {
             margin: 0;
             padding: 0;
@@ -30,7 +63,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .floating-element {
             position: fixed;
             font-size: 2rem;
@@ -39,7 +72,7 @@
             pointer-events: none;
             animation: floatElement 18s infinite ease-in-out;
         }
-        
+
         @keyframes floatElement {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
             50% { transform: translate(20px, -15px) rotate(5deg); }
@@ -53,7 +86,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             width: 100%;
         }
-        
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -61,7 +94,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .child-figure {
             font-size: 2rem;
             display: flex;
@@ -77,7 +110,7 @@
         .child-figure div {
             transition: opacity 0.5s, transform 0.5s;
         }
-        
+
         h1 { margin: 0; font-size: 1.4rem; }
         .subtitle { font-size: 0.85rem; opacity: 0.9; margin: 0.2rem 0 0; }
 
@@ -90,7 +123,7 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
-        
+
         main {
             flex-grow: 1;
             display: flex;
@@ -114,23 +147,23 @@
             margin-bottom: 20px;
             animation: pulse 2.5s infinite ease-in-out;
         }
-        
+
         #inicio h2 {
             margin-bottom: 20px;
         }
-        
+
         .input-container {
             display: flex;
             gap: 20px;
         }
 
-        .input-group { 
+        .input-group {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
         }
-        
+
         .input-group label { font-weight: bold; color: var(--primary); }
         .input-group input { padding: 8px; border-radius: 5px; border: 1px solid #ccc; text-align: center; }
         .input-group .avatar-selector {
@@ -173,7 +206,7 @@
         .input-group .avatar-selector .avatar-option:hover {
             background-color: #f0f0f0;
         }
-        
+
         #comenzar-btn {
             padding: 12px 24px;
             font-size: 16px;
@@ -184,7 +217,7 @@
             cursor: pointer;
             margin-top: 15px;
         }
-        
+
         #contenedor {
             display: none;
             flex-direction: column;
@@ -194,10 +227,10 @@
             margin: 1rem auto;
             gap: 1rem;
         }
-        
+
         #pista-carrera {
             width: 100%;
-            height: 70px; 
+            height: 70px;
             background: linear-gradient(90deg, #ffffff, #e0e0e0, #ffffff);
             border-radius: 10px;
             border: 2px solid var(--primary);
@@ -205,7 +238,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
         #pista-carrera::before {
             content: '🏁';
             position: absolute;
@@ -214,17 +247,17 @@
             transform: translate(-50%, -50%);
             font-size: 2.5rem;
         }
-        
+
         .avatar {
             position: absolute;
             top: 50%;
             font-size: 2.5rem;
             transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
         }
-        
+
         #avatar1 { left: 0; transform: translateY(-50%) scaleX(1); }
         #avatar2 { right: 0; transform: translateY(-50%); }
-        
+
         #juego-principal {
             display: flex;
             width: 100%;
@@ -232,7 +265,7 @@
             gap: 1rem;
             align-items: stretch;
         }
-        
+
         #cuerpo-juego {
             display: flex;
             justify-content: space-between;
@@ -252,12 +285,12 @@
             flex-direction: column;
             position: relative;
         }
-        
+
         .teclado-desactivado {
             opacity: 0.5;
             pointer-events: none;
         }
-        
+
         #panel-central {
             width: 18%;
             display: flex;
@@ -266,7 +299,7 @@
             align-items: center;
             gap: 20px;
         }
-        
+
         #temporizador-display {
             background-color: white;
             padding: 15px;
@@ -275,7 +308,7 @@
             text-align: center;
             width: 100%;
         }
-        
+
         #temporizador-display h3 {
             margin: 0 0 5px 0;
             color: var(--primary);
@@ -294,7 +327,7 @@
             font-weight: bold;
             color: var(--secondary);
         }
-        
+
         #terminar-btn {
             padding: 12px;
             width: 100%;
@@ -315,7 +348,7 @@
             border-radius: 8px;
             cursor: pointer;
         }
-        
+
         #revancha-btn {
             margin-top: 10px;
             padding: 12px;
@@ -328,7 +361,15 @@
         }
 
         .panel-jugador h2 { color: var(--primary); }
-        .operacion { font-size: 2.5rem; margin: 5px 0; font-weight: bold; flex-grow: 1; display: flex; align-items: center; justify-content: center;}
+        .operacion {
+            font-size: 2.5rem;
+            margin: 5px 0;
+            font-weight: bold;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .respuesta-input {
             width: 90%;
             padding: 10px;
@@ -338,7 +379,7 @@
             border: 2px solid #ccc;
             margin-bottom: 5px;
         }
-        
+
         .teclado-numerico {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -371,16 +412,15 @@
             color: white;
             text-align: center;
         }
-        
+
         #ganador-mensaje {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             padding: 40px;
             border-radius: 20px;
         }
-        
+
         #jugar-nuevo-btn { padding: 15px 30px; font-size: 1rem; margin-top: 20px; }
 
-        /* Estilos del reconocimiento */
         .reconocimiento-wrapper {
             position: relative;
             display: flex;
@@ -398,28 +438,23 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            max-width: 95%; /* Modificado para que sea más ancho */
+            max-width: 95%;
             z-index: 1;
-            font-family: 'Arial', sans-serif; /* Modificado el tipo de letra */
+            font-family: 'Arial', sans-serif;
             border: 2px solid var(--primary);
         }
 
-        .reconocimiento h1, .reconocimiento h2, .reconocimiento p {
-            margin-bottom: 5px;
-        }
+        .reconocimiento h1, .reconocimiento h2, .reconocimiento p { margin-bottom: 5px; }
 
         .reconocimiento h1 {
-            color: black; /* Modificado el color a negro */
+            color: black;
             font-size: 1.2rem;
         }
 
-        .reconocimiento h2 {
-             font-size: 1.0rem;
-        }
+        .reconocimiento h2 { font-size: 1.0rem; }
 
         .reconocimiento .grado-alto { color: var(--success); }
 
-        /* Animación de confeti */
         .confetti-container {
             position: absolute;
             top: 0;
@@ -445,20 +480,18 @@
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
-        /* Estilos para ocultar elementos */
-        .hidden-element {
-            display: none;
-        }
+        .hidden-element { display: none; }
 
         footer {
             text-align: center;
-            padding: 0.8rem;
+            padding: 1.4rem;
             background: var(--dark);
             color: white;
             width: 100%;
         }
     </style>
 </head>
+
 <body>
     <div class="floating-element" style="top: 8%; left: 5%; animation-delay: 0s;">➕</div>
     <div class="floating-element" style="top: 18%; right: 7%; animation-delay: 1s;">➖</div>
@@ -486,26 +519,27 @@
         <div id="inicio">
             <div class="start-emoji">🧏🧒</div>
             <h2>Ingresen sus nombres y elijan un avatar</h2>
+
             <div class="input-container">
                 <div class="input-group">
                     <label for="nombre-j1">Jugador/a 1:</label>
                     <input type="text" id="nombre-j1" placeholder="Nombre...">
                     <div id="avatar-selector-j1" class="avatar-selector">
                         <div id="selected-avatar-j1">🏃‍♂️</div>
-                        <div class="avatar-grid" id="avatar-grid-j1">
-                        </div>
+                        <div class="avatar-grid" id="avatar-grid-j1"></div>
                     </div>
                 </div>
+
                 <div class="input-group">
                     <label for="nombre-j2">Jugador/a 2:</label>
                     <input type="text" id="nombre-j2" placeholder="Nombre...">
                     <div id="avatar-selector-j2" class="avatar-selector">
                         <div id="selected-avatar-j2">🏃‍♀️</div>
-                        <div class="avatar-grid" id="avatar-grid-j2">
-                        </div>
+                        <div class="avatar-grid" id="avatar-grid-j2"></div>
                     </div>
                 </div>
             </div>
+
             <button id="comenzar-btn">¡Comenzar Carrera!</button>
         </div>
 
@@ -514,6 +548,7 @@
                 <div id="avatar1" class="avatar"></div>
                 <div id="avatar2" class="avatar"></div>
             </div>
+
             <div id="juego-principal">
                 <div class="panel-jugador" id="panel-j1">
                     <div id="juego-j1">
@@ -528,6 +563,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="panel-central">
                     <h3 id="jugador-turno"></h3>
                     <div id="temporizador-display">
@@ -538,6 +574,7 @@
                     <button id="reiniciar-btn">Reiniciar Juego</button>
                     <button id="revancha-btn" style="display: none;">Revancha</button>
                 </div>
+
                 <div class="panel-jugador" id="panel-j2">
                     <div id="juego-j2">
                         <h2 id="display-nombre-j2"></h2>
@@ -561,7 +598,7 @@
             <button id="jugar-nuevo-btn">Jugar de Nuevo</button>
         </div>
     </div>
-    
+
     <footer>
         <p>Instituto para Sordos Santa Rosa, Inc.</p>
         <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
@@ -584,14 +621,13 @@
         const tecladoJ1 = document.querySelector('[data-jugador="1"]');
         const tecladoJ2 = document.querySelector('[data-jugador="2"]');
         const jugadorTurnoDisplay = document.getElementById('jugador-turno');
-        
+
         const avatar1El = document.getElementById('avatar1');
         const avatar2El = document.getElementById('avatar2');
 
         const emojisJ1 = ["🏆", "🥇", "🥈", "🥉", "🏈", "⚾️", "🏀", "⚽️", "🚧", "🥊", "💪", "🚦", "🍍", "🥅", "⏱️", "🤸"];
         const emojisJ2 = ["🚴‍♂️", "🏊‍♀️", "🏄‍♂️", "🏋️‍♀️", "🏌️", "🏹", "🤺", "⛷️", "🏂", "🏅", "🏃‍♀️", "🏎️", "🚗", "🏇", "💥", "💪"];
 
-        // Definimos el conjunto de operaciones
         const operaciones = [
             { tipo: 'suma', min: 0, max: 9 },
             { tipo: 'multiplicacion', tabla: 2, max: 10 },
@@ -608,8 +644,7 @@
         function populateAvatarGrids() {
             const avatarGridJ1 = document.getElementById('avatar-grid-j1');
             const avatarGridJ2 = document.getElementById('avatar-grid-j2');
-            
-            // Populate J1 avatars
+
             emojisJ1.forEach(emoji => {
                 const option = document.createElement('div');
                 option.classList.add('avatar-option');
@@ -622,7 +657,6 @@
                 avatarGridJ1.appendChild(option);
             });
 
-            // Populate J2 avatars
             emojisJ2.forEach(emoji => {
                 const option = document.createElement('div');
                 option.classList.add('avatar-option');
@@ -641,7 +675,7 @@
             document.getElementById('avatar-selector-j1').classList.toggle('active');
             document.getElementById('avatar-selector-j2').classList.remove('active');
         });
-        
+
         document.getElementById('avatar-selector-j2').addEventListener('click', (e) => {
             e.stopPropagation();
             document.getElementById('avatar-selector-j2').classList.toggle('active');
@@ -659,7 +693,7 @@
 
             const avatarJ1 = document.getElementById('selected-avatar-j1').textContent;
             const avatarJ2 = document.getElementById('selected-avatar-j2').textContent;
-            
+
             avatar1El.textContent = avatarJ1;
             avatar2El.textContent = avatarJ2;
 
@@ -673,11 +707,11 @@
             pasosJ1 = 0;
             pasosJ2 = 0;
             actualizarAvatares();
-            
+
             generarProblema(1);
             generarProblema(2);
             juegoActivo = true;
-            
+
             turnoActual = 1;
             iniciarTurno();
         }
@@ -685,7 +719,7 @@
         function iniciarTurno() {
             tecladoJ1.classList.add('teclado-desactivado');
             tecladoJ2.classList.add('teclado-desactivado');
-            
+
             if (turnoActual === 1) {
                 tecladoJ1.classList.remove('teclado-desactivado');
                 jugadorTurnoDisplay.textContent = nombreJ1;
@@ -716,13 +750,12 @@
                 iniciarTurno();
             }
         }
-        
+
         function actualizarTimerDisplay() {
             document.getElementById('temporizador').textContent = tiempoRestanteTurno;
         }
 
         function generarProblema(jugador) {
-            // Selecciona una operación aleatoria del array de operaciones
             const opAleatoria = operaciones[Math.floor(Math.random() * operaciones.length)];
             let n1, n2, respuesta, texto;
 
@@ -740,14 +773,13 @@
                     texto = `${n1} × ${n2} = ?`;
                     break;
                 default:
-                    // Caso por defecto para evitar errores
                     n1 = 1;
                     n2 = 1;
                     respuesta = 2;
                     texto = `1 + 1 = ?`;
                     break;
             }
-            
+
             document.getElementById(`respuesta-j${jugador}`).value = '';
 
             if (jugador === 1) {
@@ -758,18 +790,15 @@
                 document.getElementById('operacion-j2').textContent = texto;
             }
         }
-        
+
         function procesarAcierto(jugador) {
             if (!juegoActivo || jugador !== turnoActual) return;
-            
-            if (jugador === 1) {
-                pasosJ1++;
-            } else if (jugador === 2) {
-                pasosJ2++;
-            }
-            
+
+            if (jugador === 1) pasosJ1++;
+            else if (jugador === 2) pasosJ2++;
+
             actualizarAvatares();
-            
+
             setTimeout(() => {
                 if (pasosJ1 >= META_PASOS) {
                     terminarJuego(nombreJ1);
@@ -785,21 +814,19 @@
         function actualizarAvatares() {
             const pista = document.getElementById('pista-carrera').offsetWidth;
             const pasoSize = (pista / 2) / META_PASOS;
-            
+
             const avatarWidth = avatar1El.offsetWidth;
             const metaOffset = (pista / 2) - (avatarWidth / 2);
 
             document.getElementById('avatar1').style.left = `${Math.min(pasosJ1 * pasoSize, metaOffset)}px`;
             document.getElementById('avatar2').style.right = `${Math.min(pasosJ2 * pasoSize, metaOffset)}px`;
         }
-        
+
         function mostrarReconocimiento(nombre, pasos, jugador, posicion) {
             const panel = document.getElementById(`panel-j${jugador}`);
             const juegoPanel = panel.querySelector(`#juego-j${jugador}`);
 
-            if (juegoPanel) {
-                juegoPanel.classList.add('hidden-element');
-            }
+            if (juegoPanel) juegoPanel.classList.add('hidden-element');
 
             const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 
@@ -824,7 +851,6 @@
             `;
             panel.innerHTML = reconocimientoHTML;
 
-            // Generar confeti
             const confettiContainer = panel.querySelector('.confetti-container');
             const colors = ['#f50057', '#00bcd4', '#4caf50', '#ffeb3b', '#9c27b0'];
             for (let i = 0; i < 50; i++) {
@@ -836,11 +862,11 @@
                 confettiContainer.appendChild(confetti);
             }
         }
-        
+
         function terminarJuego(ganador) {
             juegoActivo = false;
             clearInterval(temporizadorTurno);
-            
+
             document.getElementById('temporizador-display').style.display = 'none';
             document.getElementById('jugador-turno').style.display = 'none';
             document.getElementById('terminar-btn').style.display = 'none';
@@ -850,25 +876,19 @@
                 mostrarReconocimiento(nombreJ1, pasosJ1, 1, "Primer Lugar");
             } else if (pasosJ2 > pasosJ1) {
                 mostrarReconocimiento(nombreJ2, pasosJ2, 2, "Primer Lugar");
-            } else {
-                // En caso de empate, no mostramos reconocimiento individual
-                // En su lugar, podríamos mostrar un mensaje de empate en el panel central si quisiéramos
             }
-            
-            if(!ganador && pasosJ1 === pasosJ2) {
-                 document.getElementById('ganador-overlay').style.display = 'flex';
-                 document.getElementById('texto-ganador').textContent = `¡Se acabó el tiempo! ¡Es un empate!`;
+
+            if (!ganador && pasosJ1 === pasosJ2) {
+                document.getElementById('ganador-overlay').style.display = 'flex';
+                document.getElementById('texto-ganador').textContent = `¡Se acabó el tiempo! ¡Es un empate!`;
             }
         }
-        
-        // --- Event Listeners ---
+
         comenzarBtn.addEventListener('click', iniciarJuego);
         jugarNuevoBtn.addEventListener('click', iniciarJuego);
         terminarBtn.addEventListener('click', () => terminarJuego());
-        
-        reiniciarBtn.addEventListener('click', () => {
-            location.reload();
-        });
+
+        reiniciarBtn.addEventListener('click', () => location.reload());
 
         revanchaBtn.addEventListener('click', () => {
             sessionStorage.setItem('revancha', 'true');
@@ -882,24 +902,20 @@
         document.querySelectorAll('.teclado-numerico').forEach(teclado => {
             teclado.addEventListener('click', (e) => {
                 if (!juegoActivo || !e.target.classList.contains('tecla')) return;
-                
+
                 const tecla = e.target;
                 const jugador = parseInt(tecla.parentElement.dataset.jugador);
-                
-                if (jugador !== turnoActual) {
-                    return;
-                }
-                
+
+                if (jugador !== turnoActual) return;
+
                 const inputEl = document.getElementById(`respuesta-j${jugador}`);
-                
+
                 if (tecla.classList.contains('borrar')) {
                     inputEl.value = inputEl.value.slice(0, -1);
                 } else {
-                    if (inputEl.value.length < 3) {
-                       inputEl.value += tecla.textContent;
-                    }
+                    if (inputEl.value.length < 3) inputEl.value += tecla.textContent;
                 }
-                
+
                 const respuestaUsuario = parseInt(inputEl.value);
                 const problemaActual = (jugador === 1) ? problemaActualJ1 : problemaActualJ2;
 
@@ -908,10 +924,10 @@
                 }
             });
         });
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             populateAvatarGrids();
-            
+
             if (sessionStorage.getItem('revancha') === 'true') {
                 const nombreJ1_revancha = sessionStorage.getItem('nombreJ1');
                 const nombreJ2_revancha = sessionStorage.getItem('nombreJ2');
