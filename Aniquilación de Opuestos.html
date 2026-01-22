@@ -255,7 +255,7 @@
             color: var(--dark);
         }
 
-        /* ✅ 1) DISMINUCIÓN VERTICAL DEL RECTÁNGULO (DOS "LÍNEAS") */
+        /* ✅ 1) DISMINUCIÓN VERTICAL DEL RECTÁNGULO */
         #area-juego {
             position: relative;
             width: 100%;
@@ -264,8 +264,8 @@
             border-radius: 16px;
             border: 3px dashed var(--primary);
             overflow: hidden;
-            margin: 6px 0;          /* antes 10px */
-            min-height: 420px;      /* antes 500px */
+            margin: 6px 0;
+            min-height: 420px;
         }
 
         .numero {
@@ -385,15 +385,15 @@
         .experto { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #2e7d32; }
         .elite { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
 
-        /* ✅ 2) RECONOCIMIENTO ESTRUCTURADO (CERTIFICADO) */
+        /* ✅ 2) RECONOCIMIENTO (OPTIMIZADO VERTICALMENTE) */
         .reconocimiento {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
-            min-height: 420px; /* coherente con #area-juego */
-            padding: 10px;
+            min-height: 400px; /* antes 420px: reduce un poco el empuje vertical */
+            padding: 6px;      /* antes 10px */
         }
 
         .certificado {
@@ -406,62 +406,71 @@
         }
 
         .certificado-header {
-            padding: 18px 22px;
+            padding: 12px 18px; /* antes 18px 22px */
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
+            line-height: 1.15;  /* ✅ reduce interlineado */
         }
 
         .certificado-header .titulo {
-            font-size: 1.8rem;
+            font-size: 1.55rem; /* antes 1.8rem */
             font-weight: 900;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.25);
         }
 
         .certificado-header .subtitulo {
-            margin-top: 6px;
+            margin-top: 4px;     /* antes 6px */
             opacity: 0.92;
-            font-size: 0.95rem;
+            font-size: 0.86rem;  /* antes 0.95rem */
+            line-height: 1.15;   /* ✅ */
         }
 
         .certificado-body {
-            padding: 20px 22px 18px;
+            padding: 14px 18px 12px; /* antes 20px 22px 18px */
             text-align: center;
+            line-height: 1.18;       /* ✅ */
         }
 
         .certificado-body .emoji {
-            font-size: 2.3rem;
-            margin-bottom: 6px;
+            font-size: 2.0rem; /* antes 2.3rem */
+            margin-bottom: 4px; /* antes 6px */
         }
 
         .certificado-body .otorga {
-            font-size: 1rem;
+            font-size: 0.95rem; /* antes 1rem */
             color: #37474f;
-            margin: 8px 0 6px;
+            margin: 6px 0 4px;  /* antes 8px 0 6px */
+            line-height: 1.15;  /* ✅ */
         }
 
         .certificado-body .nombre {
-            font-size: 2.0rem;
+            font-size: 1.75rem; /* antes 2.0rem */
             font-weight: 900;
             color: var(--dark);
-            margin: 6px 0 10px;
+            margin: 4px 0 8px;  /* antes 6px 0 10px */
+            line-height: 1.1;   /* ✅ */
+            word-break: break-word; /* ✅ por si el nombre es largo */
         }
 
         .certificado-body .detalle {
-            font-size: 1.05rem;
-            margin: 6px 0;
+            font-size: 0.98rem; /* antes 1.05rem */
+            margin: 4px 0;      /* antes 6px 0 */
             color: #263238;
+            line-height: 1.18;  /* ✅ */
         }
 
         .badge-jerarquia {
             display: inline-block;
-            margin-top: 10px;
-            padding: 8px 14px;
+            margin-top: 8px;    /* antes 10px */
+            padding: 7px 12px;  /* antes 8px 14px */
             border-radius: 999px;
             font-weight: 800;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             color: white;
             background: linear-gradient(135deg, #546e7a, #90a4ae);
+            font-size: 0.92rem; /* ✅ */
+            line-height: 1.1;   /* ✅ */
         }
 
         .badge-jerarquia.elite { background: linear-gradient(135deg, #1565c0, #00bcd4); }
@@ -470,31 +479,32 @@
         .badge-jerarquia.iniciado { background: linear-gradient(135deg, #c62828, #ef5350); }
 
         .certificado-footer {
-            padding: 14px 22px 18px;
+            padding: 10px 18px 12px; /* antes 14px 22px 18px */
             border-top: 1px solid rgba(0,0,0,0.08);
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px; /* antes 10px */
             align-items: end;
+            line-height: 1.12; /* ✅ */
         }
 
         .meta {
             text-align: left;
-            font-size: 0.9rem;
+            font-size: 0.82rem; /* antes 0.9rem */
             color: #455a64;
         }
 
         .firmas {
             text-align: right;
-            font-size: 0.9rem;
+            font-size: 0.82rem; /* antes 0.9rem */
             color: #455a64;
         }
 
         .linea-firma {
             display: inline-block;
-            width: 220px;
+            width: 200px; /* antes 220px */
             border-bottom: 2px solid rgba(63,81,181,0.35);
-            margin: 10px 0 6px;
+            margin: 8px 0 4px; /* antes 10px 0 6px */
         }
 
         footer {
@@ -519,12 +529,29 @@
             .child-figure { display: none; }
             h1 { font-size: 1.4rem; }
 
-            /* ✅ reducción también en móviles */
-            #area-juego, .reconocimiento { min-height: 320px; } /* antes 400px */
+            #area-juego, .reconocimiento { min-height: 320px; }
             .numero { width: 60px; height: 60px; font-size: 20px; }
+
+            .certificado-header { padding: 10px 14px; }
+            .certificado-header .titulo { font-size: 1.35rem; }
+            .certificado-header .subtitulo { font-size: 0.82rem; }
+            .certificado-body { padding: 12px 14px 10px; }
+            .certificado-body .nombre { font-size: 1.55rem; }
+            .certificado-body .detalle { font-size: 0.92rem; }
+            .badge-jerarquia { font-size: 0.88rem; }
+
             .certificado-footer { grid-template-columns: 1fr; text-align: center; }
             .meta, .firmas { text-align: center; }
-            .linea-firma { width: 200px; }
+            .linea-firma { width: 190px; }
+        }
+
+        /* ✅ Extra: para pantallas con poca altura (laptops/zoom) */
+        @media (max-height: 720px) {
+            .certificado-header .titulo { font-size: 1.35rem; }
+            .certificado-body .emoji { font-size: 1.85rem; }
+            .certificado-body .nombre { font-size: 1.55rem; }
+            .certificado-body .detalle { font-size: 0.92rem; }
+            .meta, .firmas { font-size: 0.80rem; }
         }
     </style>
 </head>
@@ -837,10 +864,9 @@
 
         function claseJerarquia(jerarquia) {
             const j = jerarquia.toLowerCase().replace('é','e');
-            return j; // elite, experto, competente, iniciado
+            return j;
         }
 
-        /* ✅ 2) RECONOCIMIENTO MEJORADO Y ESTRUCTURADO CON PROFESORES */
         function mostrarResultadoFinal() {
             const jerarquia = obtenerJerarquia(aniquilaciones);
             const clase = claseJerarquia(jerarquia);
@@ -876,7 +902,7 @@
 
                             <div class="badge-jerarquia ${clase}">Jerarquía: ${jerarquia}</div>
 
-                            <div class="detalle" style="margin-top:10px;">
+                            <div class="detalle" style="margin-top:8px;">
                                 ${mensajeDesempeno[jerarquia]}
                             </div>
                         </div>
