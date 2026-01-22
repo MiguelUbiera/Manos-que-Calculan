@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -175,11 +176,8 @@
       min-height:0;
       overflow:hidden;
     }
-
-    /* Laterales con scroll */
     #panel-izquierdo, #historial{ overflow:auto; }
 
-    /* Laterales */
     #panel-izquierdo{
       flex: 0 0 230px;
       border:3px solid var(--primary);
@@ -187,7 +185,6 @@
       flex-direction:column;
     }
 
-    /* Centro */
     #juego{
       flex: 1 1 auto;
       border:3px solid var(--primary);
@@ -197,7 +194,7 @@
       justify-content:stretch;
       position:relative;
       padding:10px;
-      overflow:hidden;       /* juego normal */
+      overflow:hidden;
       min-width: 520px;
     }
     /* ✅ Solo cuando hay certificado, permitimos scroll interno */
@@ -206,7 +203,6 @@
       padding:8px;
     }
 
-    /* Historial */
     #historial{
       flex: 0 0 345px;
       border:2px solid var(--accent);
@@ -329,23 +325,15 @@
       border:2px solid rgba(245,0,87,.18);
       transition:transform .08s;
       touch-action:none;
+      will-change:transform;
     }
-    .globo:active{cursor:grabbing;transform:scale(1.04)}
+    .globo:active{cursor:grabbing;transform:scale(1.03)}
 
-    /* Explosión */
-    .burst{
-      position:absolute;
-      width:8px;height:8px;border-radius:50%;
-      pointer-events:none;
-      opacity:0.95;
-      transform:translate(-50%,-50%);
-      animation:burstMove .55s ease-out forwards;
-      filter:drop-shadow(0 2px 5px rgba(0,0,0,.18));
-      z-index:5;
-    }
-    @keyframes burstMove{
-      0%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
-      100%{ transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2); opacity:0; }
+    /* ✅ POP (revienta) sin chispas */
+    .globo.pop{
+      transition: transform 160ms ease, opacity 160ms ease;
+      opacity:0;
+      transform:scale(0.15);
     }
 
     /* Emojis esquinas */
@@ -358,7 +346,7 @@
     }
     #emoji-left{left:10px}
     #emoji-right{right:10px}
-    .emoji-pop{transform:scale(1.25) rotate(-6deg);opacity:1}
+    .emoji-pop{transform:scale(1.18) rotate(-5deg);opacity:1}
     #mensaje{ display:none; }
 
     /* Progreso */
@@ -409,14 +397,7 @@
     }
     footer p{margin:.25rem 0;font-size:.8rem}
 
-    /* ==========================
-       ✅ CERTIFICADO (COMPACTO)
-       - subido (arriba)
-       - menos padding y márgenes
-       - menos interlineado
-       - letra un poco menor
-       - no se corta (scroll en #juego.showing-cert)
-    =========================== */
+    /* CERTIFICADO (compacto) */
     .cert-wrap{
       height:100%;
       display:flex;
@@ -435,10 +416,7 @@
       line-height:1.20;
       max-height:100%;
     }
-    .cert-badge{
-      font-size:1.6rem;
-      margin-bottom:6px;
-    }
+    .cert-badge{ font-size:1.6rem; margin-bottom:6px; }
     .cert-title{
       margin:0;
       color:var(--primary);
@@ -447,11 +425,7 @@
       font-weight:900;
       text-transform:uppercase;
     }
-    .cert-subtitle{
-      margin:10px 0 4px;
-      font-size:.92rem;
-      color:#444;
-    }
+    .cert-subtitle{ margin:10px 0 4px; font-size:.92rem; color:#444; }
     .cert-game{
       margin:0 0 12px;
       font-size:1.0rem;
@@ -459,11 +433,7 @@
       font-weight:700;
       font-style:italic;
     }
-    .cert-award{
-      font-size:.92rem;
-      margin:0 0 6px;
-      color:#333;
-    }
+    .cert-award{ font-size:.92rem; margin:0 0 6px; color:#333; }
     .cert-name{
       margin:4px 0 10px;
       font-size:1.5rem;
@@ -471,26 +441,10 @@
       font-weight:900;
       letter-spacing:.25px;
     }
-    .cert-msg{
-      margin:6px 0 10px;
-      font-size:.98rem;
-      font-weight:600;
-      color:#424242;
-    }
-    .cert-stats{
-      margin:6px 0;
-      font-size:.96rem;
-      color:#333;
-    }
-    .cert-rank{
-      color:#d50000;
-      font-weight:900;
-    }
-    .cert-date{
-      margin-top:8px;
-      color:#555;
-      font-size:.88rem;
-    }
+    .cert-msg{ margin:6px 0 10px; font-size:.98rem; font-weight:600; color:#424242; }
+    .cert-stats{ margin:6px 0; font-size:.96rem; color:#333; }
+    .cert-rank{ color:#d50000; font-weight:900; }
+    .cert-date{ margin-top:8px; color:#555; font-size:.88rem; }
     .cert-footer{
       margin-top:12px;
       padding-top:10px;
@@ -500,7 +454,6 @@
       line-height:1.20;
     }
 
-    /* Responsive */
     @media (max-width:1024px){
       #contenedor{flex-direction:column;width:98vw;padding:10px}
       #panel-izquierdo,#juego,#historial{width:100%;flex:auto}
@@ -622,26 +575,42 @@
   <script>
     "use strict";
 
-    /* =========================
-       ANULACIÓN (Enteros) - META 0
-    ========================= */
+    /* ============================
+        ANULACIÓN (Enteros) - META 0
+        ✅ Globos casi quietos
+        ✅ Suelta -> vuela al orb -> revienta -> suma
+        ✅ Sin chispas
+        ✅ Sin solaparse (separación suave)
+    ============================ */
 
+    // --------- Configuración ---------
     const ROUND_SECONDS = 20;
     const SESSION_SECONDS = 200;
 
     const R = 28;
-    const FRICTION = 0.995;
-    const MAX_SPEED = 18;
-    const LAUNCH_SPEED = 1800;
-
     const N_GLOBOS = 20;
-    const LOCAL_BOUND = 40;
+    const LOCAL_BOUND = 34;
+
+    // Movimiento: casi quietos (micro-balanceo)
+    const HOVER_AMP_MIN = 0.6;     // px
+    const HOVER_AMP_MAX = 1.8;     // px
+    const HOVER_SPD_MIN = 0.18;    // rad/s
+    const HOVER_SPD_MAX = 0.35;    // rad/s
+    const HOVER_LERP = 0.030;      // más bajo = más quieto
+
+    // Lanzamiento al orb (vuelo directo)
+    const LAUNCH_SPEED = 950;      // px/s (si quieres más lento: 800)
+    const LAUNCH_DRAG = 0.35;      // resistencia ligera
+
+    // Anti-solape
+    const SEPARATION_PASSES = 2;
+    const SEPARATION_PAD = 2;
 
     const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
 
     const $ = (id) => document.getElementById(id);
 
-    /* UI */
+    // --------- UI ---------
     const inicio = $("inicio");
     const contenedor = $("contenedor");
     const inputNombre = $("nombre-input");
@@ -666,7 +635,7 @@
     const emojiLeft = $("emoji-left");
     const emojiRight = $("emoji-right");
 
-    /* Estado */
+    // --------- Estado ---------
     let nombreParticipante = "";
     let aciertos = 0;
 
@@ -687,18 +656,16 @@
     let globos = [];
     let rafId = null;
     let lastTs = 0;
-
     let globoId = 0;
-    let activePointer = null;
 
-    let lastBurstMs = 0;
+    let activePointer = null;
     let idxOk = 0;
 
-    /* Balance */
+    // Balance ±
     let posCount = 0;
     let negCount = 0;
 
-    /* Utils */
+    // --------- Utils ---------
     function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
     function randFloat(min,max){ return Math.random()*(max-min)+min; }
     function shuffle(arr){
@@ -723,14 +690,13 @@
       idxOk++;
       return msg;
     }
-
     function updateUIStats(){
       aciertosEl.textContent = String(aciertos);
       tTotalEl.textContent = `${tiempoTotal} segundos`;
       tRoundEl.textContent = String(tiempoRound);
     }
 
-    /* Jerarquía */
+    // --------- Jerarquía ---------
     function obtenerJerarquia(p){
       if(p < 6) return "Iniciado";
       if(p >= 6 && p <= 10) return "Competente";
@@ -745,7 +711,7 @@
       return "Buen inicio. Siga practicando para mejorar su rendimiento.";
     }
 
-    /* Historial seguro */
+    // --------- Historial ---------
     function actualizarHistorial(){
       listaHistorial.textContent = "";
       for(const p of historial){
@@ -768,7 +734,6 @@
         listaHistorial.appendChild(tr);
       }
     }
-
     function barrerHistorial(){
       if(confirm("¿Estás seguro de que quieres borrar todo el historial?")){
         historial = [];
@@ -777,7 +742,7 @@
       }
     }
 
-    /* Juego */
+    // --------- Juego ---------
     function iniciarJuego(){
       const rawName = inputNombre.value.trim();
       if(!rawName){
@@ -798,6 +763,7 @@
       progresoEl.textContent = "";
 
       running = true;
+      roundLocked = false;
 
       clearInterval(timerTotal);
       timerTotal = setInterval(() => {
@@ -830,7 +796,7 @@
       localStorage.setItem("historialAnulacion", JSON.stringify(historial));
       actualizarHistorial();
 
-      // ✅ activar modo certificado: scroll interno permitido
+      // ✅ modo certificado
       juegoSection.classList.add("showing-cert");
 
       const safeName = escapeHTML(nombreParticipante);
@@ -874,6 +840,7 @@
 
     function reiniciarJuego(){ window.location.reload(); }
 
+    // --------- Round ---------
     function iniciarNuevoRound(isFirst=false){
       if(!running) return;
 
@@ -892,25 +859,13 @@
         renderBigValue();
         limpiarGlobos();
 
-        // ✅ Globos balanceados ±1..±3 con solución garantizada para llegar a 0
+        // Globos balanceados ±1..±3 con solución garantizada
         const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS);
+        const {W,H,xMaxFloat} = getPlayfieldMetrics();
 
-        const rect = playfield.getBoundingClientRect();
-        const W = rect.width, H = rect.height;
-        const xLeftMax = Math.floor(W * 0.62);
-
-        const xMin = R + 12;
-        const xMax = xLeftMax - R - 12;
-        const yMin = R + 12;
-        const yMax = H - R - 12;
-
-        values.forEach((v) => {
-          const hx = randFloat(xMin, xMax);
-          const hy = randFloat(yMin, yMax);
-          const vx = randFloat(-MAX_SPEED, MAX_SPEED);
-          const vy = randFloat(-MAX_SPEED, MAX_SPEED);
-          crearGlobo(v, hx, hy, vx, vy, hx, hy);
-        });
+        for(const v of values){
+          spawnGloboNonOverlap(v, W, H, xMaxFloat);
+        }
 
         clearInterval(timerRound);
         timerRound = setInterval(() => {
@@ -940,88 +895,128 @@
       if(!running) return;
       const dt = Math.min(0.033, (ts - lastTs)/1000);
       lastTs = ts;
-      actualizarFisica(dt);
+
+      tickPhysics(dt, ts/1000);
       rafId = requestAnimationFrame(loop);
     }
 
-    function actualizarFisica(dt){
+    // --------- Métricas ---------
+    function getPlayfieldMetrics(){
       const rect = playfield.getBoundingClientRect();
       const W = rect.width, H = rect.height;
-      const xLeftMax = Math.floor(W * 0.62);
+      const xMaxFloat = Math.floor(W * 0.62); // zona izquierda para globos
+      return { W, H, xMaxFloat };
+    }
 
+    function getTargetCenterInPlayfield(){
+      const t = targetOrb.getBoundingClientRect();
+      const pf = playfield.getBoundingClientRect();
+      return {
+        x: (t.left - pf.left) + t.width/2,
+        y: (t.top  - pf.top)  + t.height/2,
+        r: t.width * 0.44
+      };
+    }
+
+    function clampToBounds(g, W, H, xMaxFloat){
+      const minY = R + 12;
+      const maxY = H - R - 12;
+
+      if(g.state === "float" || g.state === "held"){
+        const minX = R + 12;
+        const maxX = xMaxFloat - R - 12;
+        if(g.x < minX) g.x = minX;
+        if(g.x > maxX) g.x = maxX;
+      } else if(g.state === "launch"){
+        // launch: permitimos todo el ancho del playfield
+        if(g.x < R) g.x = R;
+        if(g.x > W - R) g.x = W - R;
+      }
+
+      if(g.y < minY) g.y = minY;
+      if(g.y > maxY) g.y = maxY;
+    }
+
+    // --------- Física (casi quietos + vuelo al orb) ---------
+    function tickPhysics(dt, tSec){
+      const {W,H,xMaxFloat} = getPlayfieldMetrics();
+
+      // 1) Movimiento
       for(const g of globos){
+        if(g.state === "dead") continue;
         if(g.state === "held") continue;
 
-        g.x += g.vx * dt;
-        g.y += g.vy * dt;
-        g.vx *= FRICTION;
-        g.vy *= FRICTION;
-
         if(g.state === "float"){
+          // Micro-balanceo MUY leve hacia un "desired" alrededor del home
+          const desiredX = g.homeX + Math.sin(tSec * g.hoverSpeed + g.hoverPhase) * g.hoverAmp;
+          const desiredY = g.homeY + Math.cos(tSec * g.hoverSpeed + g.hoverPhase) * g.hoverAmp;
+
           const minX = Math.max(R, g.homeX - LOCAL_BOUND);
-          const maxX = Math.min(xLeftMax - R, g.homeX + LOCAL_BOUND);
+          const maxX = Math.min(xMaxFloat - R, g.homeX + LOCAL_BOUND);
           const minY = Math.max(R, g.homeY - LOCAL_BOUND);
           const maxY = Math.min(H - R, g.homeY + LOCAL_BOUND);
 
-          if(g.x < minX){ g.x = minX; g.vx = Math.abs(g.vx) * 0.9; }
-          if(g.x > maxX){ g.x = maxX; g.vx = -Math.abs(g.vx) * 0.9; }
-          if(g.y < minY){ g.y = minY; g.vy = Math.abs(g.vy) * 0.9; }
-          if(g.y > maxY){ g.y = maxY; g.vy = -Math.abs(g.vy) * 0.9; }
-        } else if(g.state === "launch"){
-          if(g.y - R < 0){ g.y = R; g.vy = Math.abs(g.vy); }
-          if(g.y + R > H){ g.y = H - R; g.vy = -Math.abs(g.vy); }
+          const dx = Math.max(minX, Math.min(maxX, desiredX)) - g.x;
+          const dy = Math.max(minY, Math.min(maxY, desiredY)) - g.y;
+
+          g.x += dx * HOVER_LERP;
+          g.y += dy * HOVER_LERP;
         }
+
+        if(g.state === "launch"){
+          // Vuelo directo al orb con leve drag
+          const drag = Math.exp(-LAUNCH_DRAG * dt);
+          g.vx *= drag;
+          g.vy *= drag;
+
+          g.x += g.vx * dt;
+          g.y += g.vy * dt;
+        }
+
+        clampToBounds(g, W, H, xMaxFloat);
       }
 
-      const floaters = globos.filter(g => g.state === "float");
-      for(let i=0;i<floaters.length;i++){
-        for(let j=i+1;j<floaters.length;j++){
-          const a = floaters[i], b = floaters[j];
-          const did = resolveCircleCollision(a,b);
-          if(did){
-            const rel = Math.hypot(a.vx-b.vx, a.vy-b.vy);
-            if(rel > 16) maybeBurst((a.x+b.x)/2, (a.y+b.y)/2);
+      // 2) Anti-solape (sin choque ni rebote)
+      for(let pass=0; pass<SEPARATION_PASSES; pass++){
+        for(let i=0; i<globos.length; i++){
+          for(let j=i+1; j<globos.length; j++){
+            separateNoBounce(globos[i], globos[j]);
           }
         }
       }
 
-      // Colisión con el orb
-      const t = targetOrb.getBoundingClientRect();
-      const pf = playfield.getBoundingClientRect();
-      const tx = (t.left - pf.left) + t.width/2;
-      const ty = (t.top - pf.top) + t.height/2;
-      const targetRadius = t.width * 0.44;
+      // 3) Impacto con orb: revienta + suma (sin chispas)
+      const target = getTargetCenterInPlayfield();
 
       for(const g of [...globos]){
         if(g.state !== "launch") continue;
 
-        const dx = g.x - tx;
-        const dy = g.y - ty;
-        const dist = Math.hypot(dx, dy);
+        const dist = Math.hypot(g.x - target.x, g.y - target.y);
+        if(dist < target.r + R * 0.75){
+          g.state = "dead";
 
-        if(dist < targetRadius + R * 0.75){
-          const repX = g.homeX, repY = g.homeY;
+          // feedback sutil
+          efectoImpactoSuave();
 
-          burstAt(g.x, g.y, 16);
-          efectoImpacto();
-
+          // suma
           bigValue += g.value;
           renderBigValue();
 
-          eliminarGlobo(g.id);
+          const repX = g.homeX, repY = g.homeY;
 
-          // Respawn manteniendo balance
+          // revienta y elimina
+          popAndRemove(g);
+
+          // respawn balanceado ±
           let sign;
           if(posCount < negCount) sign = +1;
           else if(negCount < posCount) sign = -1;
           else sign = Math.random() < 0.5 ? +1 : -1;
 
           const nuevo = sign * randInt(1,3);
-          const vx = randFloat(-MAX_SPEED, MAX_SPEED);
-          const vy = randFloat(-MAX_SPEED, MAX_SPEED);
-          crearGlobo(nuevo, repX, repY, vx, vy, repX, repY);
+          spawnGloboNearHomeNonOverlap(nuevo, repX, repY, W, H, xMaxFloat);
 
-          // ✅ Victoria: meta 0
+          // victoria
           if(bigValue === 0 && !roundLocked){
             roundLocked = true;
             aciertos++;
@@ -1035,73 +1030,113 @@
         }
       }
 
+      // 4) Render
       for(const g of globos){
         g.el.style.transform = `translate(${g.x - R}px, ${g.y - R}px)`;
       }
     }
 
-    function resolveCircleCollision(a,b){
+    // --------- Anti-solape sin choque ---------
+    function separateNoBounce(a,b){
+      if(a.state === "dead" || b.state === "dead") return;
+
+      const minDist = (R*2) + SEPARATION_PAD;
       const dx = b.x - a.x;
       const dy = b.y - a.y;
       const dist = Math.hypot(dx, dy);
-      const minDist = R*2;
-      if(dist === 0 || dist >= minDist) return false;
 
-      const overlap = (minDist - dist);
+      if(dist === 0 || dist >= minDist) return;
+
       const nx = dx / dist;
       const ny = dy / dist;
+      const overlap = (minDist - dist);
 
+      // Preferencias: held y launch mueven menos; float se ajusta más
+      if(a.state === "held" && b.state !== "held"){
+        b.x += nx * overlap;
+        b.y += ny * overlap;
+        return;
+      }
+      if(b.state === "held" && a.state !== "held"){
+        a.x -= nx * overlap;
+        a.y -= ny * overlap;
+        return;
+      }
+
+      if(a.state === "launch" && b.state !== "launch"){
+        b.x += nx * overlap;
+        b.y += ny * overlap;
+        return;
+      }
+      if(b.state === "launch" && a.state !== "launch"){
+        a.x -= nx * overlap;
+        a.y -= ny * overlap;
+        return;
+      }
+
+      // Ambos similares -> repartir
       a.x -= nx * overlap/2;
       a.y -= ny * overlap/2;
       b.x += nx * overlap/2;
       b.y += ny * overlap/2;
+    }
 
-      const kx = a.vx - b.vx;
-      const ky = a.vy - b.vy;
-      const p = (kx*nx + ky*ny);
+    // --------- POP sin chispas ---------
+    function popAndRemove(g){
+      // ajustar conteo balance
+      if(g.value > 0) posCount = Math.max(0, posCount - 1);
+      else negCount = Math.max(0, negCount - 1);
 
-      a.vx -= p * nx;
-      a.vy -= p * ny;
-      b.vx += p * nx;
-      b.vy += p * ny;
+      g.el.classList.add("pop");
+      setTimeout(() => {
+        g.el.remove();
+        const idx = globos.findIndex(x => x.id === g.id);
+        if(idx >= 0) globos.splice(idx, 1);
+      }, 170);
+    }
 
+    // --------- Spawn sin solape ---------
+    function isFreeSpot(x,y){
+      const minDist = (R*2) + SEPARATION_PAD;
+      for(const g of globos){
+        if(g.state === "dead") continue;
+        if(Math.hypot(g.x - x, g.y - y) < minDist) return false;
+      }
       return true;
     }
 
-    function maybeBurst(x,y){
-      const now = performance.now();
-      if(now - lastBurstMs < 120) return;
-      lastBurstMs = now;
-      burstAt(x,y,10);
-    }
+    function spawnGloboNonOverlap(value, W, H, xMaxFloat){
+      const xMin = R + 14;
+      const xMax = xMaxFloat - R - 14;
+      const yMin = R + 14;
+      const yMax = H - R - 14;
 
-    function burstAt(x,y,count){
-      const colors = [
-        "rgba(255,255,255,.95)",
-        "rgba(245,0,87,.85)",
-        "rgba(255,152,0,.85)"
-      ];
-      for(let i=0;i<count;i++){
-        const p = document.createElement("div");
-        p.className = "burst";
-        p.style.left = x + "px";
-        p.style.top = y + "px";
-        p.style.background = colors[Math.floor(Math.random()*colors.length)];
-
-        const ang = Math.random()*Math.PI*2;
-        const mag = 24 + Math.random()*28;
-        p.style.setProperty("--dx", (Math.cos(ang)*mag)+"px");
-        p.style.setProperty("--dy", (Math.sin(ang)*mag)+"px");
-
-        p.style.width = (6 + Math.random()*6) + "px";
-        p.style.height = p.style.width;
-
-        playfield.appendChild(p);
-        setTimeout(() => p.remove(), 650);
+      for(let attempt=0; attempt<220; attempt++){
+        const x = randFloat(xMin, xMax);
+        const y = randFloat(yMin, yMax);
+        if(isFreeSpot(x,y)){
+          crearGlobo(value, x, y, x, y);
+          return;
+        }
       }
+      // fallback (muy raro)
+      crearGlobo(value, randFloat(xMin,xMax), randFloat(yMin,yMax), randFloat(xMin,xMax), randFloat(yMin,yMax));
     }
 
-    function crearGlobo(value, x, y, vx, vy, homeX, homeY){
+    function spawnGloboNearHomeNonOverlap(value, homeX, homeY, W, H, xMaxFloat){
+      for(let attempt=0; attempt<180; attempt++){
+        const x = homeX + randFloat(-16, 16);
+        const y = homeY + randFloat(-16, 16);
+        if(isFreeSpot(x,y)){
+          crearGlobo(value, x, y, homeX, homeY);
+          return;
+        }
+      }
+      crearGlobo(value, homeX, homeY, homeX, homeY);
+    }
+
+    // --------- Crear globo ---------
+    function crearGlobo(value, x, y, homeX, homeY){
       const el = document.createElement("div");
       el.className = "globo";
       el.textContent = fmt(value);
@@ -1110,18 +1145,26 @@
 
       const g = {
         id: ++globoId,
-        value, x, y, vx, vy,
-        el, state:"float",
-        offsetX:0, offsetY:0,
-        homeX, homeY
+        value,
+        x, y,
+        vx: 0, vy: 0,
+        homeX, homeY,
+        hoverAmp: randFloat(HOVER_AMP_MIN, HOVER_AMP_MAX),
+        hoverSpeed: randFloat(HOVER_SPD_MIN, HOVER_SPD_MAX),
+        hoverPhase: randFloat(0, Math.PI*2),
+        state: "float",
+        offsetX: 0, offsetY: 0,
+        el
       };
 
       if(value > 0) posCount++;
-      else if(value < 0) negCount++;
+      else negCount++;
 
+      // Interacción
       el.addEventListener("pointerdown", (e) => {
         if(!running) return;
         if(activePointer !== null) return;
+        if(g.state === "dead") return;
 
         activePointer = e.pointerId;
         el.setPointerCapture(e.pointerId);
@@ -1136,20 +1179,38 @@
 
       el.addEventListener("pointermove", (e) => {
         if(activePointer !== e.pointerId) return;
+        if(g.state !== "held") return;
+
         const rect = playfield.getBoundingClientRect();
+        const {W,H,xMaxFloat} = getPlayfieldMetrics();
+
         g.x = (e.clientX - rect.left) - g.offsetX;
         g.y = (e.clientY - rect.top) - g.offsetY;
+
+        clampToBounds(g, W, H, xMaxFloat);
+
+        // anti-solape mientras arrastra
+        for(let pass=0; pass<2; pass++){
+          for(const other of globos){
+            if(other.id === g.id) continue;
+            separateNoBounce(g, other);
+          }
+        }
       });
 
       el.addEventListener("pointerup", (e) => {
         if(activePointer !== e.pointerId) return;
         activePointer = null;
 
-        if(roundLocked){ g.state="float"; return; }
+        if(roundLocked){
+          g.state = "float";
+          return;
+        }
 
-        const c = getTargetCenterInPlayfield();
-        const dx = c.x - g.x;
-        const dy = c.y - g.y;
+        // ✅ suelta -> vuela al orb
+        const target = getTargetCenterInPlayfield();
+        const dx = target.x - g.x;
+        const dy = target.y - g.y;
         const d = Math.hypot(dx,dy) || 1;
 
         g.vx = (dx/d) * LAUNCH_SPEED;
@@ -1160,18 +1221,6 @@
       globos.push(g);
     }
 
-    function eliminarGlobo(id){
-      const idx = globos.findIndex(g => g.id === id);
-      if(idx >= 0){
-        const v = globos[idx].value;
-        if(v > 0) posCount = Math.max(0, posCount - 1);
-        else if(v < 0) negCount = Math.max(0, negCount - 1);
-
-        globos[idx].el.remove();
-        globos.splice(idx,1);
-      }
-    }
-
     function limpiarGlobos(){
       for(const g of globos) g.el.remove();
       globos = [];
@@ -1180,16 +1229,9 @@
       negCount = 0;
     }
 
-    function getTargetCenterInPlayfield(){
-      const t = targetOrb.getBoundingClientRect();
-      const pf = playfield.getBoundingClientRect();
-      return { x:(t.left - pf.left) + t.width/2, y:(t.top - pf.top) + t.height/2 };
-    }
-
-    // Genera N/2 positivos y N/2 negativos en ±1..±3 con solución para llegar a 0
+    // --------- Generación balanceada con solución ---------
     function generarGlobosBalanceadosConSolucion(bigValue, N){
       const target = -bigValue;
-
       const POS_TARGET = Math.floor(N/2);
       const NEG_TARGET = N - POS_TARGET;
 
@@ -1265,6 +1307,7 @@
       return tmp;
     }
 
+    // --------- UI / Efectos (sin chispas) ---------
     function renderBigValue(){
       targetOrb.textContent = fmt(bigValue);
       targetOrb.classList.remove("orb-win");
@@ -1276,13 +1319,14 @@
       progresoEl.appendChild(b);
     }
 
-    function efectoImpacto(){
-      emojiRight.textContent = "💥";
+    // Feedback suave al impactar (no "💥", no chispas)
+    function efectoImpactoSuave(){
+      emojiRight.textContent = "✨";
       emojiRight.classList.add("emoji-pop");
       setTimeout(() => {
         emojiRight.classList.remove("emoji-pop");
         emojiRight.textContent="🎯";
-      }, 330);
+      }, 240);
     }
 
     function efectoAcierto(){
@@ -1320,7 +1364,7 @@
       miniConfettiLayer.innerHTML = "";
     }
 
-    /* Eventos */
+    // --------- Eventos ---------
     btnComenzar.addEventListener("click", iniciarJuego);
     btnTerminar.addEventListener("click", terminarPartida);
     btnReiniciar.addEventListener("click", reiniciarJuego);
