@@ -6,7 +6,6 @@
   <title>Anulación - Enteros</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     :root{
       --primary:#3f51b5;
@@ -14,12 +13,8 @@
       --accent:#00bcd4;
       --dark:#212121;
       --success:#2e7d32;
-      --danger:#c62828;
-      --text:#263238;
-      --muted:#546e7a;
       font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
     }
-
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
     body{
       background:linear-gradient(135deg,#e3f2fd,#bbdefb);
@@ -27,9 +22,7 @@
       display:flex;
       flex-direction:column;
       touch-action:manipulation;
-      color:var(--text);
     }
-
     /* Fondo flotante */
     .floating-element{
       position:fixed;
@@ -45,7 +38,6 @@
       50%{transform:translate(-12px,9px) rotate(-4deg);opacity:.10}
       75%{transform:translate(10px,16px) rotate(3deg);opacity:.12}
     }
-
     header{
       background:linear-gradient(135deg,var(--primary),var(--accent));
       color:#fff;
@@ -62,7 +54,6 @@
       max-width:1400px;
       margin:0 auto;
     }
-
     /* Niños: transición suave */
     .kid-pulse-wrap{
       position:relative;
@@ -89,13 +80,11 @@
       60% { opacity:0; transform:scale(.55) translateY(10px); }
       100% { opacity:0; transform:scale(.55) translateY(10px); }
     }
-
     .logo{display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap}
     .logo-icon{font-size:1.7rem;animation:pulse 2.2s infinite}
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
     h1{margin:0;font-size:1.32rem}
     .subtitle{font-size:.85rem;opacity:.95;margin:.15rem 0 0}
-
     /* Inicio */
     #inicio{
       display:flex;
@@ -140,6 +129,7 @@
       transform:translateY(-2px);
       box-shadow:0 6px 8px rgba(0,0,0,.15)
     }
+    /* Frase más lejos */
     .instruction-line{
       margin-top:44px;
       color:#0b2a66;
@@ -148,10 +138,7 @@
       font-size:1.08rem;
       font-family:"Trebuchet MS","Arial Rounded MT Bold","Segoe UI",sans-serif;
       text-shadow:0 1px 0 rgba(255,255,255,.55);
-      text-align:center;
-      padding:0 10px;
     }
-
     /* Contenedor */
     #contenedor{
       display:none;
@@ -165,7 +152,6 @@
       flex:1 1 auto;
       min-height:0;
     }
-
     /* Paneles */
     #panel-izquierdo, #juego, #historial{
       background:#fff;
@@ -176,15 +162,17 @@
       min-height:0;
       overflow:hidden;
     }
-    #panel-izquierdo, #historial{ overflow:auto; }
-
+    /* Laterales con scroll */
+    #panel-izquierdo, #historial{
+      overflow:auto;
+    }
+    /* Laterales más estrechos y centro fluido */
     #panel-izquierdo{
       flex: 0 0 230px;
       border:3px solid var(--primary);
       display:flex;
       flex-direction:column;
     }
-
     #juego{
       flex: 1 1 auto;
       border:3px solid var(--primary);
@@ -197,19 +185,12 @@
       overflow:hidden;
       min-width: 520px;
     }
-    /* ✅ Solo cuando hay certificado, permitimos scroll interno */
-    #juego.showing-cert{
-      overflow:auto;
-      padding:8px;
-    }
-
     #historial{
       flex: 0 0 345px;
       border:2px solid var(--accent);
       display:flex;
       flex-direction:column;
     }
-
     .info-panel{
       background:linear-gradient(135deg,#f5f5f5,#e0e0e0);
       padding:9px;border-radius:8px;margin:7px 0;border:1px solid #ddd;
@@ -223,7 +204,6 @@
     #temporizador-total{
       font-size:17px;color:#455a64;font-weight:900
     }
-
     /* Campo */
     #playfield{
       flex:1 1 auto;
@@ -245,7 +225,7 @@
     }
     #playfield.fading{ opacity:0; }
 
-    /* Orb (meta=0) */
+    /* Orb */
     #target-orb{
       position:absolute;
       right:26px;
@@ -325,15 +305,23 @@
       border:2px solid rgba(245,0,87,.18);
       transition:transform .08s;
       touch-action:none;
-      will-change:transform;
     }
-    .globo:active{cursor:grabbing;transform:scale(1.03)}
+    .globo:active{cursor:grabbing;transform:scale(1.04)}
 
-    /* ✅ POP (revienta) sin chispas */
-    .globo.pop{
-      transition: transform 160ms ease, opacity 160ms ease;
-      opacity:0;
-      transform:scale(0.15);
+    /* Explosión */
+    .burst{
+      position:absolute;
+      width:8px;height:8px;border-radius:50%;
+      pointer-events:none;
+      opacity:0.95;
+      transform:translate(-50%,-50%);
+      animation:burstMove .55s ease-out forwards;
+      filter:drop-shadow(0 2px 5px rgba(0,0,0,.18));
+      z-index:5;
+    }
+    @keyframes burstMove{
+      0%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+      100%{ transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2); opacity:0; }
     }
 
     /* Emojis esquinas */
@@ -346,7 +334,7 @@
     }
     #emoji-left{left:10px}
     #emoji-right{right:10px}
-    .emoji-pop{transform:scale(1.18) rotate(-5deg);opacity:1}
+    .emoji-pop{transform:scale(1.25) rotate(-6deg);opacity:1}
     #mensaje{ display:none; }
 
     /* Progreso */
@@ -377,7 +365,7 @@
     /* Historial */
     #historial h2{font-size:1.25rem;margin-bottom:8px;color:var(--primary)}
     #historial table{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed}
-    #historial th,#historial td{border:1px solid #ddd;padding:7px;text-align:center;font-size:13px;word-break:break-word}
+    #historial th,#historial td{border:1px solid #ddd;padding:7px;text-align:center;font-size:13px}
     #historial th{
       background:linear-gradient(135deg,#f8f9fa,#e9ecef);
       font-weight:bold;color:var(--primary)
@@ -389,6 +377,7 @@
 
     footer{
       text-align:center;
+      /* CAMBIO (previo): franja negra más alta (≈ dos líneas extra) */
       padding: 2.25rem 0;
       background:var(--dark);
       color:#fff;
@@ -397,63 +386,7 @@
     }
     footer p{margin:.25rem 0;font-size:.8rem}
 
-    /* CERTIFICADO (compacto) */
-    .cert-wrap{
-      height:100%;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:6px;
-    }
-    .cert{
-      width:min(720px, 96%);
-      background:#fff;
-      border-radius:14px;
-      border:2px solid rgba(63,81,181,0.25);
-      box-shadow:0 10px 22px rgba(0,0,0,0.10);
-      padding:18px 16px;
-      text-align:center;
-      line-height:1.20;
-      max-height:100%;
-    }
-    .cert-badge{ font-size:1.6rem; margin-bottom:6px; }
-    .cert-title{
-      margin:0;
-      color:var(--primary);
-      font-size:1.38rem;
-      letter-spacing:.3px;
-      font-weight:900;
-      text-transform:uppercase;
-    }
-    .cert-subtitle{ margin:10px 0 4px; font-size:.92rem; color:#444; }
-    .cert-game{
-      margin:0 0 12px;
-      font-size:1.0rem;
-      color:#283593;
-      font-weight:700;
-      font-style:italic;
-    }
-    .cert-award{ font-size:.92rem; margin:0 0 6px; color:#333; }
-    .cert-name{
-      margin:4px 0 10px;
-      font-size:1.5rem;
-      color:#1a237e;
-      font-weight:900;
-      letter-spacing:.25px;
-    }
-    .cert-msg{ margin:6px 0 10px; font-size:.98rem; font-weight:600; color:#424242; }
-    .cert-stats{ margin:6px 0; font-size:.96rem; color:#333; }
-    .cert-rank{ color:#d50000; font-weight:900; }
-    .cert-date{ margin-top:8px; color:#555; font-size:.88rem; }
-    .cert-footer{
-      margin-top:12px;
-      padding-top:10px;
-      border-top:1px solid #ddd;
-      font-size:.88rem;
-      color:#555;
-      line-height:1.20;
-    }
-
+    /* Responsive */
     @media (max-width:1024px){
       #contenedor{flex-direction:column;width:98vw;padding:10px}
       #panel-izquierdo,#juego,#historial{width:100%;flex:auto}
@@ -466,13 +399,9 @@
       #playfield{height:360px}
       #target-orb{right:12px;width:128px;height:128px;font-size:48px}
       .globo{width:54px;height:54px;font-size:18px}
-      .cert{padding:16px 12px}
-      .cert-title{font-size:1.22rem}
-      .cert-name{font-size:1.38rem}
     }
   </style>
 </head>
-
 <body>
   <div class="floating-element" style="top:5%; left:3%; animation-delay:0s;">🔢</div>
   <div class="floating-element" style="top:18%; right:5%; animation-delay:1s;">🎯</div>
@@ -499,882 +428,674 @@
     <p class="subtitle">Profesores: Miguel Ubiera y Anna Morán</p>
   </header>
 
-  <main style="flex:1 1 auto; display:flex; flex-direction:column;">
-    <div id="inicio">
-      <div class="start-emoji" aria-hidden="true">🎯 🧏‍♂️ 🎯</div>
-      <h2 style="margin-bottom: 10px; color: var(--primary);">Escribe tu nombre</h2>
-      <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante" />
-      <button id="comenzar-btn" type="button">Comenzar</button>
-      <div class="instruction-line">Arroja los globos hasta obtener un 0.</div>
+  <div id="inicio">
+    <div class="start-emoji" aria-hidden="true">🎯 🧏 🎯</div>
+    <h2 style="margin-bottom: 10px; color: var(--primary);">Escribe tu nombre</h2>
+    <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante" />
+    <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
+    <!-- (Sin cambios) -->
+    <div class="instruction-line">Arroja los globos hasta obtener un 0.</div>
+  </div>
+
+  <div id="contenedor">
+    <div id="panel-izquierdo">
+      <div class="info-panel">
+        <h3>⏱️ Round (20 s)</h3>
+        <div id="temporizador-round">20</div>
+      </div>
+      <div class="info-panel">
+        <h3>⌛ Sesión</h3>
+        <div id="temporizador-total">200 segundos</div>
+      </div>
+      <div class="info-panel">
+        <h3>📈 Rendimiento</h3>
+        <p><strong>Aciertos:</strong> <span id="aciertos">0</span></p>
+      </div>
+      <div class="info-panel">
+        <h3>🧱 Progreso</h3>
+        <div id="bloques-progreso-container"></div>
+      </div>
+      <div class="botones-container">
+        <button id="terminar-btn" onclick="terminarPartida()">Terminar Partida</button>
+        <button id="reiniciar-btn" onclick="reiniciarJuego()">Jugar de Nuevo</button>
+      </div>
     </div>
 
-    <div id="contenedor">
-      <aside id="panel-izquierdo">
-        <div class="info-panel">
-          <h3>⏱️ Round (20 s)</h3>
-          <div id="temporizador-round">20</div>
+    <div id="juego">
+      <div id="playfield" aria-label="Campo de juego">
+        <div id="target-orb">-12</div>
+        <div id="win-feedback" aria-live="polite">
+          <div class="mini-confetti" aria-hidden="true"></div>
+          <div class="win-emoji">🎉✅</div>
+          <div class="win-text" id="win-text">¡Felicidades!</div>
         </div>
-        <div class="info-panel">
-          <h3>⌛ Sesión</h3>
-          <div id="temporizador-total">200 segundos</div>
-        </div>
-        <div class="info-panel">
-          <h3>📈 Rendimiento</h3>
-          <p><strong>Aciertos:</strong> <span id="aciertos">0</span></p>
-        </div>
-        <div class="info-panel">
-          <h3>🧱 Progreso</h3>
-          <div id="bloques-progreso-container"></div>
-        </div>
-        <div class="botones-container">
-          <button id="terminar-btn" type="button">Terminar Partida</button>
-          <button id="reiniciar-btn" type="button">Jugar de Nuevo</button>
-        </div>
-      </aside>
-
-      <section id="juego">
-        <div id="playfield" aria-label="Campo de juego">
-          <div id="target-orb" aria-label="Globo objetivo">-12</div>
-
-          <div id="win-feedback" aria-live="polite">
-            <div class="mini-confetti" aria-hidden="true"></div>
-            <div class="win-emoji">🎉✅</div>
-            <div class="win-text" id="win-text">¡Felicidades!</div>
-          </div>
-
-          <div id="emoji-left" class="corner-emoji">🧠</div>
-          <div id="emoji-right" class="corner-emoji">🎯</div>
-        </div>
-        <div id="mensaje"></div>
-      </section>
-
-      <aside id="historial">
-        <h2>🏆 Historial</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Aciertos</th>
-              <th>Jerarquía</th>
-            </tr>
-          </thead>
-          <tbody id="lista-historial"></tbody>
-        </table>
-        <div style="margin-top:auto;padding-top:10px;">
-          <button id="barrer-btn" type="button">Barrer Historial</button>
-        </div>
-      </aside>
+        <div id="emoji-left" class="corner-emoji">👦</div>
+        <div id="emoji-right" class="corner-emoji">👧</div>
+      </div>
+      <div id="mensaje"></div>
     </div>
-  </main>
+
+    <div id="historial">
+      <h2>🏆 Historial</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Aciertos</th>
+            <th>Jerarquía</th>
+          </tr>
+        </thead>
+        <tbody id="lista-historial"></tbody>
+      </table>
+      <div style="margin-top:auto;padding-top:10px;">
+        <button id="barrer-btn" onclick="barrerHistorial()">Barrer Historial</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>Instituto para Sordos Santa Rosa, Inc.</p>
     <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
   </footer>
 
-  <script>
-    "use strict";
-
-    /* ============================
-        ANULACIÓN (Enteros) - META 0
-        ✅ Globos casi quietos
-        ✅ Suelta -> vuela al orb -> revienta -> suma
-        ✅ Sin chispas
-        ✅ Sin solaparse (separación suave)
-    ============================ */
-
-    // --------- Configuración ---------
-    const ROUND_SECONDS = 20;
-    const SESSION_SECONDS = 200;
-
-    const R = 28;
-    const N_GLOBOS = 20;
-    const LOCAL_BOUND = 34;
-
-    // Movimiento: casi quietos (micro-balanceo)
-    const HOVER_AMP_MIN = 0.6;     // px
-    const HOVER_AMP_MAX = 1.8;     // px
-    const HOVER_SPD_MIN = 0.18;    // rad/s
-    const HOVER_SPD_MAX = 0.35;    // rad/s
-    const HOVER_LERP = 0.030;      // más bajo = más quieto
-
-    // Lanzamiento al orb (vuelo directo)
-    const LAUNCH_SPEED = 950;      // px/s (si quieres más lento: 800)
-    const LAUNCH_DRAG = 0.35;      // resistencia ligera
-
-    // Anti-solape
-    const SEPARATION_PASSES = 2;
-    const SEPARATION_PAD = 2;
-
-    const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
-
-    const $ = (id) => document.getElementById(id);
-
-    // --------- UI ---------
-    const inicio = $("inicio");
-    const contenedor = $("contenedor");
-    const inputNombre = $("nombre-input");
-
-    const btnComenzar = $("comenzar-btn");
-    const btnTerminar = $("terminar-btn");
-    const btnReiniciar = $("reiniciar-btn");
-    const btnBarrer = $("barrer-btn");
-
-    const tRoundEl = $("temporizador-round");
-    const tTotalEl = $("temporizador-total");
-    const aciertosEl = $("aciertos");
-    const progresoEl = $("bloques-progreso-container");
-    const listaHistorial = $("lista-historial");
-
-    const juegoSection = $("juego");
-    const playfield = $("playfield");
-    const targetOrb = $("target-orb");
-    const winFeedback = $("win-feedback");
-    const miniConfettiLayer = winFeedback.querySelector(".mini-confetti");
-    const winText = $("win-text");
-    const emojiLeft = $("emoji-left");
-    const emojiRight = $("emoji-right");
-
-    // --------- Estado ---------
-    let nombreParticipante = "";
-    let aciertos = 0;
-
-    let tiempoTotal = SESSION_SECONDS;
-    let tiempoRound = ROUND_SECONDS;
-
-    let timerTotal = null;
-    let timerRound = null;
-
-    let running = false;
-    let roundLocked = false;
-
-    let historial = JSON.parse(localStorage.getItem("historialAnulacion")) || [];
-
-    let bigValue = -12;
-    let nextSign = -1;
-
-    let globos = [];
-    let rafId = null;
-    let lastTs = 0;
-    let globoId = 0;
-
-    let activePointer = null;
-    let idxOk = 0;
-
-    // Balance ±
-    let posCount = 0;
-    let negCount = 0;
-
-    // --------- Utils ---------
-    function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-    function randFloat(min,max){ return Math.random()*(max-min)+min; }
-    function shuffle(arr){
-      for(let i=arr.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [arr[i],arr[j]] = [arr[j],arr[i]];
-      }
-    }
-    function fmt(n){
-      if(n === 0) return "0";
-      return n > 0 ? `+${n}` : `${n}`;
-    }
-    function escapeHTML(str){
-      return String(str).replace(/[&<>"'`=\/]/g, s => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",
-        "\"":"&quot;","'":"&#39;","`":"&#96;",
-        "=":"&#61;","/":"&#47;"
-      }[s]));
-    }
-    function siguienteMensajeOK(){
-      const msg = MENSAJES_OK[idxOk % MENSAJES_OK.length];
-      idxOk++;
-      return msg;
-    }
-    function updateUIStats(){
-      aciertosEl.textContent = String(aciertos);
-      tTotalEl.textContent = `${tiempoTotal} segundos`;
-      tRoundEl.textContent = String(tiempoRound);
-    }
-
-    // --------- Jerarquía ---------
-    function obtenerJerarquia(p){
-      if(p < 6) return "Iniciado";
-      if(p >= 6 && p <= 10) return "Competente";
-      if(p >= 11 && p <= 15) return "Experto";
-      return "Élite";
-    }
-    function fraseDesempeno(a){
-      const j = obtenerJerarquia(a);
-      if(j==="Élite") return "Excelente. Evidencia un dominio notable de la anulación de enteros.";
-      if(j==="Experto") return "Muy buen desempeño. Su estrategia fue precisa y consistente.";
-      if(j==="Competente") return "Buen avance. Continúe fortaleciendo su habilidad con práctica.";
-      return "Buen inicio. Siga practicando para mejorar su rendimiento.";
-    }
-
-    // --------- Historial ---------
-    function actualizarHistorial(){
-      listaHistorial.textContent = "";
-      for(const p of historial){
-        const tr = document.createElement("tr");
-
-        const tdN = document.createElement("td");
-        tdN.textContent = p.nombre;
-
-        const tdA = document.createElement("td");
-        tdA.textContent = String(p.aciertos);
-
-        const tdJ = document.createElement("td");
-        tdJ.textContent = p.jerarquia;
-        tdJ.className = p.jerarquia.toLowerCase();
-
-        tr.appendChild(tdN);
-        tr.appendChild(tdA);
-        tr.appendChild(tdJ);
-
-        listaHistorial.appendChild(tr);
-      }
-    }
-    function barrerHistorial(){
-      if(confirm("¿Estás seguro de que quieres borrar todo el historial?")){
-        historial = [];
-        localStorage.removeItem("historialAnulacion");
-        actualizarHistorial();
-      }
-    }
-
-    // --------- Juego ---------
-    function iniciarJuego(){
-      const rawName = inputNombre.value.trim();
-      if(!rawName){
-        alert("Por favor, escribe tu nombre.");
-        return;
-      }
-
-      nombreParticipante = rawName;
-      inicio.style.display = "none";
-      contenedor.style.display = "flex";
-
-      aciertos = 0;
-      tiempoTotal = SESSION_SECONDS;
-      updateUIStats();
-
-      btnReiniciar.style.display = "none";
-      btnTerminar.style.display = "block";
-      progresoEl.textContent = "";
-
-      running = true;
-      roundLocked = false;
-
-      clearInterval(timerTotal);
-      timerTotal = setInterval(() => {
-        if(!running) return;
-        tiempoTotal--;
-        tTotalEl.textContent = `${tiempoTotal} segundos`;
-        if(tiempoTotal <= 0) terminarPartida();
-      }, 1000);
-
-      nextSign = Math.random() < 0.5 ? -1 : 1;
-      iniciarNuevoRound(true);
-    }
-
-    function terminarPartida(){
-      running = false;
-      clearInterval(timerTotal);
-      clearInterval(timerRound);
-      cancelAnimationFrame(rafId);
-
-      const jerarquia = obtenerJerarquia(aciertos);
-
-      historial.push({
-        nombre: nombreParticipante,
-        aciertos,
-        jerarquia,
-        fecha: new Date().toLocaleDateString("es-ES")
-      });
-
-      historial.sort((a,b) => b.aciertos - a.aciertos);
-      localStorage.setItem("historialAnulacion", JSON.stringify(historial));
-      actualizarHistorial();
-
-      // ✅ modo certificado
-      juegoSection.classList.add("showing-cert");
-
-      const safeName = escapeHTML(nombreParticipante);
-
-      juegoSection.innerHTML = `
-        <div class="cert-wrap">
-          <div class="cert" role="group" aria-label="Certificado de reconocimiento">
-            <div class="cert-badge">🎓✨</div>
-            <h2 class="cert-title">Certificado de Reconocimiento</h2>
-
-            <p class="cert-subtitle">Otorgado por su desempeño en:</p>
-            <div class="cert-game">Anulación de Enteros (Meta: 0)</div>
-
-            <p class="cert-award">Se concede a:</p>
-            <div class="cert-name">${safeName}</div>
-
-            <div class="cert-msg">${fraseDesempeno(aciertos)}</div>
-
-            <div class="cert-stats">
-              <b>Aciertos:</b> ${aciertos}
-              &nbsp;•&nbsp;
-              <b>Jerarquía:</b>
-              <span class="cert-rank">${jerarquia}</span>
-            </div>
-
-            <div class="cert-date">
-              Fecha de emisión: <b>${new Date().toLocaleDateString("es-ES")}</b>
-            </div>
-
-            <div class="cert-footer">
-              Profesores responsables:<br>
-              <b>Miguel Ubiera</b> y <b>Anna Morán</b>
-            </div>
-          </div>
-        </div>
-      `;
-
-      btnReiniciar.style.display = "block";
-      btnTerminar.style.display = "none";
-    }
-
-    function reiniciarJuego(){ window.location.reload(); }
-
-    // --------- Round ---------
-    function iniciarNuevoRound(isFirst=false){
-      if(!running) return;
-
-      roundLocked = false;
-      hideWinFeedback();
-
-      const doStart = () => {
-        tiempoRound = ROUND_SECONDS;
-        tRoundEl.textContent = String(tiempoRound);
-
-        // Valor grande alternado: ±(11..19)
-        const absVal = randInt(11, 19);
-        bigValue = nextSign * absVal;
-        nextSign *= -1;
-
-        renderBigValue();
-        limpiarGlobos();
-
-        // Globos balanceados ±1..±3 con solución garantizada
-        const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS);
-        const {W,H,xMaxFloat} = getPlayfieldMetrics();
-
-        for(const v of values){
-          spawnGloboNonOverlap(v, W, H, xMaxFloat);
-        }
-
-        clearInterval(timerRound);
-        timerRound = setInterval(() => {
-          if(!running) return;
-          tiempoRound--;
-          tRoundEl.textContent = String(tiempoRound);
-          if(tiempoRound <= 0){
-            clearInterval(timerRound);
-            iniciarNuevoRound();
-          }
-        }, 1000);
-
-        lastTs = performance.now();
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(loop);
-      };
-
-      if(isFirst){ doStart(); return; }
-      playfield.classList.add("fading");
-      setTimeout(() => {
-        doStart();
-        playfield.classList.remove("fading");
-      }, 420);
-    }
-
-    function loop(ts){
-      if(!running) return;
-      const dt = Math.min(0.033, (ts - lastTs)/1000);
-      lastTs = ts;
-
-      tickPhysics(dt, ts/1000);
-      rafId = requestAnimationFrame(loop);
-    }
-
-    // --------- Métricas ---------
-    function getPlayfieldMetrics(){
-      const rect = playfield.getBoundingClientRect();
-      const W = rect.width, H = rect.height;
-      const xMaxFloat = Math.floor(W * 0.62); // zona izquierda para globos
-      return { W, H, xMaxFloat };
-    }
-
-    function getTargetCenterInPlayfield(){
-      const t = targetOrb.getBoundingClientRect();
-      const pf = playfield.getBoundingClientRect();
-      return {
-        x: (t.left - pf.left) + t.width/2,
-        y: (t.top  - pf.top)  + t.height/2,
-        r: t.width * 0.44
-      };
-    }
-
-    function clampToBounds(g, W, H, xMaxFloat){
-      const minY = R + 12;
-      const maxY = H - R - 12;
-
-      if(g.state === "float" || g.state === "held"){
-        const minX = R + 12;
-        const maxX = xMaxFloat - R - 12;
-        if(g.x < minX) g.x = minX;
-        if(g.x > maxX) g.x = maxX;
-      } else if(g.state === "launch"){
-        // launch: permitimos todo el ancho del playfield
-        if(g.x < R) g.x = R;
-        if(g.x > W - R) g.x = W - R;
-      }
-
-      if(g.y < minY) g.y = minY;
-      if(g.y > maxY) g.y = maxY;
-    }
-
-    // --------- Física (casi quietos + vuelo al orb) ---------
-    function tickPhysics(dt, tSec){
-      const {W,H,xMaxFloat} = getPlayfieldMetrics();
-
-      // 1) Movimiento
-      for(const g of globos){
-        if(g.state === "dead") continue;
-        if(g.state === "held") continue;
-
-        if(g.state === "float"){
-          // Micro-balanceo MUY leve hacia un "desired" alrededor del home
-          const desiredX = g.homeX + Math.sin(tSec * g.hoverSpeed + g.hoverPhase) * g.hoverAmp;
-          const desiredY = g.homeY + Math.cos(tSec * g.hoverSpeed + g.hoverPhase) * g.hoverAmp;
-
-          const minX = Math.max(R, g.homeX - LOCAL_BOUND);
-          const maxX = Math.min(xMaxFloat - R, g.homeX + LOCAL_BOUND);
-          const minY = Math.max(R, g.homeY - LOCAL_BOUND);
-          const maxY = Math.min(H - R, g.homeY + LOCAL_BOUND);
-
-          const dx = Math.max(minX, Math.min(maxX, desiredX)) - g.x;
-          const dy = Math.max(minY, Math.min(maxY, desiredY)) - g.y;
-
-          g.x += dx * HOVER_LERP;
-          g.y += dy * HOVER_LERP;
-        }
-
-        if(g.state === "launch"){
-          // Vuelo directo al orb con leve drag
-          const drag = Math.exp(-LAUNCH_DRAG * dt);
-          g.vx *= drag;
-          g.vy *= drag;
-
-          g.x += g.vx * dt;
-          g.y += g.vy * dt;
-        }
-
-        clampToBounds(g, W, H, xMaxFloat);
-      }
-
-      // 2) Anti-solape (sin choque ni rebote)
-      for(let pass=0; pass<SEPARATION_PASSES; pass++){
-        for(let i=0; i<globos.length; i++){
-          for(let j=i+1; j<globos.length; j++){
-            separateNoBounce(globos[i], globos[j]);
-          }
-        }
-      }
-
-      // 3) Impacto con orb: revienta + suma (sin chispas)
-      const target = getTargetCenterInPlayfield();
-
-      for(const g of [...globos]){
-        if(g.state !== "launch") continue;
-
-        const dist = Math.hypot(g.x - target.x, g.y - target.y);
-        if(dist < target.r + R * 0.75){
-          g.state = "dead";
-
-          // feedback sutil
-          efectoImpactoSuave();
-
-          // suma
-          bigValue += g.value;
-          renderBigValue();
-
-          const repX = g.homeX, repY = g.homeY;
-
-          // revienta y elimina
-          popAndRemove(g);
-
-          // respawn balanceado ±
-          let sign;
-          if(posCount < negCount) sign = +1;
-          else if(negCount < posCount) sign = -1;
-          else sign = Math.random() < 0.5 ? +1 : -1;
-
-          const nuevo = sign * randInt(1,3);
-          spawnGloboNearHomeNonOverlap(nuevo, repX, repY, W, H, xMaxFloat);
-
-          // victoria
-          if(bigValue === 0 && !roundLocked){
-            roundLocked = true;
-            aciertos++;
-            updateUIStats();
-            registrarAciertoVisual();
-            efectoAcierto();
-            showWinFeedback();
-            clearInterval(timerRound);
-            setTimeout(() => iniciarNuevoRound(), 1100);
-          }
-        }
-      }
-
-      // 4) Render
-      for(const g of globos){
-        g.el.style.transform = `translate(${g.x - R}px, ${g.y - R}px)`;
-      }
-    }
-
-    // --------- Anti-solape sin choque ---------
-    function separateNoBounce(a,b){
-      if(a.state === "dead" || b.state === "dead") return;
-
-      const minDist = (R*2) + SEPARATION_PAD;
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const dist = Math.hypot(dx, dy);
-
-      if(dist === 0 || dist >= minDist) return;
-
-      const nx = dx / dist;
-      const ny = dy / dist;
-      const overlap = (minDist - dist);
-
-      // Preferencias: held y launch mueven menos; float se ajusta más
-      if(a.state === "held" && b.state !== "held"){
-        b.x += nx * overlap;
-        b.y += ny * overlap;
-        return;
-      }
-      if(b.state === "held" && a.state !== "held"){
-        a.x -= nx * overlap;
-        a.y -= ny * overlap;
-        return;
-      }
-
-      if(a.state === "launch" && b.state !== "launch"){
-        b.x += nx * overlap;
-        b.y += ny * overlap;
-        return;
-      }
-      if(b.state === "launch" && a.state !== "launch"){
-        a.x -= nx * overlap;
-        a.y -= ny * overlap;
-        return;
-      }
-
-      // Ambos similares -> repartir
-      a.x -= nx * overlap/2;
-      a.y -= ny * overlap/2;
-      b.x += nx * overlap/2;
-      b.y += ny * overlap/2;
-    }
-
-    // --------- POP sin chispas ---------
-    function popAndRemove(g){
-      // ajustar conteo balance
-      if(g.value > 0) posCount = Math.max(0, posCount - 1);
-      else negCount = Math.max(0, negCount - 1);
-
-      g.el.classList.add("pop");
-      setTimeout(() => {
-        g.el.remove();
-        const idx = globos.findIndex(x => x.id === g.id);
-        if(idx >= 0) globos.splice(idx, 1);
-      }, 170);
-    }
-
-    // --------- Spawn sin solape ---------
-    function isFreeSpot(x,y){
-      const minDist = (R*2) + SEPARATION_PAD;
-      for(const g of globos){
-        if(g.state === "dead") continue;
-        if(Math.hypot(g.x - x, g.y - y) < minDist) return false;
-      }
-      return true;
-    }
-
-    function spawnGloboNonOverlap(value, W, H, xMaxFloat){
-      const xMin = R + 14;
-      const xMax = xMaxFloat - R - 14;
-      const yMin = R + 14;
-      const yMax = H - R - 14;
-
-      for(let attempt=0; attempt<220; attempt++){
-        const x = randFloat(xMin, xMax);
-        const y = randFloat(yMin, yMax);
-        if(isFreeSpot(x,y)){
-          crearGlobo(value, x, y, x, y);
-          return;
-        }
-      }
-      // fallback (muy raro)
-      crearGlobo(value, randFloat(xMin,xMax), randFloat(yMin,yMax), randFloat(xMin,xMax), randFloat(yMin,yMax));
-    }
-
-    function spawnGloboNearHomeNonOverlap(value, homeX, homeY, W, H, xMaxFloat){
-      for(let attempt=0; attempt<180; attempt++){
-        const x = homeX + randFloat(-16, 16);
-        const y = homeY + randFloat(-16, 16);
-        if(isFreeSpot(x,y)){
-          crearGlobo(value, x, y, homeX, homeY);
-          return;
-        }
-      }
-      crearGlobo(value, homeX, homeY, homeX, homeY);
-    }
-
-    // --------- Crear globo ---------
-    function crearGlobo(value, x, y, homeX, homeY){
-      const el = document.createElement("div");
-      el.className = "globo";
-      el.textContent = fmt(value);
-      el.tabIndex = 0;
-      playfield.appendChild(el);
-
-      const g = {
-        id: ++globoId,
-        value,
-        x, y,
-        vx: 0, vy: 0,
-        homeX, homeY,
-        hoverAmp: randFloat(HOVER_AMP_MIN, HOVER_AMP_MAX),
-        hoverSpeed: randFloat(HOVER_SPD_MIN, HOVER_SPD_MAX),
-        hoverPhase: randFloat(0, Math.PI*2),
-        state: "float",
-        offsetX: 0, offsetY: 0,
-        el
-      };
-
-      if(value > 0) posCount++;
-      else negCount++;
-
-      // Interacción
-      el.addEventListener("pointerdown", (e) => {
-        if(!running) return;
-        if(activePointer !== null) return;
-        if(g.state === "dead") return;
-
-        activePointer = e.pointerId;
-        el.setPointerCapture(e.pointerId);
-        g.state = "held";
-
-        const rect = playfield.getBoundingClientRect();
-        g.offsetX = (e.clientX - rect.left) - g.x;
-        g.offsetY = (e.clientY - rect.top) - g.y;
-
-        g.vx = 0; g.vy = 0;
-      });
-
-      el.addEventListener("pointermove", (e) => {
-        if(activePointer !== e.pointerId) return;
-        if(g.state !== "held") return;
-
-        const rect = playfield.getBoundingClientRect();
-        const {W,H,xMaxFloat} = getPlayfieldMetrics();
-
-        g.x = (e.clientX - rect.left) - g.offsetX;
-        g.y = (e.clientY - rect.top) - g.offsetY;
-
-        clampToBounds(g, W, H, xMaxFloat);
-
-        // anti-solape mientras arrastra
-        for(let pass=0; pass<2; pass++){
-          for(const other of globos){
-            if(other.id === g.id) continue;
-            separateNoBounce(g, other);
-          }
-        }
-      });
-
-      el.addEventListener("pointerup", (e) => {
-        if(activePointer !== e.pointerId) return;
-        activePointer = null;
-
-        if(roundLocked){
-          g.state = "float";
-          return;
-        }
-
-        // ✅ suelta -> vuela al orb
-        const target = getTargetCenterInPlayfield();
-        const dx = target.x - g.x;
-        const dy = target.y - g.y;
-        const d = Math.hypot(dx,dy) || 1;
-
-        g.vx = (dx/d) * LAUNCH_SPEED;
-        g.vy = (dy/d) * LAUNCH_SPEED;
-        g.state = "launch";
-      });
-
-      globos.push(g);
-    }
-
-    function limpiarGlobos(){
-      for(const g of globos) g.el.remove();
-      globos = [];
-      activePointer = null;
-      posCount = 0;
-      negCount = 0;
-    }
-
-    // --------- Generación balanceada con solución ---------
-    function generarGlobosBalanceadosConSolucion(bigValue, N){
-      const target = -bigValue;
-      const POS_TARGET = Math.floor(N/2);
-      const NEG_TARGET = N - POS_TARGET;
-
-      let pos = 0, neg = 0;
-
-      let safetyAll = 0;
-      while(safetyAll++ < 400){
-        const tmp = [];
-        let partial = 0;
-        pos = 0; neg = 0;
-
-        const k = randInt(2,4);
-
-        for(let i=0; i<k-1; i++){
-          let sign;
-          if(pos >= POS_TARGET) sign = -1;
-          else if(neg >= NEG_TARGET) sign = +1;
-          else sign = (Math.random() < 0.5 ? +1 : -1);
-
-          const mag = randInt(1,3);
-          const v = sign * mag;
-          tmp.push(v);
-          partial += v;
-          if(sign > 0) pos++; else neg++;
-        }
-
-        const last = target - partial;
-        if(last !== 0 && Math.abs(last) <= 3){
-          const signLast = Math.sign(last);
-          if((signLast > 0 && pos < POS_TARGET) || (signLast < 0 && neg < NEG_TARGET)){
-            tmp.push(last);
-            if(signLast > 0) pos++; else neg++;
-
-            const restantes = N - tmp.length;
-            const toAddPos = POS_TARGET - pos;
-            const toAddNeg = NEG_TARGET - neg;
-
-            if(toAddPos >= 0 && toAddNeg >= 0 && (toAddPos + toAddNeg === restantes)){
-              for(let i=0;i<toAddPos;i++) tmp.push(+randInt(1,3));
-              for(let i=0;i<toAddNeg;i++) tmp.push(-randInt(1,3));
-              shuffle(tmp);
-              return tmp;
-            }
-          }
-        }
-      }
-
-      // Fallback
-      const tmp = [];
-      pos = 0; neg = 0;
-      let remaining = target;
-
-      while(remaining !== 0 && tmp.length < N){
-        let stepMag = Math.min(3, Math.abs(remaining));
-        let stepSign = remaining > 0 ? +1 : -1;
-
-        if(stepSign > 0 && pos >= POS_TARGET) stepSign = -1;
-        if(stepSign < 0 && neg >= NEG_TARGET) stepSign = +1;
-
-        if(stepSign > 0 && pos >= POS_TARGET) break;
-        if(stepSign < 0 && neg >= NEG_TARGET) break;
-
-        const v = stepSign * stepMag;
-        tmp.push(v);
-        remaining -= v;
-        if(v > 0) pos++; else neg++;
-      }
-
-      while(tmp.length < N && pos < POS_TARGET){ tmp.push(+randInt(1,3)); pos++; }
-      while(tmp.length < N && neg < NEG_TARGET){ tmp.push(-randInt(1,3)); neg++; }
-
-      shuffle(tmp);
-      return tmp;
-    }
-
-    // --------- UI / Efectos (sin chispas) ---------
-    function renderBigValue(){
-      targetOrb.textContent = fmt(bigValue);
-      targetOrb.classList.remove("orb-win");
-    }
-
-    function registrarAciertoVisual(){
-      const b = document.createElement("div");
-      b.className = "bloque-acierto";
-      progresoEl.appendChild(b);
-    }
-
-    // Feedback suave al impactar (no "💥", no chispas)
-    function efectoImpactoSuave(){
-      emojiRight.textContent = "✨";
-      emojiRight.classList.add("emoji-pop");
-      setTimeout(() => {
-        emojiRight.classList.remove("emoji-pop");
-        emojiRight.textContent="🎯";
-      }, 240);
-    }
-
-    function efectoAcierto(){
-      emojiLeft.textContent = "✅";
-      emojiLeft.classList.add("emoji-pop");
-      setTimeout(() => {
-        emojiLeft.classList.remove("emoji-pop");
-        emojiLeft.textContent="🧠";
-      }, 560);
-    }
-
-    function showWinFeedback(){
-      targetOrb.classList.add("orb-win");
-      targetOrb.textContent = "0";
-      winText.textContent = siguienteMensajeOK();
-
-      miniConfettiLayer.innerHTML = "";
-      const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
-      for(let i=0;i<18;i++){
-        const p = document.createElement("div");
-        p.className = "mini-piece";
-        p.style.left = (Math.random()*100) + "%";
-        p.style.background = colors[Math.floor(Math.random()*colors.length)];
-        p.style.animationDelay = (Math.random()*0.35) + "s";
-        p.style.animationDuration = (0.85 + Math.random()*0.55) + "s";
-        miniConfettiLayer.appendChild(p);
-      }
-
-      winFeedback.classList.add("show");
-      setTimeout(hideWinFeedback, 1000);
-    }
-
-    function hideWinFeedback(){
-      winFeedback.classList.remove("show");
-      miniConfettiLayer.innerHTML = "";
-    }
-
-    // --------- Eventos ---------
-    btnComenzar.addEventListener("click", iniciarJuego);
-    btnTerminar.addEventListener("click", terminarPartida);
-    btnReiniciar.addEventListener("click", reiniciarJuego);
-    btnBarrer.addEventListener("click", barrerHistorial);
-
-    inputNombre.addEventListener("keydown", (e) => {
-      if(e.key === "Enter") iniciarJuego();
+<script>
+/* =========================
+ ANULACIÓN (Enteros)
+========================= */
+let nombreParticipante = "";
+let aciertos = 0;
+let tiempoTotal = 200;
+let tiempoRound = 20;
+let timerTotal = null, timerRound = null;
+let running = false;
+let historial = JSON.parse(localStorage.getItem('historialAnulacion')) || [];
+const playfield = document.getElementById('playfield');
+const targetOrb = document.getElementById('target-orb');
+const winFeedback = document.getElementById('win-feedback');
+const miniConfettiLayer = winFeedback.querySelector('.mini-confetti');
+const winText = document.getElementById('win-text');
+const emojiLeft = document.getElementById('emoji-left');
+const emojiRight = document.getElementById('emoji-right');
+let bigValue = -12;
+let nextSign = -1;
+let globos = [];
+let rafId = null;
+let lastTs = 0;
+const R = 28;
+const FRICTION = 0.995;
+const MAX_SPEED = 10;
+const LAUNCH_SPEED = 1800;
+/* ✅ 2 bolas más (antes 18): */
+const N_GLOBOS = 20;
+const LOCAL_BOUND = 28;
+let roundLocked = false;
+let lastBurstMs = 0;
+const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
+let idxOk = 0;
+
+/* CAMBIO: contadores de signos en el tablero */
+let posCount = 0;
+let negCount = 0;
+
+function siguienteMensajeOK(){
+  const msg = MENSAJES_OK[idxOk % MENSAJES_OK.length];
+  idxOk++;
+  return msg;
+}
+
+/* CAMBIO: formatear con signo + para positivos */
+function fmt(n){
+  if(n === 0) return "0";
+  return n > 0 ? `+${n}` : `${n}`;
+}
+
+function iniciarJuego(){
+  nombreParticipante = document.getElementById('nombre-input').value.trim();
+  if(!nombreParticipante){
+    alert("Por favor, escribe tu nombre.");
+    return;
+  }
+  document.getElementById('inicio').style.display = 'none';
+  document.getElementById('contenedor').style.display = 'flex';
+  aciertos = 0;
+  tiempoTotal = 200;
+  updateUIStats();
+  document.getElementById('reiniciar-btn').style.display = 'none';
+  document.getElementById('terminar-btn').style.display = 'block';
+  document.getElementById('bloques-progreso-container').innerHTML = "";
+  running = true;
+  clearInterval(timerTotal);
+  timerTotal = setInterval(()=>{
+    if(!running) return;
+    tiempoTotal--;
+    document.getElementById('temporizador-total').textContent = `${tiempoTotal} segundos`;
+    if(tiempoTotal <= 0) terminarPartida();
+  }, 1000);
+  nextSign = Math.random() < 0.5 ? -1 : 1;
+  iniciarNuevoRound(true);
+}
+
+function terminarPartida(){
+  running = false;
+  clearInterval(timerTotal);
+  clearInterval(timerRound);
+  cancelAnimationFrame(rafId);
+  const jerarquia = obtenerJerarquia(aciertos);
+  historial.push({ nombre: nombreParticipante, aciertos, jerarquia, fecha: new Date().toLocaleDateString('es-ES') });
+  historial.sort((a,b) => b.aciertos - a.aciertos);
+  localStorage.setItem('historialAnulacion', JSON.stringify(historial));
+  actualizarHistorial();
+  const juegoContainer = document.getElementById('juego');
+  juegoContainer.innerHTML = `
+    <div style="height:100%;display:flex;align-items:center;justify-content:center;padding:8px;">
+      <div style="max-width:620px;width:96%;background:#fff;border-radius:16px;border:3px solid rgba(0,188,212,.35);box-shadow:0 10px 25px rgba(0,0,0,.12);padding:18px;text-align:center;">
+        <div style="font-size:2.0rem;margin-bottom:6px;">🎯 🧏 🎯</div>
+        <h2 style="margin:0;color:#3f51b5;">Reconocimiento de Desempeño</h2>
+        <p style="margin:10px 0;">Se otorga este reconocimiento a:</p>
+        <h3 style="margin:8px 0;color:#3f51b5;">${nombreParticipante}</h3>
+        <p style="margin:10px 0;font-weight:800;">${fraseDesempeno(aciertos)}</p>
+        <p style="margin:10px 0;"><b>Aciertos:</b> ${aciertos} • <b>Jerarquía:</b> <span style="color:#f50057;font-weight:900">${jerarquia}</span></p>
+        <p style="margin:10px 0;">Fecha: ${new Date().toLocaleDateString('es-ES')}</p>
+        <p style="margin-top:12px;">Profesores: Miguel Ubiera y Anna Morán</p>
+      </div>
+    </div>
+  `;
+  document.getElementById('reiniciar-btn').style.display = 'block';
+  document.getElementById('terminar-btn').style.display = 'none';
+}
+function reiniciarJuego(){ window.location.reload(); }
+
+function iniciarNuevoRound(isFirst=false){
+  if(!running) return;
+  roundLocked = false;
+  hideWinFeedback();
+  const doStart = () => {
+    tiempoRound = 20;
+    document.getElementById('temporizador-round').textContent = tiempoRound;
+    const absVal = randInt(11, 19);
+    bigValue = nextSign * absVal;
+    nextSign *= -1;
+    renderBigValue();
+    limpiarGlobos();
+
+    /* CAMBIO: generar EXACTAMENTE N/2 positivos y N/2 negativos en ±1..±3, con solución garantizada */
+    const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS);
+
+    const rect = playfield.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    const xLeftMax = Math.floor(W * 0.62);
+    const xMin = R + 12;
+    const xMax = xLeftMax - R - 12;
+    const yMin = R + 12;
+    const yMax = H - R - 12;
+
+    values.forEach((v) => {
+      const hx = randFloat(xMin, xMax);
+      const hy = randFloat(yMin, yMax);
+      const vx = randFloat(-MAX_SPEED, MAX_SPEED);
+      const vy = randFloat(-MAX_SPEED, MAX_SPEED);
+      crearGlobo(v, hx, hy, vx, vy, hx, hy);
     });
 
+    clearInterval(timerRound);
+    timerRound = setInterval(()=>{
+      if(!running) return;
+      tiempoRound--;
+      document.getElementById('temporizador-round').textContent = tiempoRound;
+      if(tiempoRound <= 0){
+        clearInterval(timerRound);
+        iniciarNuevoRound();
+      }
+    }, 1000);
+    lastTs = performance.now();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  };
+  if(isFirst){ doStart(); return; }
+  playfield.classList.add('fading');
+  setTimeout(() => {
+    doStart();
+    playfield.classList.remove('fading');
+  }, 420);
+}
+
+function loop(ts){
+  if(!running) return;
+  const dt = Math.min(0.033, (ts - lastTs)/1000);
+  lastTs = ts;
+  actualizarFisica(dt);
+  rafId = requestAnimationFrame(loop);
+}
+
+function actualizarFisica(dt){
+  const rect = playfield.getBoundingClientRect();
+  const W = rect.width, H = rect.height;
+  const xLeftMax = Math.floor(W * 0.62);
+
+  for(const g of globos){
+    if(g.state === "held") continue;
+    g.x += g.vx * dt;
+    g.y += g.vy * dt;
+    g.vx *= FRICTION;
+    g.vy *= FRICTION;
+
+    if(g.state === "float"){
+      const minX = Math.max(R, g.homeX - LOCAL_BOUND);
+      const maxX = Math.min(xLeftMax - R, g.homeX + LOCAL_BOUND);
+      const minY = Math.max(R, g.homeY - LOCAL_BOUND);
+      const maxY = Math.min(H - R, g.homeY + LOCAL_BOUND);
+      if(g.x < minX){ g.x = minX; g.vx = Math.abs(g.vx) * 0.9; }
+      if(g.x > maxX){ g.x = maxX; g.vx = -Math.abs(g.vx) * 0.9; }
+      if(g.y < minY){ g.y = minY; g.vy = Math.abs(g.vy) * 0.9; }
+      if(g.y > maxY){ g.y = maxY; g.vy = -Math.abs(g.vy) * 0.9; }
+    } else if(g.state === "launch"){
+      if(g.y - R < 0){ g.y = R; g.vy = Math.abs(g.vy); }
+      if(g.y + R > H){ g.y = H - R; g.vy = -Math.abs(g.vy); }
+    }
+  }
+
+  const floaters = globos.filter(g => g.state === "float" || g.state === "held");
+  for(let i=0;i<floaters.length;i++){
+    for(let j=i+1;j<floaters.length;j++){
+      const a = floaters[i], b = floaters[j];
+    resolveCircleCollision(a,b);
+    }
+  }
+
+  const t = targetOrb.getBoundingClientRect();
+  const pf = playfield.getBoundingClientRect();
+  const tx = (t.left - pf.left) + t.width/2;
+  const ty = (t.top - pf.top) + t.height/2;
+  const targetRadius = t.width * 0.44;
+
+  for(const g of [...globos]){
+    if(g.state !== "launch") continue;
+    const dx = g.x - tx;
+    const dy = g.y - ty;
+    const dist = Math.hypot(dx, dy);
+    if(dist < targetRadius + R * 0.75){
+      const repX = g.homeX, repY = g.homeY;
+      burstAt(tx, ty, 1);
+      efectoImpacto();
+      bigValue += g.value;
+ renderBigValue();
+ showOrbDelta(g.value);
+      eliminarGlobo(g.id);
+
+      /* CAMBIO: respawn con signo para mantener balance */
+      let sign;
+      if(posCount < negCount) sign = +1;
+      else if(negCount < posCount) sign = -1;
+      else sign = Math.random() < 0.5 ? +1 : -1;
+      const nuevo = sign * randInt(1,3);
+
+      const vx = randFloat(-MAX_SPEED, MAX_SPEED);
+      const vy = randFloat(-MAX_SPEED, MAX_SPEED);
+      crearGlobo(nuevo, repX, repY, vx, vy, repX, repY);
+
+      if(bigValue === 0 && !roundLocked){
+        roundLocked = true;
+        aciertos++;
+        updateUIStats();
+        registrarAciertoVisual();
+        efectoAcierto();
+        showWinFeedback();
+        clearInterval(timerRound);
+        setTimeout(()=> iniciarNuevoRound(), 1100);
+      }
+    }
+  }
+  for(const g of globos){
+    g.el.style.transform = `translate(${g.x - R}px, ${g.y - R}px)`;
+  }
+}
+
+function resolveCircleCollision(a,b){
+ const dx = b.x - a.x;
+ const dy = b.y - a.y;
+ const dist = Math.hypot(dx, dy);
+ const minDist = R*2 + 2; // margen para que no se superpongan
+ if(dist === 0 || dist >= minDist) return false;
+ const overlap = (minDist - dist);
+ const nx = dx / dist;
+ const ny = dy / dist;
+
+ const aHeld = (a.state === "held");
+ const bHeld = (b.state === "held");
+ if(aHeld && !bHeld){
+   b.x += nx * overlap;
+   b.y += ny * overlap;
+ } else if(bHeld && !aHeld){
+   a.x -= nx * overlap;
+   a.y -= ny * overlap;
+ } else {
+   a.x -= nx * overlap/2;
+   a.y -= ny * overlap/2;
+   b.x += nx * overlap/2;
+   b.y += ny * overlap/2;
+ }
+
+ // amortiguar un poco (sin rebote)
+ a.vx *= 0.96; a.vy *= 0.96;
+ b.vx *= 0.96; b.vy *= 0.96;
+ return true;
+}
+
+function maybeBurst(x,y){ /* desactivado */ }
+
+function burstAt(x,y,count){
+ // POP simple y liviano (sin partículas)
+ const p = document.createElement('div');
+ p.style.position = 'absolute';
+ p.style.left = x + 'px';
+ p.style.top = y + 'px';
+ p.style.width = '44px';
+ p.style.height = '44px';
+ p.style.borderRadius = '50%';
+ p.style.background = 'rgba(255,255,255,0.75)';
+ p.style.boxShadow = '0 0 28px rgba(255,255,255,0.95)';
+ p.style.transform = 'translate(-50%, -50%) scale(1)';
+ p.style.opacity = '1';
+ p.style.pointerEvents = 'none';
+ p.style.transition = 'transform 0.22s ease-out, opacity 0.22s ease-out';
+ playfield.appendChild(p);
+ requestAnimationFrame(()=>{
+   p.style.transform = 'translate(-50%, -50%) scale(2.1)';
+   p.style.opacity = '0';
+ });
+ setTimeout(()=>p.remove(), 260);
+}
+
+let globoId = 0;
+let activePointer = null;
+
+/* CAMBIO: crearGlobo registra balance y muestra + a positivos */
+function crearGlobo(value, x, y, vx, vy, homeX, homeY){
+  const el = document.createElement('div');
+  el.className = 'globo';
+  el.textContent = fmt(value); /* mostrar + en positivos */
+  el.tabIndex = 0;
+  playfield.appendChild(el);
+  const g = { id: ++globoId, value, x, y, vx, vy, el, state:"float",
+    offsetX:0, offsetY:0, homeX, homeY };
+
+  /* actualizar contadores */
+  if(value > 0) posCount++;
+  else if(value < 0) negCount++;
+
+  el.addEventListener('pointerdown', (e) => {
+    if(!running) return;
+    if(activePointer !== null) return;
+    activePointer = e.pointerId;
+    el.setPointerCapture(e.pointerId);
+    g.state = "held";
+    const rect = playfield.getBoundingClientRect();
+    g.offsetX = (e.clientX - rect.left) - g.x;
+    g.offsetY = (e.clientY - rect.top) - g.y;
+    g.vx = 0; g.vy = 0;
+  });
+  el.addEventListener('pointermove', (e) => {
+    if(activePointer !== e.pointerId) return;
+    const rect = playfield.getBoundingClientRect();
+    g.x = (e.clientX - rect.left) - g.offsetX;
+    g.y = (e.clientY - rect.top) - g.offsetY;
+  });
+  el.addEventListener('pointerup', (e) => {
+    if(activePointer !== e.pointerId) return;
+    activePointer = null;
+    if(roundLocked) { g.state="float"; return; }
+    const c = getTargetCenterInPlayfield();
+    const dx = c.x - g.x;
+    const dy = c.y - g.y;
+    const d = Math.hypot(dx,dy) || 1;
+    g.vx = (dx/d) * LAUNCH_SPEED;
+    g.vy = (dy/d) * LAUNCH_SPEED;
+    g.state = "launch";
+  });
+  globos.push(g);
+}
+
+function eliminarGlobo(id){
+  const idx = globos.findIndex(g => g.id === id);
+  if(idx>=0){
+    const v = globos[idx].value;
+    if(v > 0) posCount = Math.max(0, posCount - 1);
+    else if(v < 0) negCount = Math.max(0, negCount - 1);
+    globos[idx].el.remove();
+    globos.splice(idx,1);
+  }
+}
+
+function limpiarGlobos(){
+  for(const g of globos) g.el.remove();
+  globos = [];
+  activePointer = null;
+  /* CAMBIO: reset balance al limpiar */
+  posCount = 0;
+  negCount = 0;
+}
+
+function getTargetCenterInPlayfield(){
+  const t = targetOrb.getBoundingClientRect();
+  const pf = playfield.getBoundingClientRect();
+  return { x: (t.left - pf.left) + t.width/2, y: (t.top - pf.top) + t.height/2 };
+}
+
+/* CAMBIO: generador balanceado (N/2 positivos y N/2 negativos), todos en ±1..±3 y con solución */
+function generarGlobosBalanceadosConSolucion(bigValue, N){
+  const target = -bigValue;
+  const values = [];
+
+  const POS_TARGET = Math.floor(N/2);
+  const NEG_TARGET = N - POS_TARGET;
+
+  let pos = 0, neg = 0;
+
+  // Intento principal: construir k-1 valores y ajustar el último dentro de ±3,
+  // respetando cupos de signo y magnitudes 1..3.
+  let safetyAll = 0;
+  while(safetyAll++ < 400){
+    const tmp = [];
+    let partial = 0;
+    pos = 0; neg = 0;
+
+    const k = randInt(2,4);
+
+    // Elegimos los primeros k-1 respetando cupos.
+    for(let i=0; i<k-1; i++){
+      // Determinar signo disponible (sin agotar cupos)
+      let sign;
+      if(pos >= POS_TARGET) sign = -1;
+      else if(neg >= NEG_TARGET) sign = +1;
+      else sign = (Math.random() < 0.5 ? +1 : -1);
+
+      const mag = randInt(1,3);
+      const v = sign * mag;
+      tmp.push(v);
+      partial += v;
+      if(sign>0) pos++; else neg++;
+    }
+
+    // Último valor que cierre la solución
+    const last = target - partial;
+    if(last !== 0 && Math.abs(last) <= 3){
+      const signLast = Math.sign(last);
+      // ¿cupo disponible para el signo?
+      if( (signLast>0 && pos < POS_TARGET) || (signLast<0 && neg < NEG_TARGET) ){
+        tmp.push(last);
+        if(signLast>0) pos++; else neg++;
+        // Llenamos el resto manteniendo balance exacto
+        const totalActual = tmp.length;
+        const restantes = N - totalActual;
+        if(restantes >= 0){
+          const toAddPos = POS_TARGET - pos;
+          const toAddNeg = NEG_TARGET - neg;
+          if(toAddPos >= 0 && toAddNeg >= 0 && (toAddPos + toAddNeg === restantes)){
+            for(let i=0;i<toAddPos;i++) tmp.push(+randInt(1,3));
+            for(let i=0;i<toAddNeg;i++) tmp.push(-randInt(1,3));
+            shuffle(tmp);
+            return tmp;
+          }
+        }
+      }
+    }
+    // si falla, reintenta
+  }
+
+  // Fallback: descomponer el target con pasos ±1..±3 dentro de cupos
+  const tmp = [];
+  pos = 0; neg = 0;
+  let remaining = target;
+
+  // Construimos una solución simple consumiendo cupos disponibles
+  while(remaining !== 0 && tmp.length < N){
+    let stepMag = Math.min(3, Math.abs(remaining));
+    let stepSign = remaining > 0 ? +1 : -1;
+    // asegurar cupo del signo
+    if(stepSign>0 && pos >= POS_TARGET) stepSign = -1;
+    if(stepSign<0 && neg >= NEG_TARGET) stepSign = +1;
+    // si aún no hay cupo, romper
+    if(stepSign>0 && pos >= POS_TARGET) break;
+    if(stepSign<0 && neg >= NEG_TARGET) break;
+
+    const v = stepSign * stepMag;
+    tmp.push(v);
+    remaining -= v;
+    if(v>0) pos++; else neg++;
+  }
+
+  // Completar hasta N manteniendo cupos
+  while(tmp.length < N && pos < POS_TARGET){
+    tmp.push(+randInt(1,3)); pos++;
+  }
+  while(tmp.length < N && neg < NEG_TARGET){
+    tmp.push(-randInt(1,3)); neg++;
+  }
+  shuffle(tmp);
+  return tmp;
+}
+
+function renderBigValue(){
+  /* CAMBIO: mostrar + en positivos del ORB */
+  targetOrb.textContent = fmt(bigValue);
+  targetOrb.classList.remove('orb-win');
+}
+
+function showOrbDelta(val){
+ const badge = document.createElement('div');
+ badge.textContent = fmt(val);
+ badge.style.position = 'absolute';
+ const t = targetOrb.getBoundingClientRect();
+ const pf = playfield.getBoundingClientRect();
+ badge.style.left = ((t.left - pf.left) + t.width/2) + 'px';
+ badge.style.top  = ((t.top  - pf.top ) + t.height/2 - 10) + 'px';
+ badge.style.transform = 'translate(-50%, -50%)';
+ badge.style.fontWeight = '900';
+ badge.style.fontSize = '22px';
+ badge.style.color = (val > 0) ? '#2e7d32' : '#c62828';
+ badge.style.textShadow = '0 1px 2px rgba(0,0,0,.35)';
+ badge.style.pointerEvents = 'none';
+ badge.style.transition = 'transform .45s ease-out, opacity .45s ease-out';
+ badge.style.opacity = '1';
+ playfield.appendChild(badge);
+ requestAnimationFrame(()=>{
+   badge.style.transform = 'translate(-50%, -95%)';
+   badge.style.opacity = '0';
+ });
+ setTimeout(()=>badge.remove(), 520);
+}
+
+
+function updateUIStats(){
+  document.getElementById('aciertos').textContent = aciertos;
+}
+
+function registrarAciertoVisual(){
+  const c = document.getElementById('bloques-progreso-container');
+  const b = document.createElement('div');
+  b.className = 'bloque-acierto';
+  c.appendChild(b);
+}
+
+function efectoImpacto(){
+  emojiRight.textContent = "💥";
+  emojiRight.classList.add('emoji-pop');
+  setTimeout(()=>{emojiRight.classList.remove('emoji-pop');emojiRight.textContent="🎯";}, 330);
+}
+
+function efectoAcierto(){
+  emojiLeft.textContent = "✅";
+  emojiLeft.classList.add('emoji-pop');
+  setTimeout(()=>{emojiLeft.classList.remove('emoji-pop');emojiLeft.textContent="🧠";}, 560);
+}
+
+function showWinFeedback(){
+  targetOrb.classList.add('orb-win');
+  targetOrb.textContent = "0"; /* en victoria debe verse 0 */
+  winText.textContent = siguienteMensajeOK();
+  miniConfettiLayer.innerHTML = "";
+  const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
+  for(let i=0;i<18;i++){
+    const p = document.createElement('div');
+    p.className = 'mini-piece';
+    p.style.left = (Math.random()*100) + "%";
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay = (Math.random()*0.35) + "s";
+    p.style.animationDuration = (0.85 + Math.random()*0.55) + "s";
+    miniConfettiLayer.appendChild(p);
+  }
+  winFeedback.classList.add('show');
+  setTimeout(()=>hideWinFeedback(), 1000);
+}
+
+function hideWinFeedback(){
+  winFeedback.classList.remove('show');
+  miniConfettiLayer.innerHTML = "";
+}
+
+function actualizarHistorial(){
+  const tbody = document.getElementById('lista-historial');
+  tbody.innerHTML = "";
+  historial.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.nombre}</td><td>${p.aciertos}</td><td class="${p.jerarquia.toLowerCase()}">${p.jerarquia}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function barrerHistorial(){
+  if(confirm("¿Estás seguro de que quieres borrar todo el historial?")){
+    historial = [];
+    localStorage.removeItem('historialAnulacion');
     actualizarHistorial();
-  </script>
+  }
+}
+actualizarHistorial();
+
+function obtenerJerarquia(p){
+  if(p < 6) return "Iniciado";
+  if(p >= 6 && p <= 10) return "Competente";
+  if(p >= 11 && p <= 15) return "Experto";
+  return "Élite";
+}
+function fraseDesempeno(a){
+  const j = obtenerJerarquia(a);
+  if(j==="Élite") return "¡Excelente! Gran dominio de la anulación.";
+  if(j==="Experto") return "Muy bien: tu estrategia es precisa.";
+  if(j==="Competente") return "Buen avance: sigue mejorando.";
+  return "Buen inicio: continúa practicando.";
+}
+function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function randFloat(min,max){ return Math.random()*(max-min)+min; }
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+}
+document.getElementById('nombre-input').addEventListener('keydown', (e)=>{
+  if(e.key === "Enter") iniciarJuego();
+});
+</script>
 </body>
 </html>
