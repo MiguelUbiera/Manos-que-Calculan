@@ -17,7 +17,6 @@
       --danger:#c62828;
       --text:#263238;
       --muted:#546e7a;
-
       font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
     }
 
@@ -150,7 +149,6 @@
       font-family:"Trebuchet MS","Arial Rounded MT Bold","Segoe UI",sans-serif;
       text-shadow:0 1px 0 rgba(255,255,255,.55);
       text-align:center;
-      max-width:720px;
       padding:0 10px;
     }
 
@@ -182,6 +180,7 @@
     /* Laterales con scroll */
     #panel-izquierdo, #historial{ overflow:auto; }
 
+    /* Laterales */
     #panel-izquierdo{
       flex: 0 0 230px;
       border:3px solid var(--primary);
@@ -189,7 +188,7 @@
       flex-direction:column;
     }
 
-    /* IMPORTANTE: el centro por defecto sigue ocultando overflow en el juego */
+    /* Centro */
     #juego{
       flex: 1 1 auto;
       border:3px solid var(--primary);
@@ -199,16 +198,16 @@
       justify-content:stretch;
       position:relative;
       padding:10px;
-      overflow:hidden; /* <-- para el juego */
+      overflow:hidden;       /* juego normal */
       min-width: 520px;
     }
-
-    /* ✅ SOLO cuando haya certificado, permitimos scroll en el centro */
+    /* ✅ Solo cuando hay certificado, permitimos scroll interno */
     #juego.showing-cert{
       overflow:auto;
       padding:8px;
     }
 
+    /* Historial */
     #historial{
       flex: 0 0 345px;
       border:2px solid var(--accent);
@@ -251,7 +250,7 @@
     }
     #playfield.fading{ opacity:0; }
 
-    /* Orb */
+    /* Orb (meta=0) */
     #target-orb{
       position:absolute;
       right:26px;
@@ -268,23 +267,7 @@
       border:3px solid rgba(255,255,255,.18);
       box-shadow:0 14px 30px rgba(0,0,0,.22);
       user-select:none;
-      overflow:hidden;
     }
-
-    .orb-goal{
-      position:absolute;
-      top:10px;
-      left:50%;
-      transform:translateX(-50%);
-      font-size:22px;
-      font-weight:900;
-      letter-spacing:.5px;
-      color:rgba(0,188,212,.28);
-      text-shadow:0 2px 6px rgba(0,0,0,.35);
-      pointer-events:none;
-    }
-    .orb-value{ line-height:1; }
-
     .orb-win{
       background:
         radial-gradient(circle at 30% 25%, rgba(255,255,255,.35), rgba(255,255,255,0) 48%),
@@ -350,6 +333,22 @@
     }
     .globo:active{cursor:grabbing;transform:scale(1.04)}
 
+    /* Explosión */
+    .burst{
+      position:absolute;
+      width:8px;height:8px;border-radius:50%;
+      pointer-events:none;
+      opacity:0.95;
+      transform:translate(-50%,-50%);
+      animation:burstMove .55s ease-out forwards;
+      filter:drop-shadow(0 2px 5px rgba(0,0,0,.18));
+      z-index:5;
+    }
+    @keyframes burstMove{
+      0%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+      100%{ transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2); opacity:0; }
+    }
+
     /* Emojis esquinas */
     .corner-emoji{
       position:absolute;top:10px;font-size:1.9rem;opacity:.9;
@@ -413,18 +412,18 @@
 
     /* ==========================
        ✅ CERTIFICADO (COMPACTO)
-       - subido
-       - menos padding
+       - subido (arriba)
+       - menos padding y márgenes
        - menos interlineado
-       - tipografía un poco menor
-       - max-height para no cortarse
+       - letra un poco menor
+       - no se corta (scroll en #juego.showing-cert)
     =========================== */
     .cert-wrap{
       height:100%;
       display:flex;
-      align-items:flex-start;         /* ✅ sube el certificado */
+      align-items:flex-start;
       justify-content:center;
-      padding:6px;                    /* ✅ menos margen externo */
+      padding:6px;
     }
     .cert{
       width:min(720px, 96%);
@@ -432,55 +431,56 @@
       border-radius:14px;
       border:2px solid rgba(63,81,181,0.25);
       box-shadow:0 10px 22px rgba(0,0,0,0.10);
-      padding:18px 16px;              /* ✅ más compacto */
+      padding:18px 16px;
       text-align:center;
-      line-height:1.22;               /* ✅ menos interlineado */
-      max-height:100%;                /* ✅ no excede el contenedor */
+      line-height:1.20;
+      max-height:100%;
     }
     .cert-badge{
-      font-size:1.7rem;               /* ✅ más pequeño */
+      font-size:1.6rem;
       margin-bottom:6px;
     }
     .cert-title{
       margin:0;
       color:var(--primary);
-      font-size:1.45rem;              /* ✅ menos grande */
+      font-size:1.38rem;
       letter-spacing:.3px;
       font-weight:900;
+      text-transform:uppercase;
     }
     .cert-subtitle{
       margin:10px 0 4px;
-      font-size:.95rem;
+      font-size:.92rem;
       color:#444;
     }
     .cert-game{
       margin:0 0 12px;
-      font-size:1.02rem;
+      font-size:1.0rem;
       color:#283593;
       font-weight:700;
       font-style:italic;
     }
     .cert-award{
-      font-size:.95rem;
+      font-size:.92rem;
       margin:0 0 6px;
       color:#333;
     }
     .cert-name{
       margin:4px 0 10px;
-      font-size:1.55rem;              /* ✅ más pequeño */
+      font-size:1.5rem;
       color:#1a237e;
       font-weight:900;
-      letter-spacing:.3px;
+      letter-spacing:.25px;
     }
     .cert-msg{
       margin:6px 0 10px;
-      font-size:1.0rem;               /* ✅ compactado */
+      font-size:.98rem;
       font-weight:600;
       color:#424242;
     }
     .cert-stats{
       margin:6px 0;
-      font-size:.98rem;
+      font-size:.96rem;
       color:#333;
     }
     .cert-rank{
@@ -490,15 +490,15 @@
     .cert-date{
       margin-top:8px;
       color:#555;
-      font-size:.9rem;
+      font-size:.88rem;
     }
     .cert-footer{
       margin-top:12px;
       padding-top:10px;
       border-top:1px solid #ddd;
-      font-size:.9rem;
+      font-size:.88rem;
       color:#555;
-      line-height:1.22;
+      line-height:1.20;
     }
 
     /* Responsive */
@@ -515,8 +515,8 @@
       #target-orb{right:12px;width:128px;height:128px;font-size:48px}
       .globo{width:54px;height:54px;font-size:18px}
       .cert{padding:16px 12px}
-      .cert-title{font-size:1.28rem}
-      .cert-name{font-size:1.45rem}
+      .cert-title{font-size:1.22rem}
+      .cert-name{font-size:1.38rem}
     }
   </style>
 </head>
@@ -534,13 +534,11 @@
         <div class="kid boy">👦</div>
         <div class="kid girl">👧</div>
       </div>
-
       <div class="logo">
         <span class="logo-icon">➖</span>
         <h1>Anulación (Enteros)</h1>
         <span class="logo-icon">➕</span>
       </div>
-
       <div class="kid-pulse-wrap" aria-hidden="true">
         <div class="kid boy">👦</div>
         <div class="kid girl">👧</div>
@@ -551,11 +549,11 @@
 
   <main style="flex:1 1 auto; display:flex; flex-direction:column;">
     <div id="inicio">
-      <div class="start-emoji" aria-hidden="true">🎯 🧏 🎯</div>
+      <div class="start-emoji" aria-hidden="true">🎯 🧏‍♂️ 🎯</div>
       <h2 style="margin-bottom: 10px; color: var(--primary);">Escribe tu nombre</h2>
       <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante" />
       <button id="comenzar-btn" type="button">Comenzar</button>
-      <div class="instruction-line">Arroja los globos hasta obtener un -20 o +20.</div>
+      <div class="instruction-line">Arroja los globos hasta obtener un 0.</div>
     </div>
 
     <div id="contenedor">
@@ -564,22 +562,18 @@
           <h3>⏱️ Round (20 s)</h3>
           <div id="temporizador-round">20</div>
         </div>
-
         <div class="info-panel">
           <h3>⌛ Sesión</h3>
           <div id="temporizador-total">200 segundos</div>
         </div>
-
         <div class="info-panel">
           <h3>📈 Rendimiento</h3>
           <p><strong>Aciertos:</strong> <span id="aciertos">0</span></p>
         </div>
-
         <div class="info-panel">
           <h3>🧱 Progreso</h3>
           <div id="bloques-progreso-container"></div>
         </div>
-
         <div class="botones-container">
           <button id="terminar-btn" type="button">Terminar Partida</button>
           <button id="reiniciar-btn" type="button">Jugar de Nuevo</button>
@@ -588,10 +582,7 @@
 
       <section id="juego">
         <div id="playfield" aria-label="Campo de juego">
-          <div id="target-orb" aria-label="Globo objetivo">
-            <div class="orb-goal" id="orb-goal">+20</div>
-            <div class="orb-value" id="orb-value">-12</div>
-          </div>
+          <div id="target-orb" aria-label="Globo objetivo">-12</div>
 
           <div id="win-feedback" aria-live="polite">
             <div class="mini-confetti" aria-hidden="true"></div>
@@ -599,8 +590,8 @@
             <div class="win-text" id="win-text">¡Felicidades!</div>
           </div>
 
-          <div id="emoji-left" class="corner-emoji">👦</div>
-          <div id="emoji-right" class="corner-emoji">👧</div>
+          <div id="emoji-left" class="corner-emoji">🧠</div>
+          <div id="emoji-right" class="corner-emoji">🎯</div>
         </div>
         <div id="mensaje"></div>
       </section>
@@ -617,7 +608,6 @@
           </thead>
           <tbody id="lista-historial"></tbody>
         </table>
-
         <div style="margin-top:auto;padding-top:10px;">
           <button id="barrer-btn" type="button">Barrer Historial</button>
         </div>
@@ -634,7 +624,7 @@
     "use strict";
 
     /* =========================
-        ANULACIÓN (Enteros)
+       ANULACIÓN (Enteros) - META 0
     ========================= */
 
     const ROUND_SECONDS = 20;
@@ -642,14 +632,42 @@
 
     const R = 28;
     const FRICTION = 0.995;
-    const MAX_SPEED = 10;
+    const MAX_SPEED = 18;
     const LAUNCH_SPEED = 1800;
 
     const N_GLOBOS = 20;
-    const LOCAL_BOUND = 28;
+    const LOCAL_BOUND = 40;
 
     const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
 
+    const $ = (id) => document.getElementById(id);
+
+    /* UI */
+    const inicio = $("inicio");
+    const contenedor = $("contenedor");
+    const inputNombre = $("nombre-input");
+
+    const btnComenzar = $("comenzar-btn");
+    const btnTerminar = $("terminar-btn");
+    const btnReiniciar = $("reiniciar-btn");
+    const btnBarrer = $("barrer-btn");
+
+    const tRoundEl = $("temporizador-round");
+    const tTotalEl = $("temporizador-total");
+    const aciertosEl = $("aciertos");
+    const progresoEl = $("bloques-progreso-container");
+    const listaHistorial = $("lista-historial");
+
+    const juegoSection = $("juego");
+    const playfield = $("playfield");
+    const targetOrb = $("target-orb");
+    const winFeedback = $("win-feedback");
+    const miniConfettiLayer = winFeedback.querySelector(".mini-confetti");
+    const winText = $("win-text");
+    const emojiLeft = $("emoji-left");
+    const emojiRight = $("emoji-right");
+
+    /* Estado */
     let nombreParticipante = "";
     let aciertos = 0;
 
@@ -664,6 +682,9 @@
 
     let historial = JSON.parse(localStorage.getItem("historialAnulacion")) || [];
 
+    let bigValue = -12;
+    let nextSign = -1;
+
     let globos = [];
     let rafId = null;
     let lastTs = 0;
@@ -671,60 +692,26 @@
     let globoId = 0;
     let activePointer = null;
 
+    let lastBurstMs = 0;
     let idxOk = 0;
 
-    let bigValue = -12;
-    let goalValue = 20;
-
+    /* Balance */
     let posCount = 0;
     let negCount = 0;
 
-    const $ = (id) => document.getElementById(id);
-
-    const inicio = $("inicio");
-    const contenedor = $("contenedor");
-
-    const inputNombre = $("nombre-input");
-    const btnComenzar = $("comenzar-btn");
-    const btnTerminar = $("terminar-btn");
-    const btnReiniciar = $("reiniciar-btn");
-    const btnBarrer = $("barrer-btn");
-
-    const juegoSection = $("juego");
-
-    const playfield = $("playfield");
-    const targetOrb = $("target-orb");
-    const orbGoalEl = $("orb-goal");
-    const orbValueEl = $("orb-value");
-
-    const winFeedback = $("win-feedback");
-    const miniConfettiLayer = winFeedback.querySelector(".mini-confetti");
-    const winText = $("win-text");
-
-    const emojiLeft = $("emoji-left");
-    const emojiRight = $("emoji-right");
-
-    const tRoundEl = $("temporizador-round");
-    const tTotalEl = $("temporizador-total");
-    const aciertosEl = $("aciertos");
-    const progresoEl = $("bloques-progreso-container");
-    const listaHistorial = $("lista-historial");
-
+    /* Utils */
     function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
     function randFloat(min,max){ return Math.random()*(max-min)+min; }
-
     function shuffle(arr){
       for(let i=arr.length-1;i>0;i--){
         const j = Math.floor(Math.random()*(i+1));
         [arr[i],arr[j]] = [arr[j],arr[i]];
       }
     }
-
     function fmt(n){
       if(n === 0) return "0";
       return n > 0 ? `+${n}` : `${n}`;
     }
-
     function escapeHTML(str){
       return String(str).replace(/[&<>"'`=\/]/g, s => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",
@@ -732,7 +719,6 @@
         "=":"&#61;","/":"&#47;"
       }[s]));
     }
-
     function siguienteMensajeOK(){
       const msg = MENSAJES_OK[idxOk % MENSAJES_OK.length];
       idxOk++;
@@ -745,39 +731,41 @@
       tRoundEl.textContent = String(tiempoRound);
     }
 
+    /* Jerarquía */
     function obtenerJerarquia(p){
       if(p < 6) return "Iniciado";
       if(p >= 6 && p <= 10) return "Competente";
       if(p >= 11 && p <= 15) return "Experto";
       return "Élite";
     }
-
     function fraseDesempeno(a){
       const j = obtenerJerarquia(a);
-      if(j === "Élite") return "Excelente. Evidencia un dominio notable de la anulación de enteros.";
-      if(j === "Experto") return "Muy buen desempeño. Su estrategia fue precisa y consistente.";
-      if(j === "Competente") return "Buen avance. Continúe fortaleciendo su habilidad con práctica.";
+      if(j==="Élite") return "Excelente. Evidencia un dominio notable de la anulación de enteros.";
+      if(j==="Experto") return "Muy buen desempeño. Su estrategia fue precisa y consistente.";
+      if(j==="Competente") return "Buen avance. Continúe fortaleciendo su habilidad con práctica.";
       return "Buen inicio. Siga practicando para mejorar su rendimiento.";
     }
 
+    /* Historial seguro */
     function actualizarHistorial(){
       listaHistorial.textContent = "";
       for(const p of historial){
         const tr = document.createElement("tr");
 
-        const tdNombre = document.createElement("td");
-        tdNombre.textContent = p.nombre;
+        const tdN = document.createElement("td");
+        tdN.textContent = p.nombre;
 
-        const tdAciertos = document.createElement("td");
-        tdAciertos.textContent = String(p.aciertos);
+        const tdA = document.createElement("td");
+        tdA.textContent = String(p.aciertos);
 
-        const tdJerarquia = document.createElement("td");
-        tdJerarquia.textContent = p.jerarquia;
-        tdJerarquia.className = p.jerarquia.toLowerCase();
+        const tdJ = document.createElement("td");
+        tdJ.textContent = p.jerarquia;
+        tdJ.className = p.jerarquia.toLowerCase();
 
-        tr.appendChild(tdNombre);
-        tr.appendChild(tdAciertos);
-        tr.appendChild(tdJerarquia);
+        tr.appendChild(tdN);
+        tr.appendChild(tdA);
+        tr.appendChild(tdJ);
+
         listaHistorial.appendChild(tr);
       }
     }
@@ -790,14 +778,15 @@
       }
     }
 
+    /* Juego */
     function iniciarJuego(){
       const rawName = inputNombre.value.trim();
       if(!rawName){
         alert("Por favor, escribe tu nombre.");
         return;
       }
-      nombreParticipante = rawName;
 
+      nombreParticipante = rawName;
       inicio.style.display = "none";
       contenedor.style.display = "flex";
 
@@ -819,12 +808,12 @@
         if(tiempoTotal <= 0) terminarPartida();
       }, 1000);
 
+      nextSign = Math.random() < 0.5 ? -1 : 1;
       iniciarNuevoRound(true);
     }
 
     function terminarPartida(){
       running = false;
-
       clearInterval(timerTotal);
       clearInterval(timerRound);
       cancelAnimationFrame(rafId);
@@ -842,7 +831,7 @@
       localStorage.setItem("historialAnulacion", JSON.stringify(historial));
       actualizarHistorial();
 
-      // ✅ Activar modo certificado (scroll permitido solo aquí)
+      // ✅ activar modo certificado: scroll interno permitido
       juegoSection.classList.add("showing-cert");
 
       const safeName = escapeHTML(nombreParticipante);
@@ -851,10 +840,10 @@
         <div class="cert-wrap">
           <div class="cert" role="group" aria-label="Certificado de reconocimiento">
             <div class="cert-badge">🎓✨</div>
-            <h2 class="cert-title">CERTIFICADO DE RECONOCIMIENTO</h2>
+            <h2 class="cert-title">Certificado de Reconocimiento</h2>
 
             <p class="cert-subtitle">Otorgado por su desempeño en:</p>
-            <div class="cert-game">Anulación de Enteros</div>
+            <div class="cert-game">Anulación de Enteros (Meta: 0)</div>
 
             <p class="cert-award">Se concede a:</p>
             <div class="cert-name">${safeName}</div>
@@ -884,9 +873,7 @@
       btnTerminar.style.display = "none";
     }
 
-    function reiniciarJuego(){
-      window.location.reload();
-    }
+    function reiniciarJuego(){ window.location.reload(); }
 
     function iniciarNuevoRound(isFirst=false){
       if(!running) return;
@@ -898,15 +885,16 @@
         tiempoRound = ROUND_SECONDS;
         tRoundEl.textContent = String(tiempoRound);
 
-        goalValue = (Math.random() < 0.5) ? -20 : 20;
-        orbGoalEl.textContent = fmt(goalValue);
+        // Valor grande alternado: ±(11..19)
+        const absVal = randInt(11, 19);
+        bigValue = nextSign * absVal;
+        nextSign *= -1;
 
-        bigValue = randInt(-19, 19);
         renderBigValue();
-
         limpiarGlobos();
 
-        const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS, goalValue);
+        // ✅ Globos balanceados ±1..±3 con solución garantizada para llegar a 0
+        const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS);
 
         const rect = playfield.getBoundingClientRect();
         const W = rect.width, H = rect.height;
@@ -942,7 +930,6 @@
       };
 
       if(isFirst){ doStart(); return; }
-
       playfield.classList.add("fading");
       setTimeout(() => {
         doStart();
@@ -987,13 +974,19 @@
         }
       }
 
-      const floaters = globos.filter(g => g.state === "float" || g.state === "held");
+      const floaters = globos.filter(g => g.state === "float");
       for(let i=0;i<floaters.length;i++){
         for(let j=i+1;j<floaters.length;j++){
-          resolveCircleCollision(floaters[i], floaters[j]);
+          const a = floaters[i], b = floaters[j];
+          const did = resolveCircleCollision(a,b);
+          if(did){
+            const rel = Math.hypot(a.vx-b.vx, a.vy-b.vy);
+            if(rel > 16) maybeBurst((a.x+b.x)/2, (a.y+b.y)/2);
+          }
         }
       }
 
+      // Colisión con el orb
       const t = targetOrb.getBoundingClientRect();
       const pf = playfield.getBoundingClientRect();
       const tx = (t.left - pf.left) + t.width/2;
@@ -1010,27 +1003,27 @@
         if(dist < targetRadius + R * 0.75){
           const repX = g.homeX, repY = g.homeY;
 
-          burstAt(tx, ty);
+          burstAt(g.x, g.y, 16);
           efectoImpacto();
 
           bigValue += g.value;
           renderBigValue();
-          showOrbDelta(g.value);
 
           eliminarGlobo(g.id);
 
+          // Respawn manteniendo balance
           let sign;
           if(posCount < negCount) sign = +1;
           else if(negCount < posCount) sign = -1;
           else sign = Math.random() < 0.5 ? +1 : -1;
 
           const nuevo = sign * randInt(1,3);
-
           const vx = randFloat(-MAX_SPEED, MAX_SPEED);
           const vy = randFloat(-MAX_SPEED, MAX_SPEED);
           crearGlobo(nuevo, repX, repY, vx, vy, repX, repY);
 
-          if(bigValue === goalValue && !roundLocked){
+          // ✅ Victoria: meta 0
+          if(bigValue === 0 && !roundLocked){
             roundLocked = true;
             aciertos++;
             updateUIStats();
@@ -1052,147 +1045,61 @@
       const dx = b.x - a.x;
       const dy = b.y - a.y;
       const dist = Math.hypot(dx, dy);
-      const minDist = R*2 + 2;
+      const minDist = R*2;
       if(dist === 0 || dist >= minDist) return false;
 
       const overlap = (minDist - dist);
       const nx = dx / dist;
       const ny = dy / dist;
 
-      const aHeld = (a.state === "held");
-      const bHeld = (b.state === "held");
+      a.x -= nx * overlap/2;
+      a.y -= ny * overlap/2;
+      b.x += nx * overlap/2;
+      b.y += ny * overlap/2;
 
-      if(aHeld && !bHeld){
-        b.x += nx * overlap;
-        b.y += ny * overlap;
-      } else if(bHeld && !aHeld){
-        a.x -= nx * overlap;
-        a.y -= ny * overlap;
-      } else {
-        a.x -= nx * overlap/2;
-        a.y -= ny * overlap/2;
-        b.x += nx * overlap/2;
-        b.y += ny * overlap/2;
-      }
+      const kx = a.vx - b.vx;
+      const ky = a.vy - b.vy;
+      const p = (kx*nx + ky*ny);
 
-      a.vx *= 0.96; a.vy *= 0.96;
-      b.vx *= 0.96; b.vy *= 0.96;
+      a.vx -= p * nx;
+      a.vy -= p * ny;
+      b.vx += p * nx;
+      b.vy += p * ny;
+
       return true;
     }
 
-    function burstAt(x,y){
-      const p = document.createElement("div");
-      p.style.position = "absolute";
-      p.style.left = x + "px";
-      p.style.top = y + "px";
-      p.style.width = "44px";
-      p.style.height = "44px";
-      p.style.borderRadius = "50%";
-      p.style.background = "rgba(255,255,255,0.75)";
-      p.style.boxShadow = "0 0 28px rgba(255,255,255,0.95)";
-      p.style.transform = "translate(-50%, -50%) scale(1)";
-      p.style.opacity = "1";
-      p.style.pointerEvents = "none";
-      p.style.transition = "transform 0.22s ease-out, opacity 0.22s ease-out";
-      playfield.appendChild(p);
-
-      requestAnimationFrame(() => {
-        p.style.transform = "translate(-50%, -50%) scale(2.1)";
-        p.style.opacity = "0";
-      });
-
-      setTimeout(() => p.remove(), 260);
+    function maybeBurst(x,y){
+      const now = performance.now();
+      if(now - lastBurstMs < 120) return;
+      lastBurstMs = now;
+      burstAt(x,y,10);
     }
 
-    function registrarAciertoVisual(){
-      const b = document.createElement("div");
-      b.className = "bloque-acierto";
-      progresoEl.appendChild(b);
-    }
+    function burstAt(x,y,count){
+      const colors = [
+        "rgba(255,255,255,.95)",
+        "rgba(245,0,87,.85)",
+        "rgba(255,152,0,.85)"
+      ];
+      for(let i=0;i<count;i++){
+        const p = document.createElement("div");
+        p.className = "burst";
+        p.style.left = x + "px";
+        p.style.top = y + "px";
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
 
-    function efectoImpacto(){
-      emojiRight.textContent = "💥";
-      emojiRight.classList.add("emoji-pop");
-      setTimeout(() => {
-        emojiRight.classList.remove("emoji-pop");
-        emojiRight.textContent = "🎯";
-      }, 330);
-    }
+        const ang = Math.random()*Math.PI*2;
+        const mag = 24 + Math.random()*28;
+        p.style.setProperty("--dx", (Math.cos(ang)*mag)+"px");
+        p.style.setProperty("--dy", (Math.sin(ang)*mag)+"px");
 
-    function efectoAcierto(){
-      emojiLeft.textContent = "✅";
-      emojiLeft.classList.add("emoji-pop");
-      setTimeout(() => {
-        emojiLeft.classList.remove("emoji-pop");
-        emojiLeft.textContent = "🧠";
-      }, 560);
-    }
+        p.style.width = (6 + Math.random()*6) + "px";
+        p.style.height = p.style.width;
 
-    function showWinFeedback(){
-      targetOrb.classList.add("orb-win");
-      orbValueEl.textContent = fmt(goalValue);
-
-      winText.textContent = siguienteMensajeOK();
-      miniConfettiLayer.textContent = "";
-
-      const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
-      for(let i=0;i<18;i++){
-        const piece = document.createElement("div");
-        piece.className = "mini-piece";
-        piece.style.left = (Math.random()*100) + "%";
-        piece.style.background = colors[Math.floor(Math.random()*colors.length)];
-        piece.style.animationDelay = (Math.random()*0.35) + "s";
-        piece.style.animationDuration = (0.85 + Math.random()*0.55) + "s";
-        miniConfettiLayer.appendChild(piece);
+        playfield.appendChild(p);
+        setTimeout(() => p.remove(), 650);
       }
-
-      winFeedback.classList.add("show");
-      setTimeout(hideWinFeedback, 1000);
-    }
-
-    function hideWinFeedback(){
-      winFeedback.classList.remove("show");
-      miniConfettiLayer.textContent = "";
-    }
-
-    function showOrbDelta(val){
-      const badge = document.createElement("div");
-      badge.textContent = fmt(val);
-      badge.style.position = "absolute";
-
-      const t = targetOrb.getBoundingClientRect();
-      const pf = playfield.getBoundingClientRect();
-
-      badge.style.left = ((t.left - pf.left) + t.width/2) + "px";
-      badge.style.top  = ((t.top  - pf.top ) + t.height/2 - 10) + "px";
-      badge.style.transform = "translate(-50%, -50%)";
-      badge.style.fontWeight = "900";
-      badge.style.fontSize = "22px";
-      badge.style.color = (val > 0) ? "#2e7d32" : "#c62828";
-      badge.style.textShadow = "0 1px 2px rgba(0,0,0,.35)";
-      badge.style.pointerEvents = "none";
-      badge.style.transition = "transform .45s ease-out, opacity .45s ease-out";
-      badge.style.opacity = "1";
-
-      playfield.appendChild(badge);
-
-      requestAnimationFrame(() => {
-        badge.style.transform = "translate(-50%, -95%)";
-        badge.style.opacity = "0";
-      });
-
-      setTimeout(() => badge.remove(), 520);
-    }
-
-    function renderBigValue(){
-      orbValueEl.textContent = fmt(bigValue);
-      targetOrb.classList.remove("orb-win");
-    }
-
-    function getTargetCenterInPlayfield(){
-      const t = targetOrb.getBoundingClientRect();
-      const pf = playfield.getBoundingClientRect();
-      return { x:(t.left - pf.left) + t.width/2, y:(t.top - pf.top) + t.height/2 };
     }
 
     function crearGlobo(value, x, y, vx, vy, homeX, homeY){
@@ -1200,14 +1107,12 @@
       el.className = "globo";
       el.textContent = fmt(value);
       el.tabIndex = 0;
-
       playfield.appendChild(el);
 
       const g = {
         id: ++globoId,
         value, x, y, vx, vy,
-        el,
-        state:"float",
+        el, state:"float",
         offsetX:0, offsetY:0,
         homeX, homeY
       };
@@ -1221,7 +1126,6 @@
 
         activePointer = e.pointerId;
         el.setPointerCapture(e.pointerId);
-
         g.state = "held";
 
         const rect = playfield.getBoundingClientRect();
@@ -1242,7 +1146,7 @@
         if(activePointer !== e.pointerId) return;
         activePointer = null;
 
-        if(roundLocked){ g.state = "float"; return; }
+        if(roundLocked){ g.state="float"; return; }
 
         const c = getTargetCenterInPlayfield();
         const dx = c.x - g.x;
@@ -1277,8 +1181,15 @@
       negCount = 0;
     }
 
-    function generarGlobosBalanceadosConSolucion(bigValue, N, goalValue){
-      const target = goalValue - bigValue;
+    function getTargetCenterInPlayfield(){
+      const t = targetOrb.getBoundingClientRect();
+      const pf = playfield.getBoundingClientRect();
+      return { x:(t.left - pf.left) + t.width/2, y:(t.top - pf.top) + t.height/2 };
+    }
+
+    // Genera N/2 positivos y N/2 negativos en ±1..±3 con solución para llegar a 0
+    function generarGlobosBalanceadosConSolucion(bigValue, N){
+      const target = -bigValue;
 
       const POS_TARGET = Math.floor(N/2);
       const NEG_TARGET = N - POS_TARGET;
@@ -1307,10 +1218,8 @@
         }
 
         const last = target - partial;
-
         if(last !== 0 && Math.abs(last) <= 3){
           const signLast = Math.sign(last);
-
           if((signLast > 0 && pos < POS_TARGET) || (signLast < 0 && neg < NEG_TARGET)){
             tmp.push(last);
             if(signLast > 0) pos++; else neg++;
@@ -1329,6 +1238,7 @@
         }
       }
 
+      // Fallback
       const tmp = [];
       pos = 0; neg = 0;
       let remaining = target;
@@ -1346,9 +1256,7 @@
         const v = stepSign * stepMag;
         tmp.push(v);
         remaining -= v;
-
-        if(v > 0) pos++;
-        else neg++;
+        if(v > 0) pos++; else neg++;
       }
 
       while(tmp.length < N && pos < POS_TARGET){ tmp.push(+randInt(1,3)); pos++; }
@@ -1358,6 +1266,62 @@
       return tmp;
     }
 
+    function renderBigValue(){
+      targetOrb.textContent = fmt(bigValue);
+      targetOrb.classList.remove("orb-win");
+    }
+
+    function registrarAciertoVisual(){
+      const b = document.createElement("div");
+      b.className = "bloque-acierto";
+      progresoEl.appendChild(b);
+    }
+
+    function efectoImpacto(){
+      emojiRight.textContent = "💥";
+      emojiRight.classList.add("emoji-pop");
+      setTimeout(() => {
+        emojiRight.classList.remove("emoji-pop");
+        emojiRight.textContent="🎯";
+      }, 330);
+    }
+
+    function efectoAcierto(){
+      emojiLeft.textContent = "✅";
+      emojiLeft.classList.add("emoji-pop");
+      setTimeout(() => {
+        emojiLeft.classList.remove("emoji-pop");
+        emojiLeft.textContent="🧠";
+      }, 560);
+    }
+
+    function showWinFeedback(){
+      targetOrb.classList.add("orb-win");
+      targetOrb.textContent = "0";
+      winText.textContent = siguienteMensajeOK();
+
+      miniConfettiLayer.innerHTML = "";
+      const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
+      for(let i=0;i<18;i++){
+        const p = document.createElement("div");
+        p.className = "mini-piece";
+        p.style.left = (Math.random()*100) + "%";
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        p.style.animationDelay = (Math.random()*0.35) + "s";
+        p.style.animationDuration = (0.85 + Math.random()*0.55) + "s";
+        miniConfettiLayer.appendChild(p);
+      }
+
+      winFeedback.classList.add("show");
+      setTimeout(hideWinFeedback, 1000);
+    }
+
+    function hideWinFeedback(){
+      winFeedback.classList.remove("show");
+      miniConfettiLayer.innerHTML = "";
+    }
+
+    /* Eventos */
     btnComenzar.addEventListener("click", iniciarJuego);
     btnTerminar.addEventListener("click", terminarPartida);
     btnReiniciar.addEventListener("click", reiniciarJuego);
