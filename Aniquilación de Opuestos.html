@@ -1,4 +1,6 @@
- <!DOCTYPE html>
+
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <title>Aniquilación de Opuestos - Instituto Santa Rosa</title>
@@ -18,13 +20,13 @@
             --positive: #1565c0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             margin: 0;
             padding: 0;
@@ -34,7 +36,7 @@
             flex-direction: column;
             user-select: none;
         }
-        
+
         .floating-element {
             position: fixed;
             font-size: 2rem;
@@ -43,7 +45,7 @@
             pointer-events: none;
             animation: floatElement 20s infinite ease-in-out;
         }
-        
+
         @keyframes floatElement {
             0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
             25% { transform: translate(30px, -20px) rotate(8deg); opacity: 0.18; }
@@ -59,7 +61,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             width: 100%;
         }
-        
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -68,7 +70,6 @@
             margin: 0 auto;
         }
 
-        /* 2. Transiciones para los emojis del niño y niña */
         @keyframes recede-and-return {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(0.1); opacity: 0; }
@@ -82,9 +83,9 @@
             animation: recede-and-return 7s ease-in-out infinite;
         }
         #right-child {
-            animation-delay: -3.5s; /* Desincronizar la animación */
+            animation-delay: -3.5s;
         }
-        
+
         .child-figure div {
             transition: opacity 0.5s, transform 0.5s;
         }
@@ -95,30 +96,29 @@
             justify-content: center;
             gap: 0.8rem;
         }
-        
-        /* 3. Pulsación para el fuego en el encabezado */
+
         .logo-icon {
             font-size: 1.8rem;
             animation: pulse 3s infinite;
         }
-        
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.08); }
         }
-        
+
         h1 {
             margin: 0;
             font-size: 1.6rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        
+
         .subtitle {
             font-size: 0.9rem;
             opacity: 0.9;
             margin: 0.3rem 0 0;
         }
-        
+
         .start-emoji {
             font-size: 4rem;
             margin-bottom: 20px;
@@ -133,7 +133,7 @@
             min-height: 70vh;
             width: 100%;
             padding: 2rem;
-            flex-grow: 1; /* Para empujar el footer hacia abajo */
+            flex-grow: 1;
         }
 
         .instrucciones {
@@ -150,7 +150,7 @@
             color: var(--primary);
             margin-bottom: 20px;
         }
-        
+
         #nombre-input {
             font-size: 20px;
             padding: 15px;
@@ -163,14 +163,14 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: all 0.3s;
         }
-        
+
         #nombre-input:focus {
             outline: none;
             border-color: var(--accent);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
-        
+
         #comenzar-btn {
             padding: 15px 30px;
             font-size: 18px;
@@ -183,7 +183,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             font-weight: bold;
         }
-        
+
         #comenzar-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.25);
@@ -198,7 +198,7 @@
             max-width: 1400px;
             margin: 0 auto;
             gap: 20px;
-            flex-grow: 1; 
+            flex-grow: 1;
         }
 
         #panel-izquierdo {
@@ -255,6 +255,7 @@
             color: var(--dark);
         }
 
+        /* ✅ 1) DISMINUCIÓN VERTICAL DEL RECTÁNGULO (DOS "LÍNEAS") */
         #area-juego {
             position: relative;
             width: 100%;
@@ -263,8 +264,8 @@
             border-radius: 16px;
             border: 3px dashed var(--primary);
             overflow: hidden;
-            margin: 10px 0;
-            min-height: 500px;
+            margin: 6px 0;          /* antes 10px */
+            min-height: 420px;      /* antes 500px */
         }
 
         .numero {
@@ -282,6 +283,7 @@
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             z-index: 10;
+            animation: aparicion 0.5s ease-out;
         }
 
         .numero:active {
@@ -309,10 +311,6 @@
             to { opacity: 0; transform: scale(0) rotate(360deg); filter: blur(10px); }
         }
 
-        .numero {
-            animation: aparicion 0.5s ease-out;
-        }
-
         .numero.desintegrando {
             animation: desintegracion 0.3s ease-out forwards;
             pointer-events: none;
@@ -332,12 +330,12 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             width: 100%;
         }
-        
+
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
         }
-        
+
         #terminar-btn {
             background: linear-gradient(135deg, var(--secondary), #f06292);
         }
@@ -355,55 +353,148 @@
             width: 300px;
             min-width: 280px;
         }
-        
+
         #historial h2 {
             font-size: 1.2rem;
             margin-bottom: 15px;
             color: var(--primary);
             text-align: center;
         }
-        
+
         #historial table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-        
+
         #historial th, #historial td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
             font-size: 13px;
         }
-        
+
         #historial th {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             font-weight: bold;
             color: var(--primary);
         }
-        
+
         .iniciado { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #c62828; }
         .competente { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #ef6c00; }
         .experto { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #2e7d32; }
         .elite { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
 
+        /* ✅ 2) RECONOCIMIENTO ESTRUCTURADO (CERTIFICADO) */
         .reconocimiento {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
-            min-height: 500px;
+            min-height: 420px; /* coherente con #area-juego */
+            padding: 10px;
         }
-        .reconocimiento h2 {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 15px;
+
+        .certificado {
+            width: min(720px, 95%);
+            background: linear-gradient(180deg, #ffffff, #f7fbff);
+            border-radius: 18px;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.14);
+            border: 2px solid rgba(63, 81, 181, 0.25);
+            overflow: hidden;
         }
-        .reconocimiento p {
-            font-size: 1.2rem;
-            margin: 8px 0;
+
+        .certificado-header {
+            padding: 18px 22px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .certificado-header .titulo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.25);
+        }
+
+        .certificado-header .subtitulo {
+            margin-top: 6px;
+            opacity: 0.92;
+            font-size: 0.95rem;
+        }
+
+        .certificado-body {
+            padding: 20px 22px 18px;
+            text-align: center;
+        }
+
+        .certificado-body .emoji {
+            font-size: 2.3rem;
+            margin-bottom: 6px;
+        }
+
+        .certificado-body .otorga {
+            font-size: 1rem;
+            color: #37474f;
+            margin: 8px 0 6px;
+        }
+
+        .certificado-body .nombre {
+            font-size: 2.0rem;
+            font-weight: 900;
             color: var(--dark);
+            margin: 6px 0 10px;
+        }
+
+        .certificado-body .detalle {
+            font-size: 1.05rem;
+            margin: 6px 0;
+            color: #263238;
+        }
+
+        .badge-jerarquia {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            color: white;
+            background: linear-gradient(135deg, #546e7a, #90a4ae);
+        }
+
+        .badge-jerarquia.elite { background: linear-gradient(135deg, #1565c0, #00bcd4); }
+        .badge-jerarquia.experto { background: linear-gradient(135deg, #2e7d32, #66bb6a); }
+        .badge-jerarquia.competente { background: linear-gradient(135deg, #ef6c00, #ffb74d); }
+        .badge-jerarquia.iniciado { background: linear-gradient(135deg, #c62828, #ef5350); }
+
+        .certificado-footer {
+            padding: 14px 22px 18px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .meta {
+            text-align: left;
+            font-size: 0.9rem;
+            color: #455a64;
+        }
+
+        .firmas {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #455a64;
+        }
+
+        .linea-firma {
+            display: inline-block;
+            width: 220px;
+            border-bottom: 2px solid rgba(63,81,181,0.35);
+            margin: 10px 0 6px;
         }
 
         footer {
@@ -413,7 +504,7 @@
             color: white;
             width: 100%;
         }
-        
+
         footer p {
             margin: 0.3rem 0;
             font-size: 0.85rem;
@@ -427,11 +518,17 @@
             .header-content { flex-direction: column; gap: 0.5rem; }
             .child-figure { display: none; }
             h1 { font-size: 1.4rem; }
-            #area-juego, .reconocimiento { min-height: 400px; }
+
+            /* ✅ reducción también en móviles */
+            #area-juego, .reconocimiento { min-height: 320px; } /* antes 400px */
             .numero { width: 60px; height: 60px; font-size: 20px; }
+            .certificado-footer { grid-template-columns: 1fr; text-align: center; }
+            .meta, .firmas { text-align: center; }
+            .linea-firma { width: 200px; }
         }
     </style>
 </head>
+
 <body>
     <div class="floating-element" style="top: 8%; left: 5%; animation-delay: 0s;">➕</div>
     <div class="floating-element" style="top: 18%; right: 7%; animation-delay: 1s;">➖</div>
@@ -485,7 +582,7 @@
         <div id="juego">
             <div id="area-juego"></div>
         </div>
-        
+
         <div id="historial">
             <h2>Historial de Desempeño</h2>
             <table>
@@ -520,6 +617,9 @@
         let numeroArrastrandose = null;
         let areaJuego;
 
+        const PROFESORES = "Miguel Ubiera y Anna Morán";
+        const INSTITUCION = "Instituto para Sordos Santa Rosa, Inc.";
+
         function iniciarJuego() {
             nombreParticipante = document.getElementById('nombre-input').value.trim();
             if (nombreParticipante === "") {
@@ -529,7 +629,7 @@
 
             document.getElementById('inicio').style.display = 'none';
             document.getElementById('contenedor').style.display = 'flex';
-            
+
             areaJuego = document.getElementById('area-juego');
 
             aniquilaciones = 0;
@@ -552,7 +652,7 @@
             }, 1000);
 
             aparicionTimer = setInterval(generarPareja, 3000);
-            
+
             rellenarAreaJuego(5);
         }
 
@@ -586,10 +686,15 @@
             for (let i = 0; i < cantidad; i++) {
                 let intentos = 0;
                 let posicionValida = false;
+
                 while (!posicionValida && intentos < intentosMaximos) {
                     const x = Math.random() * (areaRect.width - 70);
                     const y = Math.random() * (areaRect.height - 70);
-                    let superpone = [...numerosEnPantalla, ...posiciones].some(punto => Math.abs(punto.x - x) < margen && Math.abs(punto.y - y) < margen);
+
+                    const superpone = [...numerosEnPantalla, ...posiciones].some(punto =>
+                        Math.abs(punto.x - x) < margen && Math.abs(punto.y - y) < margen
+                    );
+
                     if (!superpone) {
                         posiciones.push({ x, y });
                         posicionValida = true;
@@ -610,7 +715,14 @@
             numeroEl.dataset.id = numeroId++;
             configurarArrastre(numeroEl);
             areaJuego.appendChild(numeroEl);
-            numerosEnPantalla.push({ id: numeroEl.dataset.id, valor, elemento: numeroEl, x: posicion.x, y: posicion.y });
+
+            numerosEnPantalla.push({
+                id: numeroEl.dataset.id,
+                valor,
+                elemento: numeroEl,
+                x: posicion.x,
+                y: posicion.y
+            });
         }
 
         function configurarArrastre(elemento) {
@@ -620,19 +732,25 @@
                 if (!juegoActivo) return;
                 isDragging = true;
                 numeroArrastrandose = elemento;
+
                 const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
                 startX = clientX - elemento.offsetLeft;
                 startY = clientY - elemento.offsetTop;
                 e.preventDefault();
             };
+
             const arrastrar = (e) => {
                 if (!isDragging || numeroArrastrandose !== elemento) return;
+
                 const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
                 elemento.style.left = `${clientX - startX}px`;
                 elemento.style.top = `${clientY - startY}px`;
             };
+
             const terminarArrastre = () => {
                 if (!isDragging || numeroArrastrandose !== elemento) return;
                 isDragging = false;
@@ -643,6 +761,7 @@
             elemento.addEventListener('mousedown', iniciarArrastre);
             document.addEventListener('mousemove', arrastrar);
             document.addEventListener('mouseup', terminarArrastre);
+
             elemento.addEventListener('touchstart', iniciarArrastre, { passive: false });
             document.addEventListener('touchmove', arrastrar, { passive: false });
             document.addEventListener('touchend', terminarArrastre);
@@ -656,7 +775,12 @@
             for (const numeroObj of numerosEnPantalla) {
                 if (numeroObj.id === id1) continue;
                 const rect2 = numeroObj.elemento.getBoundingClientRect();
-                if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) {
+
+                if (rect1.left < rect2.right &&
+                    rect1.right > rect2.left &&
+                    rect1.top < rect2.bottom &&
+                    rect1.bottom > rect2.top) {
+
                     if (valor1 + parseInt(numeroObj.elemento.dataset.valor) === 0) {
                         aniquilar(elementoArrastrado, numeroObj.elemento);
                         return;
@@ -668,12 +792,20 @@
         function aniquilar(elemento1, elemento2) {
             const id1 = elemento1.dataset.id;
             const id2 = elemento2.dataset.id;
+
             elemento1.classList.add('desintegrando');
             elemento2.classList.add('desintegrando');
-            setTimeout(() => { elemento1.remove(); elemento2.remove(); }, 300);
+
+            setTimeout(() => {
+                elemento1.remove();
+                elemento2.remove();
+            }, 300);
+
             numerosEnPantalla = numerosEnPantalla.filter(n => n.id !== id1 && n.id !== id2);
+
             aniquilaciones++;
             actualizarEstadisticas();
+
             if (juegoActivo && numerosEnPantalla.length === 0) {
                 setTimeout(() => rellenarAreaJuego(5), 400);
             }
@@ -688,6 +820,7 @@
             clearInterval(temporizador);
             clearInterval(aparicionTimer);
             juegoActivo = false;
+
             const jerarquia = obtenerJerarquia(aniquilaciones);
             historial.push({ nombre: nombreParticipante, aniquilaciones, jerarquia });
             historial.sort((a, b) => b.aniquilaciones - a.aniquilaciones);
@@ -702,17 +835,67 @@
             return "Iniciado";
         }
 
+        function claseJerarquia(jerarquia) {
+            const j = jerarquia.toLowerCase().replace('é','e');
+            return j; // elite, experto, competente, iniciado
+        }
+
+        /* ✅ 2) RECONOCIMIENTO MEJORADO Y ESTRUCTURADO CON PROFESORES */
         function mostrarResultadoFinal() {
             const jerarquia = obtenerJerarquia(aniquilaciones);
-            // 1. Agrega el emojic del niño sordo en el reconocimiento
-            const mensajes = {
-                "Élite": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Felicidades, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Rendimiento excepcional!</p>`,
-                "Experto": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Excelente trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Muy buen desempeño!</p>`,
-                "Competente": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Buen trabajo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡Sigue practicando!</p>`,
-                "Iniciado": `<h2>🧏🧒 Reconocimiento 🧏🧒</h2><p><strong>¡Ánimo, ${nombreParticipante}!</strong></p><p>Participante ${jerarquia} con ${aniquilaciones} aniquilaciones.</p><p>¡La práctica hace la perfección!</p>`
+            const clase = claseJerarquia(jerarquia);
+
+            const ahora = new Date();
+            const fecha = ahora.toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' });
+            const hora = ahora.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' });
+
+            const mensajeDesempeno = {
+                "Élite": "¡Rendimiento excepcional! Has demostrado dominio total.",
+                "Experto": "¡Muy buen desempeño! Gran precisión y velocidad.",
+                "Competente": "¡Buen trabajo! Vas por excelente camino. Sigue practicando.",
+                "Iniciado": "¡Ánimo! La práctica constante te hará mejorar rápidamente."
             };
-            
-            document.getElementById('juego').innerHTML = `<div class="reconocimiento">${mensajes[jerarquia]}</div>`;
+
+            document.getElementById('juego').innerHTML = `
+                <div class="reconocimiento">
+                    <div class="certificado">
+                        <div class="certificado-header">
+                            <div class="titulo">🧏🧒 Certificado de Reconocimiento</div>
+                            <div class="subtitulo">${INSTITUCION} • Juego: Aniquilación de Opuestos</div>
+                        </div>
+
+                        <div class="certificado-body">
+                            <div class="emoji">🏅</div>
+                            <div class="otorga">Se otorga el presente reconocimiento a:</div>
+                            <div class="nombre">${nombreParticipante}</div>
+
+                            <div class="detalle">
+                                Por alcanzar <strong>${aniquilaciones}</strong> aniquilaciones
+                                y obtener la jerarquía <strong>${jerarquia}</strong>.
+                            </div>
+
+                            <div class="badge-jerarquia ${clase}">Jerarquía: ${jerarquia}</div>
+
+                            <div class="detalle" style="margin-top:10px;">
+                                ${mensajeDesempeno[jerarquia]}
+                            </div>
+                        </div>
+
+                        <div class="certificado-footer">
+                            <div class="meta">
+                                <div><strong>Fecha:</strong> ${fecha}</div>
+                                <div><strong>Hora:</strong> ${hora}</div>
+                            </div>
+
+                            <div class="firmas">
+                                <div class="linea-firma"></div>
+                                <div><strong>Profesores:</strong> ${PROFESORES}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             document.getElementById('reiniciar-btn').style.display = 'block';
             document.getElementById('terminar-btn').style.display = 'none';
         }
@@ -733,7 +916,13 @@
             listaHistorial.innerHTML = '';
             historial.forEach(p => {
                 const clase = p.jerarquia.toLowerCase().replace('é', 'e');
-                listaHistorial.innerHTML += `<tr><td>${p.nombre}</td><td class="${clase}">${p.aniquilaciones}</td><td class="${clase}">${p.jerarquia}</td></tr>`;
+                listaHistorial.innerHTML += `
+                    <tr>
+                        <td>${p.nombre}</td>
+                        <td class="${clase}">${p.aniquilaciones}</td>
+                        <td class="${clase}">${p.jerarquia}</td>
+                    </tr>
+                `;
             });
         }
 
@@ -743,8 +932,10 @@
                 actualizarHistorial();
             }
         }
-        
-        document.getElementById('nombre-input').addEventListener('keydown', (e) => e.key === "Enter" && iniciarJuego());
+
+        document.getElementById('nombre-input').addEventListener('keydown', (e) =>
+            e.key === "Enter" && iniciarJuego()
+        );
         document.addEventListener('dragstart', (e) => e.preventDefault());
     </script>
 </body>
