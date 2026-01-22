@@ -1,5 +1,6 @@
 
- <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <title>Dictado Numérico - Instituto Santa Rosa</title>
@@ -48,7 +49,14 @@
             75% { transform: translate(15px, 25px) rotate(5deg); }
         }
 
-        header { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 1rem; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); width: 100%; }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            width: 100%;
+        }
         
         .header-content {
             display: flex;
@@ -89,51 +97,227 @@
         h1 { margin: 0; font-size: 1.6rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .subtitle { font-size: 0.9rem; opacity: 0.9; margin: 0.3rem 0 0; }
 
-        #inicio { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; width: 100%; padding: 2rem; }
+        #inicio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            width: 100%;
+            padding: 2rem;
+        }
+
         .emoji-container { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
         .pulsing-emoji { font-size: 3.5rem; display: inline-block; animation: pulse 2.5s infinite ease-in-out; }
-        .instrucciones { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); border-radius: 16px; padding: 30px; margin: 20px 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); max-width: 600px; text-align: center; }
+
+        .instrucciones {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            max-width: 600px;
+            text-align: center;
+        }
+
         .instrucciones h2 { color: var(--primary); }
-        #nombre-input { font-size: 20px; padding: 15px; width: 280px; margin: 15px; border: 3px solid var(--primary); border-radius: 12px; text-align: center; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s; }
-        #nombre-input:focus { outline: none; border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        #comenzar-btn { padding: 15px 30px; font-size: 18px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-weight: bold; }
-        #comenzar-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
+
+        #nombre-input {
+            font-size: 20px;
+            padding: 15px;
+            width: 280px;
+            margin: 15px;
+            border: 3px solid var(--primary);
+            border-radius: 12px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        #nombre-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        #comenzar-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
+
+        #comenzar-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        }
         
-        #contenedor { display: none; flex-direction: row; align-items: flex-start; padding: 20px; width: 100%; max-width: 1200px; margin: 0 auto; gap: 20px; flex-grow: 1; }
+        #contenedor {
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
         #panel-izquierdo, #juego, #historial { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); }
-        #panel-izquierdo { padding: 25px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); width: 280px; min-width: 280px; display: flex; flex-direction: column; gap: 20px; }
-        #juego { padding: 25px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); text-align: center; flex: 1; position: relative; display: flex; flex-direction: column; justify-content: center; gap: 15px; }
+
+        #panel-izquierdo {
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            width: 280px;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #juego {
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
 
         #estadisticas { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-        .stat-item { display: flex; flex-direction: column; align-items: center; font-weight: bold; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 12px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         .stat-label { font-size: 14px; color: var(--primary); margin-bottom: 8px; }
         .stat-value { font-size: 32px; color: var(--dark); }
 
-        #reto-palabra { background: var(--dark); color: white; padding: 15px; margin: 0 auto; border-radius: 12px; font-size: 1.5rem; font-weight: bold; min-height: 80px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; width: 100%; }
-        #calculadora-input { font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size: 2.5rem; padding: 8px; width: 100%; text-align: right; border: 2px solid var(--primary); border-radius: 12px; background: #e9ecef; box-shadow: inset 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s; letter-spacing: 2px; }
+        #reto-palabra {
+            background: var(--dark);
+            color: white;
+            padding: 15px;
+            margin: 0 auto;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        #calculadora-input {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 2.5rem;
+            padding: 8px;
+            width: 100%;
+            text-align: right;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            background: #e9ecef;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
+
         #calculadora-input:focus { outline: none; border-color: var(--accent); }
 
-        #teclado-numerico { display: grid; grid-template-columns: repeat(3, 1fr); row-gap: 2px; column-gap: 5px; margin-top: 10px; max-width: 320px; width: 100%; margin-left: auto; margin-right: auto; }
-        #teclado-numerico button { padding: 15px; font-size: 1.5rem; font-weight: bold; border-radius: 12px; border: 1px solid #ccc; background: #f8f9fa; color: var(--dark); cursor: pointer; transition: all 0.2s; }
+        /* ✅ CAMBIO SUTIL: teclado numérico más compacto (menos alto) */
+        #teclado-numerico {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            row-gap: 1px;      /* antes 2px */
+            column-gap: 4px;   /* antes 5px */
+            margin-top: 6px;   /* antes 10px */
+            max-width: 320px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #teclado-numerico button {
+            padding: 12px;       /* antes 15px */
+            font-size: 1.45rem;  /* antes 1.5rem */
+            font-weight: bold;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         #teclado-numerico button.cero-btn { grid-column: span 2; }
         #teclado-numerico button:hover { background: #e9ecef; transform: scale(1.05); }
         #teclado-numerico button:active { background: #d1d5db; transform: scale(0.95); }
         
         .feedback-correcto { animation: correcto 0.5s ease-out; }
-        /* CAMBIO: Animación de acierto mejorada */
+
         @keyframes correcto {
             0%   { transform: scale(1); background-color: var(--dark); box-shadow: none; }
             50%  { transform: scale(1.12); background-color: var(--success); box-shadow: 0 0 30px var(--success); }
             100% { transform: scale(1); background-color: var(--dark); box-shadow: none; }
         }
 
-        button { padding: 12px 24px; font-size: 16px; background: linear-gradient(135deg, var(--primary), #5c6bc0); color: white; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; margin: 8px 0; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.15); width: 100%; }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: linear-gradient(135deg, var(--primary), #5c6bc0);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 8px 0;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            width: 100%;
+        }
+
         button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
         #terminar-btn { background: linear-gradient(135deg, var(--secondary), #f06292); }
         #reiniciar-btn { display: none; background: linear-gradient(135deg, var(--success), #66bb6a); }
 
-        #historial { padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); width: 300px; min-width: 280px; }
-        #historial h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); text-align: center; }
+        #historial {
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            width: 300px;
+            min-width: 280px;
+        }
+
+        #historial h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            text-align: center;
+        }
+
         #historial table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         #historial th, #historial td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px; }
         #historial th { background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-weight: bold; color: var(--primary); }
@@ -142,7 +326,6 @@
         .experto { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #2e7d32; }
         .elite { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
 
-        /* CAMBIO: Estilos del certificado más compactos */
         .certificado { text-align: center; padding: 10px; }
         .certificado h3 { font-size: 1.6rem; color: var(--primary); margin-bottom: 8px; }
         .certificado .institucion { font-size: 1rem; font-weight: bold; }
@@ -219,7 +402,9 @@
                 <button id="reiniciar-btn" onclick="reiniciarJuego()">Reiniciar Juego</button>
             </div>
         </div>
+
         <div id="juego"></div>
+
         <div id="historial">
             <h2>Historial de Desempeño</h2>
             <table>
@@ -231,7 +416,8 @@
     </div>
 
     <footer>
-        <p>Instituto para Sordos Santa Rosa, Inc.</p><p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
+        <p>Instituto para Sordos Santa Rosa, Inc.</p>
+        <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
     </footer>
 
     <script>
@@ -245,10 +431,7 @@
             aciertos = 0; tiempoRestante = 180; juegoActivo = true;
             actualizarEstadisticas();
             const areaJuego = document.getElementById('juego');
-            // ===== INICIO DE LA CORRECCIÓN 1 =====
-            // Se agrega 'readonly' al input y se eliminan 'inputmode', 'pattern' y 'oninput'
             areaJuego.innerHTML = `<div id="reto-palabra"></div><input type="text" id="calculadora-input" readonly><div id="teclado-numerico"><button onclick="manejarTeclaTeclado('7')">7</button><button onclick="manejarTeclaTeclado('8')">8</button><button onclick="manejarTeclaTeclado('9')">9</button><button onclick="manejarTeclaTeclado('4')">4</button><button onclick="manejarTeclaTeclado('5')">5</button><button onclick="manejarTeclaTeclado('6')">6</button><button onclick="manejarTeclaTeclado('1')">1</button><button onclick="manejarTeclaTeclado('2')">2</button><button onclick="manejarTeclaTeclado('3')">3</button><button class="cero-btn" onclick="manejarTeclaTeclado('0')">0</button><button onclick="manejarTeclaTeclado('borrar')">&#9003;</button></div>`;
-            // ===== FIN DE LA CORRECCIÓN 1 =====
             document.getElementById('reiniciar-btn').style.display = 'none';
             document.getElementById('terminar-btn').style.display = 'block';
             temporizador = setInterval(() => {
@@ -258,9 +441,7 @@
             }, 1000);
             generarNuevoReto();
         }
-        
-        // ===== INICIO DE LA CORRECCIÓN 2 =====
-        // Se modifica la función para llamar a 'verificarRespuesta' directamente
+
         function manejarTeclaTeclado(valor) {
             if (!juegoActivo) return;
             const input = document.getElementById('calculadora-input');
@@ -271,7 +452,6 @@
             }
             verificarRespuesta(input.value);
         }
-        // ===== FIN DE LA CORRECCIÓN 2 =====
 
         function generarNuevoReto() {
             if (!juegoActivo) return;
@@ -309,7 +489,6 @@
             mostrarResultadoFinal();
         }
 
-        // CAMBIO: Jerarquías actualizadas
         function obtenerJerarquia(puntuacion) {
             if (puntuacion >= 51) return "Élite";
             if (puntuacion >= 37) return "Experto";
@@ -404,7 +583,10 @@
             const decenas = ['', 'diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
             const especiales = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
             const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
-            if (n === 0) return 'cero'; if (n === 100) return 'cien'; if (n === 10000) return 'diez mil';
+            if (n === 0) return 'cero';
+            if (n === 100) return 'cien';
+            if (n === 10000) return 'diez mil';
+
             let letras = '';
             if (n >= 1000) {
                 const mil = Math.floor(n / 1000);
@@ -418,15 +600,18 @@
                 if (n > 0) letras += ' ';
             }
             if (n > 0) {
-                if (n < 10) { letras += unidades[n]; } 
-                else if (n < 20) { letras += especiales[n - 10]; } 
-                else {
+                if (n < 10) {
+                    letras += unidades[n];
+                } else if (n < 20) {
+                    letras += especiales[n - 10];
+                } else {
                     const d = Math.floor(n / 10);
                     const u = n % 10;
-                    if (d === 2) { letras += (u === 0) ? 'veinte' : 'veinti' + unidades[u]; } 
-                    else {
+                    if (d === 2) {
+                        letras += (u === 0) ? 'veinte' : 'veinti' + unidades[u];
+                    } else {
                         letras += decenas[d];
-                        if (u > 0) { letras += ' y ' + unidades[u]; }
+                        if (u > 0) letras += ' y ' + unidades[u];
                     }
                 }
             }
