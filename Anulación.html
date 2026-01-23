@@ -1,9 +1,13 @@
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <title>Anulación - Enteros</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     :root{
       --primary:#3f51b5;
@@ -11,8 +15,13 @@
       --accent:#00bcd4;
       --dark:#212121;
       --success:#2e7d32;
+      --danger:#c62828;
+      --text:#263238;
+      --muted:#546e7a;
+
       font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
     }
+
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
     body{
       background:linear-gradient(135deg,#e3f2fd,#bbdefb);
@@ -20,7 +29,9 @@
       display:flex;
       flex-direction:column;
       touch-action:manipulation;
+      color:var(--text);
     }
+
     /* Fondo flotante */
     .floating-element{
       position:fixed;
@@ -36,6 +47,7 @@
       50%{transform:translate(-12px,9px) rotate(-4deg);opacity:.10}
       75%{transform:translate(10px,16px) rotate(3deg);opacity:.12}
     }
+
     header{
       background:linear-gradient(135deg,var(--primary),var(--accent));
       color:#fff;
@@ -52,6 +64,7 @@
       max-width:1400px;
       margin:0 auto;
     }
+
     /* Niños: transición suave */
     .kid-pulse-wrap{
       position:relative;
@@ -78,11 +91,13 @@
       60% { opacity:0; transform:scale(.55) translateY(10px); }
       100% { opacity:0; transform:scale(.55) translateY(10px); }
     }
+
     .logo{display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap}
     .logo-icon{font-size:1.7rem;animation:pulse 2.2s infinite}
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
     h1{margin:0;font-size:1.32rem}
     .subtitle{font-size:.85rem;opacity:.95;margin:.15rem 0 0}
+
     /* Inicio */
     #inicio{
       display:flex;
@@ -127,7 +142,6 @@
       transform:translateY(-2px);
       box-shadow:0 6px 8px rgba(0,0,0,.15)
     }
-    /* Frase más lejos */
     .instruction-line{
       margin-top:44px;
       color:#0b2a66;
@@ -136,7 +150,11 @@
       font-size:1.08rem;
       font-family:"Trebuchet MS","Arial Rounded MT Bold","Segoe UI",sans-serif;
       text-shadow:0 1px 0 rgba(255,255,255,.55);
+      text-align:center;
+      max-width:720px;
+      padding:0 10px;
     }
+
     /* Contenedor */
     #contenedor{
       display:none;
@@ -150,6 +168,7 @@
       flex:1 1 auto;
       min-height:0;
     }
+
     /* Paneles */
     #panel-izquierdo, #juego, #historial{
       background:#fff;
@@ -160,17 +179,18 @@
       min-height:0;
       overflow:hidden;
     }
+
     /* Laterales con scroll */
-    #panel-izquierdo, #historial{
-      overflow:auto;
-    }
-    /* Laterales más estrechos y centro fluido */
+    #panel-izquierdo, #historial{ overflow:auto; }
+
     #panel-izquierdo{
       flex: 0 0 230px;
       border:3px solid var(--primary);
       display:flex;
       flex-direction:column;
     }
+
+    /* IMPORTANTE: el centro por defecto sigue ocultando overflow en el juego */
     #juego{
       flex: 1 1 auto;
       border:3px solid var(--primary);
@@ -180,15 +200,23 @@
       justify-content:stretch;
       position:relative;
       padding:10px;
-      overflow:hidden;
+      overflow:hidden; /* <-- para el juego */
       min-width: 520px;
     }
+
+    /* ✅ SOLO cuando haya certificado, permitimos scroll en el centro */
+    #juego.showing-cert{
+      overflow:auto;
+      padding:8px;
+    }
+
     #historial{
       flex: 0 0 345px;
       border:2px solid var(--accent);
       display:flex;
       flex-direction:column;
     }
+
     .info-panel{
       background:linear-gradient(135deg,#f5f5f5,#e0e0e0);
       padding:9px;border-radius:8px;margin:7px 0;border:1px solid #ddd;
@@ -202,6 +230,7 @@
     #temporizador-total{
       font-size:17px;color:#455a64;font-weight:900
     }
+
     /* Campo */
     #playfield{
       flex:1 1 auto;
@@ -240,7 +269,23 @@
       border:3px solid rgba(255,255,255,.18);
       box-shadow:0 14px 30px rgba(0,0,0,.22);
       user-select:none;
+      overflow:hidden;
     }
+
+    .orb-goal{
+      position:absolute;
+      top:10px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.5px;
+      color:rgba(0,188,212,.28);
+      text-shadow:0 2px 6px rgba(0,0,0,.35);
+      pointer-events:none;
+    }
+    .orb-value{ line-height:1; }
+
     .orb-win{
       background:
         radial-gradient(circle at 30% 25%, rgba(255,255,255,.35), rgba(255,255,255,0) 48%),
@@ -306,9 +351,6 @@
     }
     .globo:active{cursor:grabbing;transform:scale(1.04)}
 
-    /* Explosión (POP liviano) */
-    .burst{ display:none; }
-
     /* Emojis esquinas */
     .corner-emoji{
       position:absolute;top:10px;font-size:1.9rem;opacity:.9;
@@ -350,7 +392,7 @@
     /* Historial */
     #historial h2{font-size:1.25rem;margin-bottom:8px;color:var(--primary)}
     #historial table{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed}
-    #historial th,#historial td{border:1px solid #ddd;padding:7px;text-align:center;font-size:13px}
+    #historial th,#historial td{border:1px solid #ddd;padding:7px;text-align:center;font-size:13px;word-break:break-word}
     #historial th{
       background:linear-gradient(135deg,#f8f9fa,#e9ecef);
       font-weight:bold;color:var(--primary)
@@ -370,6 +412,96 @@
     }
     footer p{margin:.25rem 0;font-size:.8rem}
 
+    /* ==========================
+       ✅ CERTIFICADO (COMPACTO)
+       - subido
+       - menos padding
+       - menos interlineado
+       - tipografía un poco menor
+       - max-height para no cortarse
+    =========================== */
+    .cert-wrap{
+      height:100%;
+      display:flex;
+      align-items:flex-start;         /* ✅ sube el certificado */
+      justify-content:center;
+      padding:6px;                    /* ✅ menos margen externo */
+    }
+    .cert{
+      width:min(720px, 96%);
+      background:#fff;
+      border-radius:14px;
+      border:2px solid rgba(63,81,181,0.25);
+      box-shadow:0 10px 22px rgba(0,0,0,0.10);
+      padding:18px 16px;              /* ✅ más compacto */
+      text-align:center;
+      line-height:1.22;               /* ✅ menos interlineado */
+      max-height:100%;                /* ✅ no excede el contenedor */
+    }
+    .cert-badge{
+      font-size:1.7rem;               /* ✅ más pequeño */
+      margin-bottom:6px;
+    }
+    .cert-title{
+      margin:0;
+      color:var(--primary);
+      font-size:1.45rem;              /* ✅ menos grande */
+      letter-spacing:.3px;
+      font-weight:900;
+    }
+    .cert-subtitle{
+      margin:10px 0 4px;
+      font-size:.95rem;
+      color:#444;
+    }
+    .cert-game{
+      margin:0 0 12px;
+      font-size:1.02rem;
+      color:#283593;
+      font-weight:700;
+      font-style:italic;
+    }
+    .cert-award{
+      font-size:.95rem;
+      margin:0 0 6px;
+      color:#333;
+    }
+    .cert-name{
+      margin:4px 0 10px;
+      font-size:1.55rem;              /* ✅ más pequeño */
+      color:#1a237e;
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .cert-msg{
+      margin:6px 0 10px;
+      font-size:1.0rem;               /* ✅ compactado */
+      font-weight:600;
+      color:#424242;
+    }
+    .cert-stats{
+      margin:6px 0;
+      font-size:.98rem;
+      color:#333;
+    }
+    .cert-rank{
+      color:#d50000;
+      font-weight:900;
+    }
+    .cert-date{
+      margin-top:8px;
+      color:#555;
+      font-size:.9rem;
+    }
+    .cert-footer{
+      margin-top:12px;
+      padding-top:10px;
+      border-top:1px solid #ddd;
+      font-size:.9rem;
+      color:#555;
+      line-height:1.22;
+    }
+
     /* Responsive */
     @media (max-width:1024px){
       #contenedor{flex-direction:column;width:98vw;padding:10px}
@@ -383,9 +515,13 @@
       #playfield{height:360px}
       #target-orb{right:12px;width:128px;height:128px;font-size:48px}
       .globo{width:54px;height:54px;font-size:18px}
+      .cert{padding:16px 12px}
+      .cert-title{font-size:1.28rem}
+      .cert-name{font-size:1.45rem}
     }
   </style>
 </head>
+
 <body>
   <div class="floating-element" style="top:5%; left:3%; animation-delay:0s;">🔢</div>
   <div class="floating-element" style="top:18%; right:5%; animation-delay:1s;">🎯</div>
@@ -399,11 +535,13 @@
         <div class="kid boy">👦</div>
         <div class="kid girl">👧</div>
       </div>
+
       <div class="logo">
         <span class="logo-icon">➖</span>
         <h1>Anulación (Enteros)</h1>
         <span class="logo-icon">➕</span>
       </div>
+
       <div class="kid-pulse-wrap" aria-hidden="true">
         <div class="kid boy">👦</div>
         <div class="kid girl">👧</div>
@@ -412,699 +550,825 @@
     <p class="subtitle">Profesores: Miguel Ubiera y Anna Morán</p>
   </header>
 
-  <div id="inicio">
-    <div class="start-emoji" aria-hidden="true">🎯 🧏 🎯</div>
-    <h2 style="margin-bottom: 10px; color: var(--primary);">Escribe tu nombre</h2>
-    <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante" />
-    <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
-    <div class="instruction-line">Arroja los globos hasta obtener un 0.</div>
-  </div>
-
-  <div id="contenedor">
-    <div id="panel-izquierdo">
-      <div class="info-panel">
-        <h3>⏱️ Round (20 s)</h3>
-        <div id="temporizador-round">20</div>
-      </div>
-      <div class="info-panel">
-        <h3>⌛ Sesión</h3>
-        <div id="temporizador-total">200 segundos</div>
-      </div>
-      <div class="info-panel">
-        <h3>📈 Rendimiento</h3>
-        <p><strong>Aciertos:</strong> <span id="aciertos">0</span></p>
-      </div>
-      <div class="info-panel">
-        <h3>🧱 Progreso</h3>
-        <div id="bloques-progreso-container"></div>
-      </div>
-      <div class="botones-container">
-        <button id="terminar-btn" onclick="terminarPartida()">Terminar Partida</button>
-        <button id="reiniciar-btn" onclick="reiniciarJuego()">Jugar de Nuevo</button>
-      </div>
+  <main style="flex:1 1 auto; display:flex; flex-direction:column;">
+    <div id="inicio">
+      <div class="start-emoji" aria-hidden="true">🎯 🧏 🎯</div>
+      <h2 style="margin-bottom: 10px; color: var(--primary);">Escribe tu nombre</h2>
+      <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante" />
+      <button id="comenzar-btn" type="button">Comenzar</button>
+      <div class="instruction-line">Arroja los globos hasta obtener un -20 o +20.</div>
     </div>
 
-    <div id="juego">
-      <div id="playfield" aria-label="Campo de juego">
-        <div id="target-orb">-12</div>
-        <div id="win-feedback" aria-live="polite">
-          <div class="mini-confetti" aria-hidden="true"></div>
-          <div class="win-emoji">🎉✅</div>
-          <div class="win-text" id="win-text">¡Felicidades!</div>
+    <div id="contenedor">
+      <aside id="panel-izquierdo">
+        <div class="info-panel">
+          <h3>⏱️ Round (20 s)</h3>
+          <div id="temporizador-round">20</div>
         </div>
-        <div id="emoji-left" class="corner-emoji">👦</div>
-        <div id="emoji-right" class="corner-emoji">👧</div>
-      </div>
-      <div id="mensaje"></div>
-    </div>
 
-    <div id="historial">
-      <h2>🏆 Historial</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Aciertos</th>
-            <th>Jerarquía</th>
-          </tr>
-        </thead>
-        <tbody id="lista-historial"></tbody>
-      </table>
-      <div style="margin-top:auto;padding-top:10px;">
-        <button id="barrer-btn" onclick="barrerHistorial()">Barrer Historial</button>
-      </div>
+        <div class="info-panel">
+          <h3>⌛ Sesión</h3>
+          <div id="temporizador-total">200 segundos</div>
+        </div>
+
+        <div class="info-panel">
+          <h3>📈 Rendimiento</h3>
+          <p><strong>Aciertos:</strong> <span id="aciertos">0</span></p>
+        </div>
+
+        <div class="info-panel">
+          <h3>🧱 Progreso</h3>
+          <div id="bloques-progreso-container"></div>
+        </div>
+
+        <div class="botones-container">
+          <button id="terminar-btn" type="button">Terminar Partida</button>
+          <button id="reiniciar-btn" type="button">Jugar de Nuevo</button>
+        </div>
+      </aside>
+
+      <section id="juego">
+        <div id="playfield" aria-label="Campo de juego">
+          <div id="target-orb" aria-label="Globo objetivo">
+            <div class="orb-goal" id="orb-goal">+20</div>
+            <div class="orb-value" id="orb-value">-12</div>
+          </div>
+
+          <div id="win-feedback" aria-live="polite">
+            <div class="mini-confetti" aria-hidden="true"></div>
+            <div class="win-emoji">🎉✅</div>
+            <div class="win-text" id="win-text">¡Felicidades!</div>
+          </div>
+
+          <div id="emoji-left" class="corner-emoji">👦</div>
+          <div id="emoji-right" class="corner-emoji">👧</div>
+        </div>
+        <div id="mensaje"></div>
+      </section>
+
+      <aside id="historial">
+        <h2>🏆 Historial</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Aciertos</th>
+              <th>Jerarquía</th>
+            </tr>
+          </thead>
+          <tbody id="lista-historial"></tbody>
+        </table>
+
+        <div style="margin-top:auto;padding-top:10px;">
+          <button id="barrer-btn" type="button">Barrer Historial</button>
+        </div>
+      </aside>
     </div>
-  </div>
+  </main>
 
   <footer>
     <p>Instituto para Sordos Santa Rosa, Inc.</p>
     <p>© 2025 - Desarrollado por Miguel Ubiera y Anna Morán</p>
   </footer>
 
-<script>
-/* =========================
- ANULACIÓN (Enteros)
-========================= */
-let nombreParticipante = "";
-let aciertos = 0;
-let tiempoTotal = 200;
-let tiempoRound = 20;
-let timerTotal = null, timerRound = null;
-let running = false;
-let historial = JSON.parse(localStorage.getItem('historialAnulacion')) || [];
-const playfield = document.getElementById('playfield');
-const targetOrb = document.getElementById('target-orb');
-const winFeedback = document.getElementById('win-feedback');
-const miniConfettiLayer = winFeedback.querySelector('.mini-confetti');
-const winText = document.getElementById('win-text');
-const emojiLeft = document.getElementById('emoji-left');
-const emojiRight = document.getElementById('emoji-right');
+  <script>
+    "use strict";
 
-let bigValue = -12;
-let nextSign = -1;
-let globos = [];
-let rafId = null;
-let lastTs = 0;
+    /* =========================
+        ANULACIÓN (Enteros)
+    ========================= */
 
-const R = 28;
-const FRICTION = 0.995;
-const MAX_SPEED = 10;
-const LAUNCH_SPEED = 1800;
+    const ROUND_SECONDS = 20;
+    const SESSION_SECONDS = 200;
 
-const N_GLOBOS = 20;
-const LOCAL_BOUND = 28;
+    const R = 28;
+    const FRICTION = 0.995;
+    const MAX_SPEED = 10;
+    const LAUNCH_SPEED = 1800;
 
-let roundLocked = false;
-let lastBurstMs = 0;
+    const N_GLOBOS = 20;
+    const LOCAL_BOUND = 28;
 
-const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
-let idxOk = 0;
+    const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
 
-/* contadores de signos */
-let posCount = 0;
-let negCount = 0;
+    let nombreParticipante = "";
+    let aciertos = 0;
 
-function siguienteMensajeOK(){
-  const msg = MENSAJES_OK[idxOk % MENSAJES_OK.length];
-  idxOk++;
-  return msg;
-}
+    let tiempoTotal = SESSION_SECONDS;
+    let tiempoRound = ROUND_SECONDS;
 
-/* formatear con signo + */
-function fmt(n){
-  if(n === 0) return "0";
-  return n > 0 ? `+${n}` : `${n}`;
-}
+    let timerTotal = null;
+    let timerRound = null;
 
-function iniciarJuego(){
-  nombreParticipante = document.getElementById('nombre-input').value.trim();
-  if(!nombreParticipante){
-    alert("Por favor, escribe tu nombre.");
-    return;
-  }
-  document.getElementById('inicio').style.display = 'none';
-  document.getElementById('contenedor').style.display = 'flex';
-  aciertos = 0;
-  tiempoTotal = 200;
-  updateUIStats();
-  document.getElementById('reiniciar-btn').style.display = 'none';
-  document.getElementById('terminar-btn').style.display = 'block';
-  document.getElementById('bloques-progreso-container').innerHTML = "";
-  running = true;
+    let running = false;
+    let roundLocked = false;
 
-  clearInterval(timerTotal);
-  timerTotal = setInterval(()=>{
-    if(!running) return;
-    tiempoTotal--;
-    document.getElementById('temporizador-total').textContent = `${tiempoTotal} segundos`;
-    if(tiempoTotal <= 0) terminarPartida();
-  }, 1000);
+    let historial = JSON.parse(localStorage.getItem("historialAnulacion")) || [];
 
-  nextSign = Math.random() < 0.5 ? -1 : 1;
-  iniciarNuevoRound(true);
-}
+    let globos = [];
+    let rafId = null;
+    let lastTs = 0;
 
-function terminarPartida(){
-  running = false;
-  clearInterval(timerTotal);
-  clearInterval(timerRound);
-  cancelAnimationFrame(rafId);
+    let globoId = 0;
+    let activePointer = null;
 
-  const jerarquia = obtenerJerarquia(aciertos);
-  historial.push({ nombre: nombreParticipante, aciertos, jerarquia, fecha: new Date().toLocaleDateString('es-ES') });
-  historial.sort((a,b) => b.aciertos - a.aciertos);
-  localStorage.setItem('historialAnulacion', JSON.stringify(historial));
-  actualizarHistorial();
+    let idxOk = 0;
 
-  const juegoContainer = document.getElementById('juego');
-  juegoContainer.innerHTML = `
-    <div style="height:100%;display:flex;align-items:center;justify-content:center;padding:8px;">
-      <div style="max-width:620px;width:96%;background:#fff;border-radius:16px;border:3px solid rgba(0,188,212,.35);box-shadow:0 10px 25px rgba(0,0,0,.12);padding:18px;text-align:center;">
-        <div style="font-size:2.0rem;margin-bottom:6px;">🎯 🧏 🎯</div>
-        <h2 style="margin:0;color:#3f51b5;">Reconocimiento de Desempeño</h2>
-        <p style="margin:10px 0;">Se otorga este reconocimiento a:</p>
-        <h3 style="margin:8px 0;color:#3f51b5;">${nombreParticipante}</h3>
-        <p style="margin:10px 0;font-weight:800;">${fraseDesempeno(aciertos)}</p>
-        <p style="margin:10px 0;"><b>Aciertos:</b> ${aciertos} • <b>Jerarquía:</b> <span style="color:#f50057;font-weight:900">${jerarquia}</span></p>
-        <p style="margin:10px 0;">Fecha: ${new Date().toLocaleDateString('es-ES')}</p>
-        <p style="margin-top:12px;">Profesores: Miguel Ubiera y Anna Morán</p>
-      </div>
-    </div>
-  `;
-  document.getElementById('reiniciar-btn').style.display = 'block';
-  document.getElementById('terminar-btn').style.display = 'none';
-}
+    let bigValue = -12;
+    let goalValue = 20;
 
-function reiniciarJuego(){ window.location.reload(); }
+    let posCount = 0;
+    let negCount = 0;
 
-function iniciarNuevoRound(isFirst=false){
-  if(!running) return;
-  roundLocked = false;
-  hideWinFeedback();
+    const $ = (id) => document.getElementById(id);
 
-  const doStart = () => {
-    tiempoRound = 20;
-    document.getElementById('temporizador-round').textContent = tiempoRound;
+    const inicio = $("inicio");
+    const contenedor = $("contenedor");
 
-    const absVal = randInt(11, 19);
-    bigValue = nextSign * absVal;
-    nextSign *= -1;
-    renderBigValue();
+    const inputNombre = $("nombre-input");
+    const btnComenzar = $("comenzar-btn");
+    const btnTerminar = $("terminar-btn");
+    const btnReiniciar = $("reiniciar-btn");
+    const btnBarrer = $("barrer-btn");
 
-    limpiarGlobos();
+    const juegoSection = $("juego");
 
-    const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS);
+    const playfield = $("playfield");
+    const targetOrb = $("target-orb");
+    const orbGoalEl = $("orb-goal");
+    const orbValueEl = $("orb-value");
 
-    const rect = playfield.getBoundingClientRect();
-    const W = rect.width, H = rect.height;
-    const xLeftMax = Math.floor(W * 0.62);
-    const xMin = R + 12;
-    const xMax = xLeftMax - R - 12;
-    const yMin = R + 12;
-    const yMax = H - R - 12;
+    const winFeedback = $("win-feedback");
+    const miniConfettiLayer = winFeedback.querySelector(".mini-confetti");
+    const winText = $("win-text");
 
-    values.forEach((v) => {
-      const hx = randFloat(xMin, xMax);
-      const hy = randFloat(yMin, yMax);
+    const emojiLeft = $("emoji-left");
+    const emojiRight = $("emoji-right");
 
-      // ✅ CAMBIO: sin levitación/velocidad cuando están "float"
-      const vx = 0;
-      const vy = 0;
+    const tRoundEl = $("temporizador-round");
+    const tTotalEl = $("temporizador-total");
+    const aciertosEl = $("aciertos");
+    const progresoEl = $("bloques-progreso-container");
+    const listaHistorial = $("lista-historial");
 
-      crearGlobo(v, hx, hy, vx, vy, hx, hy);
-    });
+    function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+    function randFloat(min,max){ return Math.random()*(max-min)+min; }
 
-    clearInterval(timerRound);
-    timerRound = setInterval(()=>{
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+    }
+
+    function fmt(n){
+      if(n === 0) return "0";
+      return n > 0 ? `+${n}` : `${n}`;
+    }
+
+    function escapeHTML(str){
+      return String(str).replace(/[&<>"'`=\/]/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",
+        "\"":"&quot;","'":"&#39;","`":"&#96;",
+        "=":"&#61;","/":"&#47;"
+      }[s]));
+    }
+
+    function siguienteMensajeOK(){
+      const msg = MENSAJES_OK[idxOk % MENSAJES_OK.length];
+      idxOk++;
+      return msg;
+    }
+
+    function updateUIStats(){
+      aciertosEl.textContent = String(aciertos);
+      tTotalEl.textContent = `${tiempoTotal} segundos`;
+      tRoundEl.textContent = String(tiempoRound);
+    }
+
+    function obtenerJerarquia(p){
+      if(p < 6) return "Iniciado";
+      if(p >= 6 && p <= 10) return "Competente";
+      if(p >= 11 && p <= 15) return "Experto";
+      return "Élite";
+    }
+
+    function fraseDesempeno(a){
+      const j = obtenerJerarquia(a);
+      if(j === "Élite") return "Excelente. Evidencia un dominio notable de la anulación de enteros.";
+      if(j === "Experto") return "Muy buen desempeño. Su estrategia fue precisa y consistente.";
+      if(j === "Competente") return "Buen avance. Continúe fortaleciendo su habilidad con práctica.";
+      return "Buen inicio. Siga practicando para mejorar su rendimiento.";
+    }
+
+    function actualizarHistorial(){
+      listaHistorial.textContent = "";
+      for(const p of historial){
+        const tr = document.createElement("tr");
+
+        const tdNombre = document.createElement("td");
+        tdNombre.textContent = p.nombre;
+
+        const tdAciertos = document.createElement("td");
+        tdAciertos.textContent = String(p.aciertos);
+
+        const tdJerarquia = document.createElement("td");
+        tdJerarquia.textContent = p.jerarquia;
+        tdJerarquia.className = p.jerarquia.toLowerCase();
+
+        tr.appendChild(tdNombre);
+        tr.appendChild(tdAciertos);
+        tr.appendChild(tdJerarquia);
+        listaHistorial.appendChild(tr);
+      }
+    }
+
+    function barrerHistorial(){
+      if(confirm("¿Estás seguro de que quieres borrar todo el historial?")){
+        historial = [];
+        localStorage.removeItem("historialAnulacion");
+        actualizarHistorial();
+      }
+    }
+
+    function iniciarJuego(){
+      const rawName = inputNombre.value.trim();
+      if(!rawName){
+        alert("Por favor, escribe tu nombre.");
+        return;
+      }
+      nombreParticipante = rawName;
+
+      inicio.style.display = "none";
+      contenedor.style.display = "flex";
+
+      aciertos = 0;
+      tiempoTotal = SESSION_SECONDS;
+      updateUIStats();
+
+      btnReiniciar.style.display = "none";
+      btnTerminar.style.display = "block";
+      progresoEl.textContent = "";
+
+      running = true;
+
+      clearInterval(timerTotal);
+      timerTotal = setInterval(() => {
+        if(!running) return;
+        tiempoTotal--;
+        tTotalEl.textContent = `${tiempoTotal} segundos`;
+        if(tiempoTotal <= 0) terminarPartida();
+      }, 1000);
+
+      iniciarNuevoRound(true);
+    }
+
+    function terminarPartida(){
+      running = false;
+
+      clearInterval(timerTotal);
+      clearInterval(timerRound);
+      cancelAnimationFrame(rafId);
+
+      const jerarquia = obtenerJerarquia(aciertos);
+
+      historial.push({
+        nombre: nombreParticipante,
+        aciertos,
+        jerarquia,
+        fecha: new Date().toLocaleDateString("es-ES")
+      });
+
+      historial.sort((a,b) => b.aciertos - a.aciertos);
+      localStorage.setItem("historialAnulacion", JSON.stringify(historial));
+      actualizarHistorial();
+
+      // ✅ Activar modo certificado (scroll permitido solo aquí)
+      juegoSection.classList.add("showing-cert");
+
+      const safeName = escapeHTML(nombreParticipante);
+
+      juegoSection.innerHTML = `
+        <div class="cert-wrap">
+          <div class="cert" role="group" aria-label="Certificado de reconocimiento">
+            <div class="cert-badge">🎓✨</div>
+            <h2 class="cert-title">CERTIFICADO DE RECONOCIMIENTO</h2>
+
+            <p class="cert-subtitle">Otorgado por su desempeño en:</p>
+            <div class="cert-game">Anulación de Enteros</div>
+
+            <p class="cert-award">Se concede a:</p>
+            <div class="cert-name">${safeName}</div>
+
+            <div class="cert-msg">${fraseDesempeno(aciertos)}</div>
+
+            <div class="cert-stats">
+              <b>Aciertos:</b> ${aciertos}
+              &nbsp;•&nbsp;
+              <b>Jerarquía:</b>
+              <span class="cert-rank">${jerarquia}</span>
+            </div>
+
+            <div class="cert-date">
+              Fecha de emisión: <b>${new Date().toLocaleDateString("es-ES")}</b>
+            </div>
+
+            <div class="cert-footer">
+              Profesores responsables:<br>
+              <b>Miguel Ubiera</b> y <b>Anna Morán</b>
+            </div>
+          </div>
+        </div>
+      `;
+
+      btnReiniciar.style.display = "block";
+      btnTerminar.style.display = "none";
+    }
+
+    function reiniciarJuego(){
+      window.location.reload();
+    }
+
+    function iniciarNuevoRound(isFirst=false){
       if(!running) return;
-      tiempoRound--;
-      document.getElementById('temporizador-round').textContent = tiempoRound;
-      if(tiempoRound <= 0){
+
+      roundLocked = false;
+      hideWinFeedback();
+
+      const doStart = () => {
+        tiempoRound = ROUND_SECONDS;
+        tRoundEl.textContent = String(tiempoRound);
+
+        goalValue = (Math.random() < 0.5) ? -20 : 20;
+        orbGoalEl.textContent = fmt(goalValue);
+
+        bigValue = randInt(-19, 19);
+        renderBigValue();
+
+        limpiarGlobos();
+
+        const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS, goalValue);
+
+        const rect = playfield.getBoundingClientRect();
+        const W = rect.width, H = rect.height;
+        const xLeftMax = Math.floor(W * 0.62);
+
+        const xMin = R + 12;
+        const xMax = xLeftMax - R - 12;
+        const yMin = R + 12;
+        const yMax = H - R - 12;
+
+        values.forEach((v) => {
+          const hx = randFloat(xMin, xMax);
+          const hy = randFloat(yMin, yMax);
+          const vx = randFloat(-MAX_SPEED, MAX_SPEED);
+          const vy = randFloat(-MAX_SPEED, MAX_SPEED);
+          crearGlobo(v, hx, hy, vx, vy, hx, hy);
+        });
+
         clearInterval(timerRound);
-        iniciarNuevoRound();
+        timerRound = setInterval(() => {
+          if(!running) return;
+          tiempoRound--;
+          tRoundEl.textContent = String(tiempoRound);
+          if(tiempoRound <= 0){
+            clearInterval(timerRound);
+            iniciarNuevoRound();
+          }
+        }, 1000);
+
+        lastTs = performance.now();
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(loop);
+      };
+
+      if(isFirst){ doStart(); return; }
+
+      playfield.classList.add("fading");
+      setTimeout(() => {
+        doStart();
+        playfield.classList.remove("fading");
+      }, 420);
+    }
+
+    function loop(ts){
+      if(!running) return;
+      const dt = Math.min(0.033, (ts - lastTs)/1000);
+      lastTs = ts;
+      actualizarFisica(dt);
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function actualizarFisica(dt){
+      const rect = playfield.getBoundingClientRect();
+      const W = rect.width, H = rect.height;
+      const xLeftMax = Math.floor(W * 0.62);
+
+      for(const g of globos){
+        if(g.state === "held") continue;
+
+        g.x += g.vx * dt;
+        g.y += g.vy * dt;
+        g.vx *= FRICTION;
+        g.vy *= FRICTION;
+
+        if(g.state === "float"){
+          const minX = Math.max(R, g.homeX - LOCAL_BOUND);
+          const maxX = Math.min(xLeftMax - R, g.homeX + LOCAL_BOUND);
+          const minY = Math.max(R, g.homeY - LOCAL_BOUND);
+          const maxY = Math.min(H - R, g.homeY + LOCAL_BOUND);
+
+          if(g.x < minX){ g.x = minX; g.vx = Math.abs(g.vx) * 0.9; }
+          if(g.x > maxX){ g.x = maxX; g.vx = -Math.abs(g.vx) * 0.9; }
+          if(g.y < minY){ g.y = minY; g.vy = Math.abs(g.vy) * 0.9; }
+          if(g.y > maxY){ g.y = maxY; g.vy = -Math.abs(g.vy) * 0.9; }
+        } else if(g.state === "launch"){
+          if(g.y - R < 0){ g.y = R; g.vy = Math.abs(g.vy); }
+          if(g.y + R > H){ g.y = H - R; g.vy = -Math.abs(g.vy); }
+        }
       }
-    }, 1000);
 
-    lastTs = performance.now();
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(loop);
-  };
-
-  if(isFirst){ doStart(); return; }
-
-  playfield.classList.add('fading');
-  setTimeout(() => {
-    doStart();
-    playfield.classList.remove('fading');
-  }, 420);
-}
-
-function loop(ts){
-  if(!running) return;
-  const dt = Math.min(0.033, (ts - lastTs)/1000);
-  lastTs = ts;
-  actualizarFisica(dt);
-  rafId = requestAnimationFrame(loop);
-}
-
-function actualizarFisica(dt){
-  const rect = playfield.getBoundingClientRect();
-  const W = rect.width, H = rect.height;
-  const xLeftMax = Math.floor(W * 0.62);
-
-  // ✅ CAMBIO: SOLO se mueve cuando está en "launch"
-  for(const g of globos){
-    if(g.state === "held") continue;
-
-    if(g.state === "float"){
-      // totalmente estático
-      g.vx = 0;
-      g.vy = 0;
-
-      // asegurar dentro del área de juego izquierda
-      const minX = R + 4;
-      const maxX = xLeftMax - R - 4;
-      const minY = R + 4;
-      const maxY = H - R - 4;
-      if(g.x < minX) g.x = minX;
-      if(g.x > maxX) g.x = maxX;
-      if(g.y < minY) g.y = minY;
-      if(g.y > maxY) g.y = maxY;
-
-      continue;
-    }
-
-    if(g.state === "launch"){
-      g.x += g.vx * dt;
-      g.y += g.vy * dt;
-      g.vx *= FRICTION;
-      g.vy *= FRICTION;
-
-      // rebote vertical suave
-      if(g.y - R < 0){ g.y = R; g.vy = Math.abs(g.vy); }
-      if(g.y + R > H){ g.y = H - R; g.vy = -Math.abs(g.vy); }
-    }
-  }
-
-  // ✅ Mantener separación sin choque (evita superposición)
-  const floaters = globos.filter(g => g.state === "float" || g.state === "held");
-  for(let i=0;i<floaters.length;i++){
-    for(let j=i+1;j<floaters.length;j++){
-      const a = floaters[i], b = floaters[j];
-      resolveCircleCollision(a,b);
-    }
-  }
-
-  // Colisión con el ORB SOLO para lanzados
-  const t = targetOrb.getBoundingClientRect();
-  const pf = playfield.getBoundingClientRect();
-  const tx = (t.left - pf.left) + t.width/2;
-  const ty = (t.top - pf.top) + t.height/2;
-  const targetRadius = t.width * 0.44;
-
-  for(const g of [...globos]){
-    if(g.state !== "launch") continue;
-    const dx = g.x - tx;
-    const dy = g.y - ty;
-    const dist = Math.hypot(dx, dy);
-
-    if(dist < targetRadius + R * 0.75){
-      const repX = g.homeX, repY = g.homeY;
-
-      burstAt(tx, ty, 1);
-      efectoImpacto();
-
-      bigValue += g.value;
-      renderBigValue();
-      showOrbDelta(g.value);
-
-      eliminarGlobo(g.id);
-
-      // Respawn manteniendo balance
-      let sign;
-      if(posCount < negCount) sign = +1;
-      else if(negCount < posCount) sign = -1;
-      else sign = Math.random() < 0.5 ? +1 : -1;
-      const nuevo = sign * randInt(1,3);
-
-      // ✅ CAMBIO: reaparece estático (sin levitación)
-      const vx = 0;
-      const vy = 0;
-      crearGlobo(nuevo, repX, repY, vx, vy, repX, repY);
-
-      if(bigValue === 0 && !roundLocked){
-        roundLocked = true;
-        aciertos++;
-        updateUIStats();
-        registrarAciertoVisual();
-        efectoAcierto();
-        showWinFeedback();
-        clearInterval(timerRound);
-        setTimeout(()=> iniciarNuevoRound(), 1100);
+      const floaters = globos.filter(g => g.state === "float" || g.state === "held");
+      for(let i=0;i<floaters.length;i++){
+        for(let j=i+1;j<floaters.length;j++){
+          resolveCircleCollision(floaters[i], floaters[j]);
+        }
       }
-    }
-  }
 
-  for(const g of globos){
-    g.el.style.transform = `translate(${g.x - R}px, ${g.y - R}px)`;
-  }
-}
+      const t = targetOrb.getBoundingClientRect();
+      const pf = playfield.getBoundingClientRect();
+      const tx = (t.left - pf.left) + t.width/2;
+      const ty = (t.top - pf.top) + t.height/2;
+      const targetRadius = t.width * 0.44;
 
-function resolveCircleCollision(a,b){
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const dist = Math.hypot(dx, dy);
-  const minDist = R*2 + 2;
-  if(dist === 0 || dist >= minDist) return false;
+      for(const g of [...globos]){
+        if(g.state !== "launch") continue;
 
-  const overlap = (minDist - dist);
-  const nx = dx / dist;
-  const ny = dy / dist;
+        const dx = g.x - tx;
+        const dy = g.y - ty;
+        const dist = Math.hypot(dx, dy);
 
-  const aHeld = (a.state === "held");
-  const bHeld = (b.state === "held");
+        if(dist < targetRadius + R * 0.75){
+          const repX = g.homeX, repY = g.homeY;
 
-  if(aHeld && !bHeld){
-    b.x += nx * overlap;
-    b.y += ny * overlap;
-  } else if(bHeld && !aHeld){
-    a.x -= nx * overlap;
-    a.y -= ny * overlap;
-  } else {
-    a.x -= nx * overlap/2;
-    a.y -= ny * overlap/2;
-    b.x += nx * overlap/2;
-    b.y += ny * overlap/2;
-  }
+          burstAt(tx, ty);
+          efectoImpacto();
 
-  // amortiguar (sin rebote)
-  a.vx *= 0.96; a.vy *= 0.96;
-  b.vx *= 0.96; b.vy *= 0.96;
-  return true;
-}
+          bigValue += g.value;
+          renderBigValue();
+          showOrbDelta(g.value);
 
-function maybeBurst(x,y){ /* desactivado */ }
+          eliminarGlobo(g.id);
 
-// POP simple y liviano
-function burstAt(x,y,count){
-  const p = document.createElement('div');
-  p.style.position = 'absolute';
-  p.style.left = x + 'px';
-  p.style.top = y + 'px';
-  p.style.width = '44px';
-  p.style.height = '44px';
-  p.style.borderRadius = '50%';
-  p.style.background = 'rgba(255,255,255,0.75)';
-  p.style.boxShadow = '0 0 28px rgba(255,255,255,0.95)';
-  p.style.transform = 'translate(-50%, -50%) scale(1)';
-  p.style.opacity = '1';
-  p.style.pointerEvents = 'none';
-  p.style.transition = 'transform 0.22s ease-out, opacity 0.22s ease-out';
-  playfield.appendChild(p);
-  requestAnimationFrame(()=>{
-    p.style.transform = 'translate(-50%, -50%) scale(2.1)';
-    p.style.opacity = '0';
-  });
-  setTimeout(()=>p.remove(), 260);
-}
+          let sign;
+          if(posCount < negCount) sign = +1;
+          else if(negCount < posCount) sign = -1;
+          else sign = Math.random() < 0.5 ? +1 : -1;
 
-let globoId = 0;
-let activePointer = null;
+          const nuevo = sign * randInt(1,3);
 
-function crearGlobo(value, x, y, vx, vy, homeX, homeY){
-  const el = document.createElement('div');
-  el.className = 'globo';
-  el.textContent = fmt(value);
-  el.tabIndex = 0;
-  playfield.appendChild(el);
+          const vx = randFloat(-MAX_SPEED, MAX_SPEED);
+          const vy = randFloat(-MAX_SPEED, MAX_SPEED);
+          crearGlobo(nuevo, repX, repY, vx, vy, repX, repY);
 
-  const g = { id: ++globoId, value, x, y, vx, vy, el, state:"float",
-    offsetX:0, offsetY:0, homeX, homeY };
-
-  if(value > 0) posCount++;
-  else if(value < 0) negCount++;
-
-  el.addEventListener('pointerdown', (e) => {
-    if(!running) return;
-    if(activePointer !== null) return;
-    activePointer = e.pointerId;
-    el.setPointerCapture(e.pointerId);
-    g.state = "held";
-    const rect = playfield.getBoundingClientRect();
-    g.offsetX = (e.clientX - rect.left) - g.x;
-    g.offsetY = (e.clientY - rect.top) - g.y;
-    g.vx = 0; g.vy = 0;
-  });
-
-  el.addEventListener('pointermove', (e) => {
-    if(activePointer !== e.pointerId) return;
-    const rect = playfield.getBoundingClientRect();
-    g.x = (e.clientX - rect.left) - g.offsetX;
-    g.y = (e.clientY - rect.top) - g.offsetY;
-  });
-
-  el.addEventListener('pointerup', (e) => {
-    if(activePointer !== e.pointerId) return;
-    activePointer = null;
-    if(roundLocked) { g.state="float"; return; }
-
-    const c = getTargetCenterInPlayfield();
-    const dx = c.x - g.x;
-    const dy = c.y - g.y;
-    const d = Math.hypot(dx,dy) || 1;
-
-    g.vx = (dx/d) * LAUNCH_SPEED;
-    g.vy = (dy/d) * LAUNCH_SPEED;
-    g.state = "launch";
-  });
-
-  globos.push(g);
-}
-
-function eliminarGlobo(id){
-  const idx = globos.findIndex(g => g.id === id);
-  if(idx>=0){
-    const v = globos[idx].value;
-    if(v > 0) posCount = Math.max(0, posCount - 1);
-    else if(v < 0) negCount = Math.max(0, negCount - 1);
-    globos[idx].el.remove();
-    globos.splice(idx,1);
-  }
-}
-
-function limpiarGlobos(){
-  for(const g of globos) g.el.remove();
-  globos = [];
-  activePointer = null;
-  posCount = 0;
-  negCount = 0;
-}
-
-function getTargetCenterInPlayfield(){
-  const t = targetOrb.getBoundingClientRect();
-  const pf = playfield.getBoundingClientRect();
-  return { x: (t.left - pf.left) + t.width/2, y: (t.top - pf.top) + t.height/2 };
-}
-
-function generarGlobosBalanceadosConSolucion(bigValue, N){
-  const target = -bigValue;
-  const POS_TARGET = Math.floor(N/2);
-  const NEG_TARGET = N - POS_TARGET;
-
-  let pos = 0, neg = 0;
-
-  let safetyAll = 0;
-  while(safetyAll++ < 400){
-    const tmp = [];
-    let partial = 0;
-    pos = 0; neg = 0;
-
-    const k = randInt(2,4);
-
-    for(let i=0; i<k-1; i++){
-      let sign;
-      if(pos >= POS_TARGET) sign = -1;
-      else if(neg >= NEG_TARGET) sign = +1;
-      else sign = (Math.random() < 0.5 ? +1 : -1);
-
-      const mag = randInt(1,3);
-      const v = sign * mag;
-      tmp.push(v);
-      partial += v;
-      if(sign>0) pos++; else neg++;
-    }
-
-    const last = target - partial;
-    if(last !== 0 && Math.abs(last) <= 3){
-      const signLast = Math.sign(last);
-      if( (signLast>0 && pos < POS_TARGET) || (signLast<0 && neg < NEG_TARGET) ){
-        tmp.push(last);
-        if(signLast>0) pos++; else neg++;
-
-        const restantes = N - tmp.length;
-        if(restantes >= 0){
-          const toAddPos = POS_TARGET - pos;
-          const toAddNeg = NEG_TARGET - neg;
-          if(toAddPos >= 0 && toAddNeg >= 0 && (toAddPos + toAddNeg === restantes)){
-            for(let i=0;i<toAddPos;i++) tmp.push(+randInt(1,3));
-            for(let i=0;i<toAddNeg;i++) tmp.push(-randInt(1,3));
-            shuffle(tmp);
-            return tmp;
+          if(bigValue === goalValue && !roundLocked){
+            roundLocked = true;
+            aciertos++;
+            updateUIStats();
+            registrarAciertoVisual();
+            efectoAcierto();
+            showWinFeedback();
+            clearInterval(timerRound);
+            setTimeout(() => iniciarNuevoRound(), 1100);
           }
         }
       }
+
+      for(const g of globos){
+        g.el.style.transform = `translate(${g.x - R}px, ${g.y - R}px)`;
+      }
     }
-  }
 
-  // Fallback
-  const tmp = [];
-  pos = 0; neg = 0;
-  let remaining = target;
+    function resolveCircleCollision(a,b){
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.hypot(dx, dy);
+      const minDist = R*2 + 2;
+      if(dist === 0 || dist >= minDist) return false;
 
-  while(remaining !== 0 && tmp.length < N){
-    let stepMag = Math.min(3, Math.abs(remaining));
-    let stepSign = remaining > 0 ? +1 : -1;
+      const overlap = (minDist - dist);
+      const nx = dx / dist;
+      const ny = dy / dist;
 
-    if(stepSign>0 && pos >= POS_TARGET) stepSign = -1;
-    if(stepSign<0 && neg >= NEG_TARGET) stepSign = +1;
+      const aHeld = (a.state === "held");
+      const bHeld = (b.state === "held");
 
-    if(stepSign>0 && pos >= POS_TARGET) break;
-    if(stepSign<0 && neg >= NEG_TARGET) break;
+      if(aHeld && !bHeld){
+        b.x += nx * overlap;
+        b.y += ny * overlap;
+      } else if(bHeld && !aHeld){
+        a.x -= nx * overlap;
+        a.y -= ny * overlap;
+      } else {
+        a.x -= nx * overlap/2;
+        a.y -= ny * overlap/2;
+        b.x += nx * overlap/2;
+        b.y += ny * overlap/2;
+      }
 
-    const v = stepSign * stepMag;
-    tmp.push(v);
-    remaining -= v;
-    if(v>0) pos++; else neg++;
-  }
+      a.vx *= 0.96; a.vy *= 0.96;
+      b.vx *= 0.96; b.vy *= 0.96;
+      return true;
+    }
 
-  while(tmp.length < N && pos < POS_TARGET){ tmp.push(+randInt(1,3)); pos++; }
-  while(tmp.length < N && neg < NEG_TARGET){ tmp.push(-randInt(1,3)); neg++; }
-  shuffle(tmp);
-  return tmp;
-}
+    function burstAt(x,y){
+      const p = document.createElement("div");
+      p.style.position = "absolute";
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      p.style.width = "44px";
+      p.style.height = "44px";
+      p.style.borderRadius = "50%";
+      p.style.background = "rgba(255,255,255,0.75)";
+      p.style.boxShadow = "0 0 28px rgba(255,255,255,0.95)";
+      p.style.transform = "translate(-50%, -50%) scale(1)";
+      p.style.opacity = "1";
+      p.style.pointerEvents = "none";
+      p.style.transition = "transform 0.22s ease-out, opacity 0.22s ease-out";
+      playfield.appendChild(p);
 
-function renderBigValue(){
-  targetOrb.textContent = fmt(bigValue);
-  targetOrb.classList.remove('orb-win');
-}
+      requestAnimationFrame(() => {
+        p.style.transform = "translate(-50%, -50%) scale(2.1)";
+        p.style.opacity = "0";
+      });
 
-function showOrbDelta(val){
-  const badge = document.createElement('div');
-  badge.textContent = fmt(val);
-  badge.style.position = 'absolute';
-  const t = targetOrb.getBoundingClientRect();
-  const pf = playfield.getBoundingClientRect();
-  badge.style.left = ((t.left - pf.left) + t.width/2) + 'px';
-  badge.style.top  = ((t.top  - pf.top ) + t.height/2 - 10) + 'px';
-  badge.style.transform = 'translate(-50%, -50%)';
-  badge.style.fontWeight = '900';
-  badge.style.fontSize = '22px';
-  badge.style.color = (val > 0) ? '#2e7d32' : '#c62828';
-  badge.style.textShadow = '0 1px 2px rgba(0,0,0,.35)';
-  badge.style.pointerEvents = 'none';
-  badge.style.transition = 'transform .45s ease-out, opacity .45s ease-out';
-  badge.style.opacity = '1';
-  playfield.appendChild(badge);
-  requestAnimationFrame(()=>{
-    badge.style.transform = 'translate(-50%, -95%)';
-    badge.style.opacity = '0';
-  });
-  setTimeout(()=>badge.remove(), 520);
-}
+      setTimeout(() => p.remove(), 260);
+    }
 
-function updateUIStats(){
-  document.getElementById('aciertos').textContent = aciertos;
-}
+    function registrarAciertoVisual(){
+      const b = document.createElement("div");
+      b.className = "bloque-acierto";
+      progresoEl.appendChild(b);
+    }
 
-function registrarAciertoVisual(){
-  const c = document.getElementById('bloques-progreso-container');
-  const b = document.createElement('div');
-  b.className = 'bloque-acierto';
-  c.appendChild(b);
-}
+    function efectoImpacto(){
+      emojiRight.textContent = "💥";
+      emojiRight.classList.add("emoji-pop");
+      setTimeout(() => {
+        emojiRight.classList.remove("emoji-pop");
+        emojiRight.textContent = "🎯";
+      }, 330);
+    }
 
-function efectoImpacto(){
-  emojiRight.textContent = "💥";
-  emojiRight.classList.add('emoji-pop');
-  setTimeout(()=>{ emojiRight.classList.remove('emoji-pop'); emojiRight.textContent="👧"; }, 330);
-}
+    function efectoAcierto(){
+      emojiLeft.textContent = "✅";
+      emojiLeft.classList.add("emoji-pop");
+      setTimeout(() => {
+        emojiLeft.classList.remove("emoji-pop");
+        emojiLeft.textContent = "🧠";
+      }, 560);
+    }
 
-function efectoAcierto(){
-  emojiLeft.textContent = "✅";
-  emojiLeft.classList.add('emoji-pop');
-  setTimeout(()=>{ emojiLeft.classList.remove('emoji-pop'); emojiLeft.textContent="👦"; }, 560);
-}
+    function showWinFeedback(){
+      targetOrb.classList.add("orb-win");
+      orbValueEl.textContent = fmt(goalValue);
 
-function showWinFeedback(){
-  targetOrb.classList.add('orb-win');
-  targetOrb.textContent = "0";
-  winText.textContent = siguienteMensajeOK();
-  miniConfettiLayer.innerHTML = "";
-  const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
-  for(let i=0;i<18;i++){
-    const p = document.createElement('div');
-    p.className = 'mini-piece';
-    p.style.left = (Math.random()*100) + "%";
-    p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDelay = (Math.random()*0.35) + "s";
-    p.style.animationDuration = (0.85 + Math.random()*0.55) + "s";
-    miniConfettiLayer.appendChild(p);
-  }
-  winFeedback.classList.add('show');
-  setTimeout(()=>hideWinFeedback(), 1000);
-}
+      winText.textContent = siguienteMensajeOK();
+      miniConfettiLayer.textContent = "";
 
-function hideWinFeedback(){
-  winFeedback.classList.remove('show');
-  miniConfettiLayer.innerHTML = "";
-}
+      const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
+      for(let i=0;i<18;i++){
+        const piece = document.createElement("div");
+        piece.className = "mini-piece";
+        piece.style.left = (Math.random()*100) + "%";
+        piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+        piece.style.animationDelay = (Math.random()*0.35) + "s";
+        piece.style.animationDuration = (0.85 + Math.random()*0.55) + "s";
+        miniConfettiLayer.appendChild(piece);
+      }
 
-function actualizarHistorial(){
-  const tbody = document.getElementById('lista-historial');
-  tbody.innerHTML = "";
-  historial.forEach(p => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${p.nombre}</td><td>${p.aciertos}</td><td class="${p.jerarquia.toLowerCase()}">${p.jerarquia}</td>`;
-    tbody.appendChild(tr);
-  });
-}
+      winFeedback.classList.add("show");
+      setTimeout(hideWinFeedback, 1000);
+    }
 
-function barrerHistorial(){
-  if(confirm("¿Estás seguro de que quieres borrar todo el historial?")){
-    historial = [];
-    localStorage.removeItem('historialAnulacion');
+    function hideWinFeedback(){
+      winFeedback.classList.remove("show");
+      miniConfettiLayer.textContent = "";
+    }
+
+    function showOrbDelta(val){
+      const badge = document.createElement("div");
+      badge.textContent = fmt(val);
+      badge.style.position = "absolute";
+
+      const t = targetOrb.getBoundingClientRect();
+      const pf = playfield.getBoundingClientRect();
+
+      badge.style.left = ((t.left - pf.left) + t.width/2) + "px";
+      badge.style.top  = ((t.top  - pf.top ) + t.height/2 - 10) + "px";
+      badge.style.transform = "translate(-50%, -50%)";
+      badge.style.fontWeight = "900";
+      badge.style.fontSize = "22px";
+      badge.style.color = (val > 0) ? "#2e7d32" : "#c62828";
+      badge.style.textShadow = "0 1px 2px rgba(0,0,0,.35)";
+      badge.style.pointerEvents = "none";
+      badge.style.transition = "transform .45s ease-out, opacity .45s ease-out";
+      badge.style.opacity = "1";
+
+      playfield.appendChild(badge);
+
+      requestAnimationFrame(() => {
+        badge.style.transform = "translate(-50%, -95%)";
+        badge.style.opacity = "0";
+      });
+
+      setTimeout(() => badge.remove(), 520);
+    }
+
+    function renderBigValue(){
+      orbValueEl.textContent = fmt(bigValue);
+      targetOrb.classList.remove("orb-win");
+    }
+
+    function getTargetCenterInPlayfield(){
+      const t = targetOrb.getBoundingClientRect();
+      const pf = playfield.getBoundingClientRect();
+      return { x:(t.left - pf.left) + t.width/2, y:(t.top - pf.top) + t.height/2 };
+    }
+
+    function crearGlobo(value, x, y, vx, vy, homeX, homeY){
+      const el = document.createElement("div");
+      el.className = "globo";
+      el.textContent = fmt(value);
+      el.tabIndex = 0;
+
+      playfield.appendChild(el);
+
+      const g = {
+        id: ++globoId,
+        value, x, y, vx, vy,
+        el,
+        state:"float",
+        offsetX:0, offsetY:0,
+        homeX, homeY
+      };
+
+      if(value > 0) posCount++;
+      else if(value < 0) negCount++;
+
+      el.addEventListener("pointerdown", (e) => {
+        if(!running) return;
+        if(activePointer !== null) return;
+
+        activePointer = e.pointerId;
+        el.setPointerCapture(e.pointerId);
+
+        g.state = "held";
+
+        const rect = playfield.getBoundingClientRect();
+        g.offsetX = (e.clientX - rect.left) - g.x;
+        g.offsetY = (e.clientY - rect.top) - g.y;
+
+        g.vx = 0; g.vy = 0;
+      });
+
+      el.addEventListener("pointermove", (e) => {
+        if(activePointer !== e.pointerId) return;
+        const rect = playfield.getBoundingClientRect();
+        g.x = (e.clientX - rect.left) - g.offsetX;
+        g.y = (e.clientY - rect.top) - g.offsetY;
+      });
+
+      el.addEventListener("pointerup", (e) => {
+        if(activePointer !== e.pointerId) return;
+        activePointer = null;
+
+        if(roundLocked){ g.state = "float"; return; }
+
+        const c = getTargetCenterInPlayfield();
+        const dx = c.x - g.x;
+        const dy = c.y - g.y;
+        const d = Math.hypot(dx,dy) || 1;
+
+        g.vx = (dx/d) * LAUNCH_SPEED;
+        g.vy = (dy/d) * LAUNCH_SPEED;
+        g.state = "launch";
+      });
+
+      globos.push(g);
+    }
+
+    function eliminarGlobo(id){
+      const idx = globos.findIndex(g => g.id === id);
+      if(idx >= 0){
+        const v = globos[idx].value;
+        if(v > 0) posCount = Math.max(0, posCount - 1);
+        else if(v < 0) negCount = Math.max(0, negCount - 1);
+
+        globos[idx].el.remove();
+        globos.splice(idx,1);
+      }
+    }
+
+    function limpiarGlobos(){
+      for(const g of globos) g.el.remove();
+      globos = [];
+      activePointer = null;
+      posCount = 0;
+      negCount = 0;
+    }
+
+    function generarGlobosBalanceadosConSolucion(bigValue, N, goalValue){
+      const target = goalValue - bigValue;
+
+      const POS_TARGET = Math.floor(N/2);
+      const NEG_TARGET = N - POS_TARGET;
+
+      let pos = 0, neg = 0;
+
+      let safetyAll = 0;
+      while(safetyAll++ < 400){
+        const tmp = [];
+        let partial = 0;
+        pos = 0; neg = 0;
+
+        const k = randInt(2,4);
+
+        for(let i=0; i<k-1; i++){
+          let sign;
+          if(pos >= POS_TARGET) sign = -1;
+          else if(neg >= NEG_TARGET) sign = +1;
+          else sign = (Math.random() < 0.5 ? +1 : -1);
+
+          const mag = randInt(1,3);
+          const v = sign * mag;
+          tmp.push(v);
+          partial += v;
+          if(sign > 0) pos++; else neg++;
+        }
+
+        const last = target - partial;
+
+        if(last !== 0 && Math.abs(last) <= 3){
+          const signLast = Math.sign(last);
+
+          if((signLast > 0 && pos < POS_TARGET) || (signLast < 0 && neg < NEG_TARGET)){
+            tmp.push(last);
+            if(signLast > 0) pos++; else neg++;
+
+            const restantes = N - tmp.length;
+            const toAddPos = POS_TARGET - pos;
+            const toAddNeg = NEG_TARGET - neg;
+
+            if(toAddPos >= 0 && toAddNeg >= 0 && (toAddPos + toAddNeg === restantes)){
+              for(let i=0;i<toAddPos;i++) tmp.push(+randInt(1,3));
+              for(let i=0;i<toAddNeg;i++) tmp.push(-randInt(1,3));
+              shuffle(tmp);
+              return tmp;
+            }
+          }
+        }
+      }
+
+      const tmp = [];
+      pos = 0; neg = 0;
+      let remaining = target;
+
+      while(remaining !== 0 && tmp.length < N){
+        let stepMag = Math.min(3, Math.abs(remaining));
+        let stepSign = remaining > 0 ? +1 : -1;
+
+        if(stepSign > 0 && pos >= POS_TARGET) stepSign = -1;
+        if(stepSign < 0 && neg >= NEG_TARGET) stepSign = +1;
+
+        if(stepSign > 0 && pos >= POS_TARGET) break;
+        if(stepSign < 0 && neg >= NEG_TARGET) break;
+
+        const v = stepSign * stepMag;
+        tmp.push(v);
+        remaining -= v;
+
+        if(v > 0) pos++;
+        else neg++;
+      }
+
+      while(tmp.length < N && pos < POS_TARGET){ tmp.push(+randInt(1,3)); pos++; }
+      while(tmp.length < N && neg < NEG_TARGET){ tmp.push(-randInt(1,3)); neg++; }
+
+      shuffle(tmp);
+      return tmp;
+    }
+
+    btnComenzar.addEventListener("click", iniciarJuego);
+    btnTerminar.addEventListener("click", terminarPartida);
+    btnReiniciar.addEventListener("click", reiniciarJuego);
+    btnBarrer.addEventListener("click", barrerHistorial);
+
+    inputNombre.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") iniciarJuego();
+    });
+
     actualizarHistorial();
-  }
-}
-actualizarHistorial();
-
-function obtenerJerarquia(p){
-  if(p < 6) return "Iniciado";
-  if(p >= 6 && p <= 10) return "Competente";
-  if(p >= 11 && p <= 15) return "Experto";
-  return "Élite";
-}
-
-function fraseDesempeno(a){
-  const j = obtenerJerarquia(a);
-  if(j==="Élite") return "¡Excelente! Gran dominio de la anulación.";
-  if(j==="Experto") return "Muy bien: tu estrategia es precisa.";
-  if(j==="Competente") return "Buen avance: sigue mejorando.";
-  return "Buen inicio: continúa practicando.";
-}
-
-function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-function randFloat(min,max){ return Math.random()*(max-min)+min; }
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
-  }
-}
-
-document.getElementById('nombre-input').addEventListener('keydown', (e)=>{
-  if(e.key === "Enter") iniciarJuego();
-});
-</script>
+  </script>
 </body>
 </html>
