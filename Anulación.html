@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -306,21 +308,8 @@
     }
     .globo:active{cursor:grabbing;transform:scale(1.04)}
 
-    /* Explosión */
-    .burst{
-      position:absolute;
-      width:8px;height:8px;border-radius:50%;
-      pointer-events:none;
-      opacity:0.95;
-      transform:translate(-50%,-50%);
-      animation:burstMove .55s ease-out forwards;
-      filter:drop-shadow(0 2px 5px rgba(0,0,0,.18));
-      z-index:5;
-    }
-    @keyframes burstMove{
-      0%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
-      100%{ transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2); opacity:0; }
-    }
+    /* Explosión (POP liviano) */
+    .burst{ display:none; }
 
     /* Emojis esquinas */
     .corner-emoji{
@@ -375,7 +364,6 @@
 
     footer{
       text-align:center;
-      /* CAMBIO (previo): franja negra más alta (≈ dos líneas extra) */
       padding: 2.25rem 0;
       background:var(--dark);
       color:#fff;
@@ -431,7 +419,6 @@
     <h2 style="margin-bottom: 10px; color: var(--primary);">Escribe tu nombre</h2>
     <input type="text" id="nombre-input" placeholder="Tu nombre aquí" autofocus aria-label="Nombre del participante" />
     <button id="comenzar-btn" onclick="iniciarJuego()">Comenzar</button>
-    <!-- (Sin cambios) -->
     <div class="instruction-line">Arroja los globos hasta obtener un 0.</div>
   </div>
 
@@ -514,24 +501,28 @@ const miniConfettiLayer = winFeedback.querySelector('.mini-confetti');
 const winText = document.getElementById('win-text');
 const emojiLeft = document.getElementById('emoji-left');
 const emojiRight = document.getElementById('emoji-right');
+
 let bigValue = -12;
 let nextSign = -1;
 let globos = [];
 let rafId = null;
 let lastTs = 0;
+
 const R = 28;
 const FRICTION = 0.995;
 const MAX_SPEED = 10;
 const LAUNCH_SPEED = 1800;
-/* ✅ 2 bolas más (antes 18): */
+
 const N_GLOBOS = 20;
 const LOCAL_BOUND = 28;
+
 let roundLocked = false;
 let lastBurstMs = 0;
+
 const MENSAJES_OK = ["¡Felicidades!", "¡Muy bien!", "¡Sigue adelante!"];
 let idxOk = 0;
 
-/* CAMBIO: contadores de signos en el tablero */
+/* contadores de signos */
 let posCount = 0;
 let negCount = 0;
 
@@ -541,7 +532,7 @@ function siguienteMensajeOK(){
   return msg;
 }
 
-/* CAMBIO: formatear con signo + para positivos */
+/* formatear con signo + */
 function fmt(n){
   if(n === 0) return "0";
   return n > 0 ? `+${n}` : `${n}`;
@@ -562,6 +553,7 @@ function iniciarJuego(){
   document.getElementById('terminar-btn').style.display = 'block';
   document.getElementById('bloques-progreso-container').innerHTML = "";
   running = true;
+
   clearInterval(timerTotal);
   timerTotal = setInterval(()=>{
     if(!running) return;
@@ -569,6 +561,7 @@ function iniciarJuego(){
     document.getElementById('temporizador-total').textContent = `${tiempoTotal} segundos`;
     if(tiempoTotal <= 0) terminarPartida();
   }, 1000);
+
   nextSign = Math.random() < 0.5 ? -1 : 1;
   iniciarNuevoRound(true);
 }
@@ -578,11 +571,13 @@ function terminarPartida(){
   clearInterval(timerTotal);
   clearInterval(timerRound);
   cancelAnimationFrame(rafId);
+
   const jerarquia = obtenerJerarquia(aciertos);
   historial.push({ nombre: nombreParticipante, aciertos, jerarquia, fecha: new Date().toLocaleDateString('es-ES') });
   historial.sort((a,b) => b.aciertos - a.aciertos);
   localStorage.setItem('historialAnulacion', JSON.stringify(historial));
   actualizarHistorial();
+
   const juegoContainer = document.getElementById('juego');
   juegoContainer.innerHTML = `
     <div style="height:100%;display:flex;align-items:center;justify-content:center;padding:8px;">
@@ -601,22 +596,25 @@ function terminarPartida(){
   document.getElementById('reiniciar-btn').style.display = 'block';
   document.getElementById('terminar-btn').style.display = 'none';
 }
+
 function reiniciarJuego(){ window.location.reload(); }
 
 function iniciarNuevoRound(isFirst=false){
   if(!running) return;
   roundLocked = false;
   hideWinFeedback();
+
   const doStart = () => {
     tiempoRound = 20;
     document.getElementById('temporizador-round').textContent = tiempoRound;
+
     const absVal = randInt(11, 19);
     bigValue = nextSign * absVal;
     nextSign *= -1;
     renderBigValue();
+
     limpiarGlobos();
 
-    /* CAMBIO: generar EXACTAMENTE N/2 positivos y N/2 negativos en ±1..±3, con solución garantizada */
     const values = generarGlobosBalanceadosConSolucion(bigValue, N_GLOBOS);
 
     const rect = playfield.getBoundingClientRect();
@@ -630,8 +628,11 @@ function iniciarNuevoRound(isFirst=false){
     values.forEach((v) => {
       const hx = randFloat(xMin, xMax);
       const hy = randFloat(yMin, yMax);
-      const vx = randFloat(-MAX_SPEED, MAX_SPEED);
-      const vy = randFloat(-MAX_SPEED, MAX_SPEED);
+
+      // ✅ CAMBIO: sin levitación/velocidad cuando están "float"
+      const vx = 0;
+      const vy = 0;
+
       crearGlobo(v, hx, hy, vx, vy, hx, hy);
     });
 
@@ -645,11 +646,14 @@ function iniciarNuevoRound(isFirst=false){
         iniciarNuevoRound();
       }
     }, 1000);
+
     lastTs = performance.now();
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(loop);
   };
+
   if(isFirst){ doStart(); return; }
+
   playfield.classList.add('fading');
   setTimeout(() => {
     doStart();
@@ -670,36 +674,50 @@ function actualizarFisica(dt){
   const W = rect.width, H = rect.height;
   const xLeftMax = Math.floor(W * 0.62);
 
+  // ✅ CAMBIO: SOLO se mueve cuando está en "launch"
   for(const g of globos){
     if(g.state === "held") continue;
-    g.x += g.vx * dt;
-    g.y += g.vy * dt;
-    g.vx *= FRICTION;
-    g.vy *= FRICTION;
 
     if(g.state === "float"){
-      const minX = Math.max(R, g.homeX - LOCAL_BOUND);
-      const maxX = Math.min(xLeftMax - R, g.homeX + LOCAL_BOUND);
-      const minY = Math.max(R, g.homeY - LOCAL_BOUND);
-      const maxY = Math.min(H - R, g.homeY + LOCAL_BOUND);
-      if(g.x < minX){ g.x = minX; g.vx = Math.abs(g.vx) * 0.9; }
-      if(g.x > maxX){ g.x = maxX; g.vx = -Math.abs(g.vx) * 0.9; }
-      if(g.y < minY){ g.y = minY; g.vy = Math.abs(g.vy) * 0.9; }
-      if(g.y > maxY){ g.y = maxY; g.vy = -Math.abs(g.vy) * 0.9; }
-    } else if(g.state === "launch"){
+      // totalmente estático
+      g.vx = 0;
+      g.vy = 0;
+
+      // asegurar dentro del área de juego izquierda
+      const minX = R + 4;
+      const maxX = xLeftMax - R - 4;
+      const minY = R + 4;
+      const maxY = H - R - 4;
+      if(g.x < minX) g.x = minX;
+      if(g.x > maxX) g.x = maxX;
+      if(g.y < minY) g.y = minY;
+      if(g.y > maxY) g.y = maxY;
+
+      continue;
+    }
+
+    if(g.state === "launch"){
+      g.x += g.vx * dt;
+      g.y += g.vy * dt;
+      g.vx *= FRICTION;
+      g.vy *= FRICTION;
+
+      // rebote vertical suave
       if(g.y - R < 0){ g.y = R; g.vy = Math.abs(g.vy); }
       if(g.y + R > H){ g.y = H - R; g.vy = -Math.abs(g.vy); }
     }
   }
 
+  // ✅ Mantener separación sin choque (evita superposición)
   const floaters = globos.filter(g => g.state === "float" || g.state === "held");
   for(let i=0;i<floaters.length;i++){
     for(let j=i+1;j<floaters.length;j++){
       const a = floaters[i], b = floaters[j];
-    resolveCircleCollision(a,b);
+      resolveCircleCollision(a,b);
     }
   }
 
+  // Colisión con el ORB SOLO para lanzados
   const t = targetOrb.getBoundingClientRect();
   const pf = playfield.getBoundingClientRect();
   const tx = (t.left - pf.left) + t.width/2;
@@ -711,24 +729,29 @@ function actualizarFisica(dt){
     const dx = g.x - tx;
     const dy = g.y - ty;
     const dist = Math.hypot(dx, dy);
+
     if(dist < targetRadius + R * 0.75){
       const repX = g.homeX, repY = g.homeY;
+
       burstAt(tx, ty, 1);
       efectoImpacto();
+
       bigValue += g.value;
- renderBigValue();
- showOrbDelta(g.value);
+      renderBigValue();
+      showOrbDelta(g.value);
+
       eliminarGlobo(g.id);
 
-      /* CAMBIO: respawn con signo para mantener balance */
+      // Respawn manteniendo balance
       let sign;
       if(posCount < negCount) sign = +1;
       else if(negCount < posCount) sign = -1;
       else sign = Math.random() < 0.5 ? +1 : -1;
       const nuevo = sign * randInt(1,3);
 
-      const vx = randFloat(-MAX_SPEED, MAX_SPEED);
-      const vy = randFloat(-MAX_SPEED, MAX_SPEED);
+      // ✅ CAMBIO: reaparece estático (sin levitación)
+      const vx = 0;
+      const vy = 0;
       crearGlobo(nuevo, repX, repY, vx, vy, repX, repY);
 
       if(bigValue === 0 && !roundLocked){
@@ -743,81 +766,83 @@ function actualizarFisica(dt){
       }
     }
   }
+
   for(const g of globos){
     g.el.style.transform = `translate(${g.x - R}px, ${g.y - R}px)`;
   }
 }
 
 function resolveCircleCollision(a,b){
- const dx = b.x - a.x;
- const dy = b.y - a.y;
- const dist = Math.hypot(dx, dy);
- const minDist = R*2 + 2; // margen para que no se superpongan
- if(dist === 0 || dist >= minDist) return false;
- const overlap = (minDist - dist);
- const nx = dx / dist;
- const ny = dy / dist;
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const dist = Math.hypot(dx, dy);
+  const minDist = R*2 + 2;
+  if(dist === 0 || dist >= minDist) return false;
 
- const aHeld = (a.state === "held");
- const bHeld = (b.state === "held");
- if(aHeld && !bHeld){
-   b.x += nx * overlap;
-   b.y += ny * overlap;
- } else if(bHeld && !aHeld){
-   a.x -= nx * overlap;
-   a.y -= ny * overlap;
- } else {
-   a.x -= nx * overlap/2;
-   a.y -= ny * overlap/2;
-   b.x += nx * overlap/2;
-   b.y += ny * overlap/2;
- }
+  const overlap = (minDist - dist);
+  const nx = dx / dist;
+  const ny = dy / dist;
 
- // amortiguar un poco (sin rebote)
- a.vx *= 0.96; a.vy *= 0.96;
- b.vx *= 0.96; b.vy *= 0.96;
- return true;
+  const aHeld = (a.state === "held");
+  const bHeld = (b.state === "held");
+
+  if(aHeld && !bHeld){
+    b.x += nx * overlap;
+    b.y += ny * overlap;
+  } else if(bHeld && !aHeld){
+    a.x -= nx * overlap;
+    a.y -= ny * overlap;
+  } else {
+    a.x -= nx * overlap/2;
+    a.y -= ny * overlap/2;
+    b.x += nx * overlap/2;
+    b.y += ny * overlap/2;
+  }
+
+  // amortiguar (sin rebote)
+  a.vx *= 0.96; a.vy *= 0.96;
+  b.vx *= 0.96; b.vy *= 0.96;
+  return true;
 }
 
 function maybeBurst(x,y){ /* desactivado */ }
 
+// POP simple y liviano
 function burstAt(x,y,count){
- // POP simple y liviano (sin partículas)
- const p = document.createElement('div');
- p.style.position = 'absolute';
- p.style.left = x + 'px';
- p.style.top = y + 'px';
- p.style.width = '44px';
- p.style.height = '44px';
- p.style.borderRadius = '50%';
- p.style.background = 'rgba(255,255,255,0.75)';
- p.style.boxShadow = '0 0 28px rgba(255,255,255,0.95)';
- p.style.transform = 'translate(-50%, -50%) scale(1)';
- p.style.opacity = '1';
- p.style.pointerEvents = 'none';
- p.style.transition = 'transform 0.22s ease-out, opacity 0.22s ease-out';
- playfield.appendChild(p);
- requestAnimationFrame(()=>{
-   p.style.transform = 'translate(-50%, -50%) scale(2.1)';
-   p.style.opacity = '0';
- });
- setTimeout(()=>p.remove(), 260);
+  const p = document.createElement('div');
+  p.style.position = 'absolute';
+  p.style.left = x + 'px';
+  p.style.top = y + 'px';
+  p.style.width = '44px';
+  p.style.height = '44px';
+  p.style.borderRadius = '50%';
+  p.style.background = 'rgba(255,255,255,0.75)';
+  p.style.boxShadow = '0 0 28px rgba(255,255,255,0.95)';
+  p.style.transform = 'translate(-50%, -50%) scale(1)';
+  p.style.opacity = '1';
+  p.style.pointerEvents = 'none';
+  p.style.transition = 'transform 0.22s ease-out, opacity 0.22s ease-out';
+  playfield.appendChild(p);
+  requestAnimationFrame(()=>{
+    p.style.transform = 'translate(-50%, -50%) scale(2.1)';
+    p.style.opacity = '0';
+  });
+  setTimeout(()=>p.remove(), 260);
 }
 
 let globoId = 0;
 let activePointer = null;
 
-/* CAMBIO: crearGlobo registra balance y muestra + a positivos */
 function crearGlobo(value, x, y, vx, vy, homeX, homeY){
   const el = document.createElement('div');
   el.className = 'globo';
-  el.textContent = fmt(value); /* mostrar + en positivos */
+  el.textContent = fmt(value);
   el.tabIndex = 0;
   playfield.appendChild(el);
+
   const g = { id: ++globoId, value, x, y, vx, vy, el, state:"float",
     offsetX:0, offsetY:0, homeX, homeY };
 
-  /* actualizar contadores */
   if(value > 0) posCount++;
   else if(value < 0) negCount++;
 
@@ -832,24 +857,29 @@ function crearGlobo(value, x, y, vx, vy, homeX, homeY){
     g.offsetY = (e.clientY - rect.top) - g.y;
     g.vx = 0; g.vy = 0;
   });
+
   el.addEventListener('pointermove', (e) => {
     if(activePointer !== e.pointerId) return;
     const rect = playfield.getBoundingClientRect();
     g.x = (e.clientX - rect.left) - g.offsetX;
     g.y = (e.clientY - rect.top) - g.offsetY;
   });
+
   el.addEventListener('pointerup', (e) => {
     if(activePointer !== e.pointerId) return;
     activePointer = null;
     if(roundLocked) { g.state="float"; return; }
+
     const c = getTargetCenterInPlayfield();
     const dx = c.x - g.x;
     const dy = c.y - g.y;
     const d = Math.hypot(dx,dy) || 1;
+
     g.vx = (dx/d) * LAUNCH_SPEED;
     g.vy = (dy/d) * LAUNCH_SPEED;
     g.state = "launch";
   });
+
   globos.push(g);
 }
 
@@ -868,7 +898,6 @@ function limpiarGlobos(){
   for(const g of globos) g.el.remove();
   globos = [];
   activePointer = null;
-  /* CAMBIO: reset balance al limpiar */
   posCount = 0;
   negCount = 0;
 }
@@ -879,18 +908,13 @@ function getTargetCenterInPlayfield(){
   return { x: (t.left - pf.left) + t.width/2, y: (t.top - pf.top) + t.height/2 };
 }
 
-/* CAMBIO: generador balanceado (N/2 positivos y N/2 negativos), todos en ±1..±3 y con solución */
 function generarGlobosBalanceadosConSolucion(bigValue, N){
   const target = -bigValue;
-  const values = [];
-
   const POS_TARGET = Math.floor(N/2);
   const NEG_TARGET = N - POS_TARGET;
 
   let pos = 0, neg = 0;
 
-  // Intento principal: construir k-1 valores y ajustar el último dentro de ±3,
-  // respetando cupos de signo y magnitudes 1..3.
   let safetyAll = 0;
   while(safetyAll++ < 400){
     const tmp = [];
@@ -899,9 +923,7 @@ function generarGlobosBalanceadosConSolucion(bigValue, N){
 
     const k = randInt(2,4);
 
-    // Elegimos los primeros k-1 respetando cupos.
     for(let i=0; i<k-1; i++){
-      // Determinar signo disponible (sin agotar cupos)
       let sign;
       if(pos >= POS_TARGET) sign = -1;
       else if(neg >= NEG_TARGET) sign = +1;
@@ -914,17 +936,14 @@ function generarGlobosBalanceadosConSolucion(bigValue, N){
       if(sign>0) pos++; else neg++;
     }
 
-    // Último valor que cierre la solución
     const last = target - partial;
     if(last !== 0 && Math.abs(last) <= 3){
       const signLast = Math.sign(last);
-      // ¿cupo disponible para el signo?
       if( (signLast>0 && pos < POS_TARGET) || (signLast<0 && neg < NEG_TARGET) ){
         tmp.push(last);
         if(signLast>0) pos++; else neg++;
-        // Llenamos el resto manteniendo balance exacto
-        const totalActual = tmp.length;
-        const restantes = N - totalActual;
+
+        const restantes = N - tmp.length;
         if(restantes >= 0){
           const toAddPos = POS_TARGET - pos;
           const toAddNeg = NEG_TARGET - neg;
@@ -937,22 +956,20 @@ function generarGlobosBalanceadosConSolucion(bigValue, N){
         }
       }
     }
-    // si falla, reintenta
   }
 
-  // Fallback: descomponer el target con pasos ±1..±3 dentro de cupos
+  // Fallback
   const tmp = [];
   pos = 0; neg = 0;
   let remaining = target;
 
-  // Construimos una solución simple consumiendo cupos disponibles
   while(remaining !== 0 && tmp.length < N){
     let stepMag = Math.min(3, Math.abs(remaining));
     let stepSign = remaining > 0 ? +1 : -1;
-    // asegurar cupo del signo
+
     if(stepSign>0 && pos >= POS_TARGET) stepSign = -1;
     if(stepSign<0 && neg >= NEG_TARGET) stepSign = +1;
-    // si aún no hay cupo, romper
+
     if(stepSign>0 && pos >= POS_TARGET) break;
     if(stepSign<0 && neg >= NEG_TARGET) break;
 
@@ -962,47 +979,40 @@ function generarGlobosBalanceadosConSolucion(bigValue, N){
     if(v>0) pos++; else neg++;
   }
 
-  // Completar hasta N manteniendo cupos
-  while(tmp.length < N && pos < POS_TARGET){
-    tmp.push(+randInt(1,3)); pos++;
-  }
-  while(tmp.length < N && neg < NEG_TARGET){
-    tmp.push(-randInt(1,3)); neg++;
-  }
+  while(tmp.length < N && pos < POS_TARGET){ tmp.push(+randInt(1,3)); pos++; }
+  while(tmp.length < N && neg < NEG_TARGET){ tmp.push(-randInt(1,3)); neg++; }
   shuffle(tmp);
   return tmp;
 }
 
 function renderBigValue(){
-  /* CAMBIO: mostrar + en positivos del ORB */
   targetOrb.textContent = fmt(bigValue);
   targetOrb.classList.remove('orb-win');
 }
 
 function showOrbDelta(val){
- const badge = document.createElement('div');
- badge.textContent = fmt(val);
- badge.style.position = 'absolute';
- const t = targetOrb.getBoundingClientRect();
- const pf = playfield.getBoundingClientRect();
- badge.style.left = ((t.left - pf.left) + t.width/2) + 'px';
- badge.style.top  = ((t.top  - pf.top ) + t.height/2 - 10) + 'px';
- badge.style.transform = 'translate(-50%, -50%)';
- badge.style.fontWeight = '900';
- badge.style.fontSize = '22px';
- badge.style.color = (val > 0) ? '#2e7d32' : '#c62828';
- badge.style.textShadow = '0 1px 2px rgba(0,0,0,.35)';
- badge.style.pointerEvents = 'none';
- badge.style.transition = 'transform .45s ease-out, opacity .45s ease-out';
- badge.style.opacity = '1';
- playfield.appendChild(badge);
- requestAnimationFrame(()=>{
-   badge.style.transform = 'translate(-50%, -95%)';
-   badge.style.opacity = '0';
- });
- setTimeout(()=>badge.remove(), 520);
+  const badge = document.createElement('div');
+  badge.textContent = fmt(val);
+  badge.style.position = 'absolute';
+  const t = targetOrb.getBoundingClientRect();
+  const pf = playfield.getBoundingClientRect();
+  badge.style.left = ((t.left - pf.left) + t.width/2) + 'px';
+  badge.style.top  = ((t.top  - pf.top ) + t.height/2 - 10) + 'px';
+  badge.style.transform = 'translate(-50%, -50%)';
+  badge.style.fontWeight = '900';
+  badge.style.fontSize = '22px';
+  badge.style.color = (val > 0) ? '#2e7d32' : '#c62828';
+  badge.style.textShadow = '0 1px 2px rgba(0,0,0,.35)';
+  badge.style.pointerEvents = 'none';
+  badge.style.transition = 'transform .45s ease-out, opacity .45s ease-out';
+  badge.style.opacity = '1';
+  playfield.appendChild(badge);
+  requestAnimationFrame(()=>{
+    badge.style.transform = 'translate(-50%, -95%)';
+    badge.style.opacity = '0';
+  });
+  setTimeout(()=>badge.remove(), 520);
 }
-
 
 function updateUIStats(){
   document.getElementById('aciertos').textContent = aciertos;
@@ -1018,18 +1028,18 @@ function registrarAciertoVisual(){
 function efectoImpacto(){
   emojiRight.textContent = "💥";
   emojiRight.classList.add('emoji-pop');
-  setTimeout(()=>{emojiRight.classList.remove('emoji-pop');emojiRight.textContent="🎯";}, 330);
+  setTimeout(()=>{ emojiRight.classList.remove('emoji-pop'); emojiRight.textContent="👧"; }, 330);
 }
 
 function efectoAcierto(){
   emojiLeft.textContent = "✅";
   emojiLeft.classList.add('emoji-pop');
-  setTimeout(()=>{emojiLeft.classList.remove('emoji-pop');emojiLeft.textContent="🧠";}, 560);
+  setTimeout(()=>{ emojiLeft.classList.remove('emoji-pop'); emojiLeft.textContent="👦"; }, 560);
 }
 
 function showWinFeedback(){
   targetOrb.classList.add('orb-win');
-  targetOrb.textContent = "0"; /* en victoria debe verse 0 */
+  targetOrb.textContent = "0";
   winText.textContent = siguienteMensajeOK();
   miniConfettiLayer.innerHTML = "";
   const colors = ["#ff5252","#ffeb3b","#69f0ae","#40c4ff","#b388ff","#ff9800"];
@@ -1076,6 +1086,7 @@ function obtenerJerarquia(p){
   if(p >= 11 && p <= 15) return "Experto";
   return "Élite";
 }
+
 function fraseDesempeno(a){
   const j = obtenerJerarquia(a);
   if(j==="Élite") return "¡Excelente! Gran dominio de la anulación.";
@@ -1083,6 +1094,7 @@ function fraseDesempeno(a){
   if(j==="Competente") return "Buen avance: sigue mejorando.";
   return "Buen inicio: continúa practicando.";
 }
+
 function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function randFloat(min,max){ return Math.random()*(max-min)+min; }
 function shuffle(arr){
@@ -1091,6 +1103,7 @@ function shuffle(arr){
     [arr[i],arr[j]] = [arr[j],arr[i]];
   }
 }
+
 document.getElementById('nombre-input').addEventListener('keydown', (e)=>{
   if(e.key === "Enter") iniciarJuego();
 });
