@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,15 +17,15 @@
             --error: #f44336;
             --negative: #d32f2f;
             --positive: #1565c0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Nunito', 'Quicksand', ' Sans MS', cursive;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             margin: 0;
             padding: 0;
@@ -36,7 +35,7 @@
             flex-direction: column;
             user-select: none;
         }
-
+        
         .floating-element {
             position: fixed;
             font-size: 2rem;
@@ -45,7 +44,7 @@
             pointer-events: none;
             animation: floatElement 20s infinite ease-in-out;
         }
-
+        
         @keyframes floatElement {
             0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
             25% { transform: translate(30px, -20px) rotate(8deg); opacity: 0.18; }
@@ -61,7 +60,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             width: 100%;
         }
-
+        
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -70,6 +69,7 @@
             margin: 0 auto;
         }
 
+        /* 2. Transiciones para los emojis del niño y niña */
         @keyframes recede-and-return {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(0.1); opacity: 0; }
@@ -83,9 +83,9 @@
             animation: recede-and-return 7s ease-in-out infinite;
         }
         #right-child {
-            animation-delay: -3.5s;
+            animation-delay: -3.5s; /* Desincronizar la animación */
         }
-
+        
         .child-figure div {
             transition: opacity 0.5s, transform 0.5s;
         }
@@ -96,29 +96,31 @@
             justify-content: center;
             gap: 0.8rem;
         }
-
+        
+        /* 3. Pulsación para el fuego en el encabezado */
         .logo-icon {
             font-size: 1.8rem;
             animation: pulse 3s infinite;
         }
-
+        
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.08); }
         }
-
+        
         h1 {
             margin: 0;
             font-size: 1.6rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 600;
         }
-
+        
         .subtitle {
             font-size: 0.9rem;
             opacity: 0.9;
             margin: 0.3rem 0 0;
         }
-
+        
         .start-emoji {
             font-size: 4rem;
             margin-bottom: 20px;
@@ -133,7 +135,7 @@
             min-height: 70vh;
             width: 100%;
             padding: 2rem;
-            flex-grow: 1;
+            flex-grow: 1; /* Para empujar el footer hacia abajo */
         }
 
         .instrucciones {
@@ -149,8 +151,9 @@
         .instrucciones h2 {
             color: var(--primary);
             margin-bottom: 20px;
+            font-weight: 600;
         }
-
+        
         #nombre-input {
             font-size: 20px;
             padding: 15px;
@@ -162,15 +165,16 @@
             background: white;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: all 0.3s;
+            font-family: 'Nunito', 'Quicksand', cursive;
         }
-
+        
         #nombre-input:focus {
             outline: none;
             border-color: var(--accent);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
-
+        
         #comenzar-btn {
             padding: 15px 30px;
             font-size: 18px;
@@ -182,8 +186,9 @@
             transition: all 0.3s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             font-weight: bold;
+            font-family: 'Nunito', 'Quicksand', cursive;
         }
-
+        
         #comenzar-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.25);
@@ -198,7 +203,7 @@
             max-width: 1400px;
             margin: 0 auto;
             gap: 20px;
-            flex-grow: 1;
+            flex-grow: 1; 
         }
 
         #panel-izquierdo {
@@ -255,7 +260,6 @@
             color: var(--dark);
         }
 
-        /* ✅ 1) DISMINUCIÓN VERTICAL DEL RECTÁNGULO */
         #area-juego {
             position: relative;
             width: 100%;
@@ -264,8 +268,8 @@
             border-radius: 16px;
             border: 3px dashed var(--primary);
             overflow: hidden;
-            margin: 6px 0;
-            min-height: 420px;
+            margin: 10px 0;
+            min-height: 475px; /* Reducido de 500px a 475px para ahorrar espacio */
         }
 
         .numero {
@@ -283,7 +287,6 @@
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             z-index: 10;
-            animation: aparicion 0.5s ease-out;
         }
 
         .numero:active {
@@ -311,6 +314,10 @@
             to { opacity: 0; transform: scale(0) rotate(360deg); filter: blur(10px); }
         }
 
+        .numero {
+            animation: aparicion 0.5s ease-out;
+        }
+
         .numero.desintegrando {
             animation: desintegracion 0.3s ease-out forwards;
             pointer-events: none;
@@ -329,13 +336,14 @@
             font-weight: bold;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             width: 100%;
+            font-family: 'Nunito', 'Quicksand', cursive;
         }
-
+        
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
         }
-
+        
         #terminar-btn {
             background: linear-gradient(135deg, var(--secondary), #f06292);
         }
@@ -353,160 +361,302 @@
             width: 300px;
             min-width: 280px;
         }
-
+        
         #historial h2 {
             font-size: 1.2rem;
             margin-bottom: 15px;
             color: var(--primary);
             text-align: center;
         }
-
+        
         #historial table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin: 10px;
         }
-
+        
         #historial th, #historial td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
             font-size: 13px;
         }
-
+        
         #historial th {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             font-weight: bold;
             color: var(--primary);
         }
-
+        
         .iniciado { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #c62828; }
         .competente { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #ef6c00; }
         .experto { background: linear-gradient(135deg, #e8f5e8, #c8e6c9); color: #2e7d32; }
         .elite { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
 
-        /* ✅ 2) RECONOCIMIENTO (OPTIMIZADO VERTICALMENTE) */
         .reconocimiento {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
-            min-height: 400px; /* antes 420px: reduce un poco el empuje vertical */
-            padding: 6px;      /* antes 10px */
+            min-height: 475px;
+            padding: 10px;
         }
-
+        
+        /* Estilos para el nuevo diseño del reconocimiento */
         .certificado {
-            width: min(720px, 95%);
-            background: linear-gradient(180deg, #ffffff, #f7fbff);
-            border-radius: 18px;
-            box-shadow: 0 10px 26px rgba(0,0,0,0.14);
-            border: 2px solid rgba(63, 81, 181, 0.25);
+            width: 100%;
+            max-width: 100%;
+            background: white;
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+            position: relative;
+            margin: 10px 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
-
+        
         .certificado-header {
-            padding: 12px 18px; /* antes 18px 22px */
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: linear-gradient(135deg, #e53935, #d32f2f);
             color: white;
-            line-height: 1.15;  /* ✅ reduce interlineado */
-        }
-
-        .certificado-header .titulo {
-            font-size: 1.55rem; /* antes 1.8rem */
-            font-weight: 900;
-            letter-spacing: 0.2px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.25);
-        }
-
-        .certificado-header .subtitulo {
-            margin-top: 4px;     /* antes 6px */
-            opacity: 0.92;
-            font-size: 0.86rem;  /* antes 0.95rem */
-            line-height: 1.15;   /* ✅ */
-        }
-
-        .certificado-body {
-            padding: 14px 18px 12px; /* antes 20px 22px 18px */
+            padding: 8px 5px;
             text-align: center;
-            line-height: 1.18;       /* ✅ */
+            height: auto;
         }
-
-        .certificado-body .emoji {
-            font-size: 2.0rem; /* antes 2.3rem */
-            margin-bottom: 4px; /* antes 6px */
+        
+        .certificado-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-weight: 700;
         }
-
-        .certificado-body .otorga {
-            font-size: 0.95rem; /* antes 1rem */
-            color: #37474f;
-            margin: 6px 0 4px;  /* antes 8px 0 6px */
-            line-height: 1.15;  /* ✅ */
+        
+        .certificado-header p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin: 1px 0;
         }
-
-        .certificado-body .nombre {
-            font-size: 1.75rem; /* antes 2.0rem */
-            font-weight: 900;
-            color: var(--dark);
-            margin: 4px 0 8px;  /* antes 6px 0 10px */
-            line-height: 1.1;   /* ✅ */
-            word-break: break-word; /* ✅ por si el nombre es largo */
+        
+        .certificado-body {
+            padding: 8px 5px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
-
-        .certificado-body .detalle {
-            font-size: 0.98rem; /* antes 1.05rem */
-            margin: 4px 0;      /* antes 6px 0 */
-            color: #263238;
-            line-height: 1.18;  /* ✅ */
+        
+        .certificado-content {
+            background: #fffde7; /* Fondo amarillento pálido */
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
-
-        .badge-jerarquia {
-            display: inline-block;
-            margin-top: 8px;    /* antes 10px */
-            padding: 7px 12px;  /* antes 8px 14px */
-            border-radius: 999px;
-            font-weight: 800;
-            letter-spacing: 0.2px;
-            color: white;
-            background: linear-gradient(135deg, #546e7a, #90a4ae);
-            font-size: 0.92rem; /* ✅ */
-            line-height: 1.1;   /* ✅ */
+        
+        .certificado-title {
+            text-align: center;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            position: relative;
         }
-
-        .badge-jerarquia.elite { background: linear-gradient(135deg, #1565c0, #00bcd4); }
-        .badge-jerarquia.experto { background: linear-gradient(135deg, #2e7d32, #66bb6a); }
-        .badge-jerarquia.competente { background: linear-gradient(135deg, #ef6c00, #ffb74d); }
-        .badge-jerarquia.iniciado { background: linear-gradient(135deg, #c62828, #ef5350); }
-
+        
+        .certificado-title h3 {
+            font-size: 1.4rem;
+            margin-bottom: 3px;
+            font-weight: 600;
+            font-family: 'Nunito', 'Quicksand', cursive;
+            letter-spacing: 0.5px;
+        }
+        
+        .certificado-title p {
+            font-size: 1.3rem;
+            margin: 8px 0;
+            font-weight: 600;
+            color: #34495e;
+            font-family: 'Nunito', 'Quicksand', cursive;
+        }
+        
+        .certificado-title::before {
+            content: "✨";
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.8rem;
+            animation: floatStar 2s infinite ease-in-out;
+        }
+        
+        .certificado-title::after {
+            content: "✨";
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.8rem;
+            animation: floatStar 2.5s infinite ease-in-out reverse;
+        }
+        
+        @keyframes floatStar {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-50%) rotate(180deg); }
+        }
+        
+        .certificado-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+        
+        .certificado-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 7px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            font-size: 0.8rem;
+        }
+        
+        .certificado-detail h4 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+            font-size: 0.9rem;
+        }
+        
+        .certificado-detail p {
+            font-size: 0.8rem;
+            color: #34495e;
+            line-height: 1.3;
+        }
+        
+        .certificado-level {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+        
+        .certificado-level-content {
+            flex: 1;
+        }
+        
+        .certificado-level h4 {
+            font-size: 1.15rem;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .certificado-level p {
+            font-size: 0.8rem;
+            line-height: 1.3;
+            color: #34495e;
+        }
+        
+        .certificado-level-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-left: 10px;
+        }
+        
+        .certificado-level-icon.iniciado {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #c62828;
+        }
+        
+        .certificado-level-icon.competente {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #ef6c00;
+        }
+        
+        .certificado-level-icon.experto {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            color: #2e7d32;
+        }
+        
+        .certificado-level-icon.elite {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+        }
+        
         .certificado-footer {
-            padding: 10px 18px 12px; /* antes 14px 22px 18px */
-            border-top: 1px solid rgba(0,0,0,0.08);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px; /* antes 10px */
-            align-items: end;
-            line-height: 1.12; /* ✅ */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 0 5px;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
         }
-
-        .meta {
-            text-align: left;
-            font-size: 0.82rem; /* antes 0.9rem */
-            color: #455a64;
+        
+        .certificado-footer .signature {
+            text-align: center;
+            flex: 1;
+            padding: 0 7px;
         }
-
-        .firmas {
-            text-align: right;
-            font-size: 0.82rem; /* antes 0.9rem */
-            color: #455a64;
+        
+        .certificado-footer .signature p {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 5px 0;
         }
-
-        .linea-firma {
-            display: inline-block;
-            width: 200px; /* antes 220px */
-            border-bottom: 2px solid rgba(63,81,181,0.35);
-            margin: 8px 0 4px; /* antes 10px 0 6px */
+        
+        .certificado-footer .signature span {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.7rem;
         }
-
+        
+        /* Estilos específicos para cada nivel de jerarquía */
+        .certificado.iniciado .certificado-header {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+        
+        .certificado.competente .certificado-header {
+            background: linear-gradient(135deg, #ff9800, #e65100);
+        }
+        
+        .certificado.experto .certificado-header {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+        }
+        
+        .certificado.elite .certificado-header {
+            background: linear-gradient(135deg, #2196f3, #1565c0);
+        }
+        
+        .certificado.iniciado .certificado-level {
+            border-left: 3px solid #f44336;
+        }
+        
+        .certificado.competente .certificado-level {
+            border-left: 3px solid #ff9800;
+        }
+        
+        .certificado.experto .certificado-level {
+            border-left: 3px solid #4caf50;
+        }
+        
+        .certificado.elite .certificado-level {
+            border-left: 3px solid #2196f3;
+        }
+        
         footer {
             text-align: center;
             padding: 1rem;
@@ -514,7 +664,7 @@
             color: white;
             width: 100%;
         }
-
+        
         footer p {
             margin: 0.3rem 0;
             font-size: 0.85rem;
@@ -528,34 +678,11 @@
             .header-content { flex-direction: column; gap: 0.5rem; }
             .child-figure { display: none; }
             h1 { font-size: 1.4rem; }
-
-            #area-juego, .reconocimiento { min-height: 320px; }
+            #area-juego, .reconocimiento { min-height: 375px; } /* Reducido de 400px a 375px */
             .numero { width: 60px; height: 60px; font-size: 20px; }
-
-            .certificado-header { padding: 10px 14px; }
-            .certificado-header .titulo { font-size: 1.35rem; }
-            .certificado-header .subtitulo { font-size: 0.82rem; }
-            .certificado-body { padding: 12px 14px 10px; }
-            .certificado-body .nombre { font-size: 1.55rem; }
-            .certificado-body .detalle { font-size: 0.92rem; }
-            .badge-jerarquia { font-size: 0.88rem; }
-
-            .certificado-footer { grid-template-columns: 1fr; text-align: center; }
-            .meta, .firmas { text-align: center; }
-            .linea-firma { width: 190px; }
-        }
-
-        /* ✅ Extra: para pantallas con poca altura (laptops/zoom) */
-        @media (max-height: 720px) {
-            .certificado-header .titulo { font-size: 1.35rem; }
-            .certificado-body .emoji { font-size: 1.85rem; }
-            .certificado-body .nombre { font-size: 1.55rem; }
-            .certificado-body .detalle { font-size: 0.92rem; }
-            .meta, .firmas { font-size: 0.80rem; }
         }
     </style>
 </head>
-
 <body>
     <div class="floating-element" style="top: 8%; left: 5%; animation-delay: 0s;">➕</div>
     <div class="floating-element" style="top: 18%; right: 7%; animation-delay: 1s;">➖</div>
@@ -609,7 +736,7 @@
         <div id="juego">
             <div id="area-juego"></div>
         </div>
-
+        
         <div id="historial">
             <h2>Historial de Desempeño</h2>
             <table>
@@ -644,9 +771,6 @@
         let numeroArrastrandose = null;
         let areaJuego;
 
-        const PROFESORES = "Miguel Ubiera y Anna Morán";
-        const INSTITUCION = "Instituto para Sordos Santa Rosa, Inc.";
-
         function iniciarJuego() {
             nombreParticipante = document.getElementById('nombre-input').value.trim();
             if (nombreParticipante === "") {
@@ -656,7 +780,7 @@
 
             document.getElementById('inicio').style.display = 'none';
             document.getElementById('contenedor').style.display = 'flex';
-
+            
             areaJuego = document.getElementById('area-juego');
 
             aniquilaciones = 0;
@@ -679,7 +803,7 @@
             }, 1000);
 
             aparicionTimer = setInterval(generarPareja, 3000);
-
+            
             rellenarAreaJuego(5);
         }
 
@@ -713,15 +837,10 @@
             for (let i = 0; i < cantidad; i++) {
                 let intentos = 0;
                 let posicionValida = false;
-
                 while (!posicionValida && intentos < intentosMaximos) {
                     const x = Math.random() * (areaRect.width - 70);
                     const y = Math.random() * (areaRect.height - 70);
-
-                    const superpone = [...numerosEnPantalla, ...posiciones].some(punto =>
-                        Math.abs(punto.x - x) < margen && Math.abs(punto.y - y) < margen
-                    );
-
+                    let superpone = [...numerosEnPantalla, ...posiciones].some(punto => Math.abs(punto.x - x) < margen && Math.abs(punto.y - y) < margen);
                     if (!superpone) {
                         posiciones.push({ x, y });
                         posicionValida = true;
@@ -742,14 +861,7 @@
             numeroEl.dataset.id = numeroId++;
             configurarArrastre(numeroEl);
             areaJuego.appendChild(numeroEl);
-
-            numerosEnPantalla.push({
-                id: numeroEl.dataset.id,
-                valor,
-                elemento: numeroEl,
-                x: posicion.x,
-                y: posicion.y
-            });
+            numerosEnPantalla.push({ id: numeroEl.dataset.id, valor, elemento: numeroEl, x: posicion.x, y: posicion.y });
         }
 
         function configurarArrastre(elemento) {
@@ -759,25 +871,40 @@
                 if (!juegoActivo) return;
                 isDragging = true;
                 numeroArrastrandose = elemento;
-
                 const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
                 startX = clientX - elemento.offsetLeft;
                 startY = clientY - elemento.offsetTop;
                 e.preventDefault();
             };
-
+            
             const arrastrar = (e) => {
                 if (!isDragging || numeroArrastrandose !== elemento) return;
-
                 const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-                elemento.style.left = `${clientX - startX}px`;
-                elemento.style.top = `${clientY - startY}px`;
+                let newLeft = clientX - startX;
+                let newTop = clientY - startY;
+                
+                // NUEVO: Restringir el movimiento dentro de los límites del área de juego
+                if (areaJuego) {
+                    const areaRect = areaJuego.getBoundingClientRect();
+                    const elemWidth = elemento.offsetWidth;
+                    const elemHeight = elemento.offsetHeight;
+                    
+                    // Calcular límites internos (considerando el borde de 3px en cada lado)
+                    const innerWidth = areaRect.width - 6; // 3px izquierda + 3px derecha
+                    const innerHeight = areaRect.height - 6; // 3px arriba + 3px abajo
+                    
+                    // Restringir posición horizontal
+                    newLeft = Math.max(0, Math.min(newLeft, innerWidth - elemWidth));
+                    // Restringir posición vertical
+                    newTop = Math.max(0, Math.min(newTop, innerHeight - elemHeight));
+                }
+                
+                elemento.style.left = `${newLeft}px`;
+                elemento.style.top = `${newTop}px`;
             };
-
+            
             const terminarArrastre = () => {
                 if (!isDragging || numeroArrastrandose !== elemento) return;
                 isDragging = false;
@@ -788,7 +915,6 @@
             elemento.addEventListener('mousedown', iniciarArrastre);
             document.addEventListener('mousemove', arrastrar);
             document.addEventListener('mouseup', terminarArrastre);
-
             elemento.addEventListener('touchstart', iniciarArrastre, { passive: false });
             document.addEventListener('touchmove', arrastrar, { passive: false });
             document.addEventListener('touchend', terminarArrastre);
@@ -802,12 +928,7 @@
             for (const numeroObj of numerosEnPantalla) {
                 if (numeroObj.id === id1) continue;
                 const rect2 = numeroObj.elemento.getBoundingClientRect();
-
-                if (rect1.left < rect2.right &&
-                    rect1.right > rect2.left &&
-                    rect1.top < rect2.bottom &&
-                    rect1.bottom > rect2.top) {
-
+                if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top) {
                     if (valor1 + parseInt(numeroObj.elemento.dataset.valor) === 0) {
                         aniquilar(elementoArrastrado, numeroObj.elemento);
                         return;
@@ -819,20 +940,12 @@
         function aniquilar(elemento1, elemento2) {
             const id1 = elemento1.dataset.id;
             const id2 = elemento2.dataset.id;
-
             elemento1.classList.add('desintegrando');
             elemento2.classList.add('desintegrando');
-
-            setTimeout(() => {
-                elemento1.remove();
-                elemento2.remove();
-            }, 300);
-
+            setTimeout(() => { elemento1.remove(); elemento2.remove(); }, 300);
             numerosEnPantalla = numerosEnPantalla.filter(n => n.id !== id1 && n.id !== id2);
-
             aniquilaciones++;
             actualizarEstadisticas();
-
             if (juegoActivo && numerosEnPantalla.length === 0) {
                 setTimeout(() => rellenarAreaJuego(5), 400);
             }
@@ -847,7 +960,6 @@
             clearInterval(temporizador);
             clearInterval(aparicionTimer);
             juegoActivo = false;
-
             const jerarquia = obtenerJerarquia(aniquilaciones);
             historial.push({ nombre: nombreParticipante, aniquilaciones, jerarquia });
             historial.sort((a, b) => b.aniquilaciones - a.aniquilaciones);
@@ -862,66 +974,94 @@
             return "Iniciado";
         }
 
-        function claseJerarquia(jerarquia) {
-            const j = jerarquia.toLowerCase().replace('é','e');
-            return j;
-        }
-
         function mostrarResultadoFinal() {
             const jerarquia = obtenerJerarquia(aniquilaciones);
-            const clase = claseJerarquia(jerarquia);
-
-            const ahora = new Date();
-            const fecha = ahora.toLocaleDateString('es-DO', { year: 'numeric', month: 'long', day: 'numeric' });
-            const hora = ahora.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' });
-
-            const mensajeDesempeno = {
-                "Élite": "¡Rendimiento excepcional! Has demostrado dominio total.",
-                "Experto": "¡Muy buen desempeño! Gran precisión y velocidad.",
-                "Competente": "¡Buen trabajo! Vas por excelente camino. Sigue practicando.",
-                "Iniciado": "¡Ánimo! La práctica constante te hará mejorar rápidamente."
+            const fecha = new Date().toISOString().split('T')[0];
+            
+            // Definir retroalimentación específica para cada nivel - SUGERENCIA MÁS CONCISA
+            const retroalimentaciones = {
+                "Iniciado": {
+                    mensaje: "<strong>Sugerencia:</strong> combina opuestos (+3 y -3).",
+                    color: "#f44336",
+                    icono: "🥉",
+                    clase: "iniciado"
+                },
+                "Competente": {
+                    mensaje: "¡Buen progreso! Sigue practicando para mejorar.",
+                    color: "#ff9800",
+                    icono: "🥈",
+                    clase: "competente"
+                },
+                "Experto": {
+                    mensaje: "¡Excelente desempeño! Tu estrategia es muy efectiva.",
+                    color: "#4caf50",
+                    icono: "🥇",
+                    clase: "experto"
+                },
+                "Élite": {
+                    mensaje: "¡Rendimiento excepcional! Eres un maestro en aniquilación.",
+                    color: "#2196f3",
+                    icono: "🏆",
+                    clase: "elite"
+                }
             };
-
-            document.getElementById('juego').innerHTML = `
-                <div class="reconocimiento">
-                    <div class="certificado">
-                        <div class="certificado-header">
-                            <div class="titulo">🧏🧒 Certificado de Reconocimiento</div>
-                            <div class="subtitulo">${INSTITUCION} • Juego: Aniquilación de Opuestos</div>
-                        </div>
-
-                        <div class="certificado-body">
-                            <div class="emoji">🏅</div>
-                            <div class="otorga">Se otorga el presente reconocimiento a:</div>
-                            <div class="nombre">${nombreParticipante}</div>
-
-                            <div class="detalle">
-                                Por alcanzar <strong>${aniquilaciones}</strong> aniquilaciones
-                                y obtener la jerarquía <strong>${jerarquia}</strong>.
+            
+            const retro = retroalimentaciones[jerarquia];
+            
+            // Crear el reconocimiento con el nuevo diseño - CON TEXTO COMPLETO "SE OTORGA ESTE RECONOCIMIENTO A:"
+            const reconocimientoHTML = `
+                <div class="certificado ${retro.clase}">
+                    <div class="certificado-header">
+                        <h2>Reconocimiento de Desempeño</h2>
+                        <p>Anulación (Enteros) • Instituto para Sordos Santa Rosa, Inc.</p>
+                    </div>
+                    <div class="certificado-body">
+                        <div class="certificado-content">
+                            <div class="certificado-title">
+                                <h3>Se otorga este reconocimiento a:</h3>
+                                <p>${nombreParticipante}</p>
                             </div>
-
-                            <div class="badge-jerarquia ${clase}">Jerarquía: ${jerarquia}</div>
-
-                            <div class="detalle" style="margin-top:8px;">
-                                ${mensajeDesempeno[jerarquia]}
+                            
+                            <div class="certificado-details">
+                                <div class="certificado-detail">
+                                    <div>
+                                        <h4>Buen ${jerarquia.toLowerCase()}: ${jerarquia === "Iniciado" ? "continúa practicando." : jerarquia === "Competente" ? "sigue mejorando." : jerarquia === "Experto" ? "¡excelente desempeño!" : "¡rendimiento excepcional!"}</h4>
+                                        <p><strong>Aniquilaciones:</strong> ${aniquilaciones} | <strong>Jerarquía:</strong> <span style="color: ${retro.color}; font-weight: bold;">${jerarquia}</span></p>
+                                    </div>
+                                </div>
+                                <div class="certificado-detail">
+                                    <div>
+                                        <h4>Fecha: ${fecha}</h4>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="certificado-footer">
-                            <div class="meta">
-                                <div><strong>Fecha:</strong> ${fecha}</div>
-                                <div><strong>Hora:</strong> ${hora}</div>
+                            
+                            <div class="certificado-level">
+                                <div class="certificado-level-content">
+                                    <h4>${jerarquia}</h4>
+                                    <p>${retro.mensaje}</p>
+                                </div>
+                                <div class="certificado-level-icon ${retro.clase}">
+                                    ${retro.icono}
+                                </div>
                             </div>
-
-                            <div class="firmas">
-                                <div class="linea-firma"></div>
-                                <div><strong>Profesores:</strong> ${PROFESORES}</div>
+                            
+                            <div class="certificado-footer">
+                                <div class="signature">
+                                    <p>Miguel Ubiera</p>
+                                    <span>Docente</span>
+                                </div>
+                                <div class="signature">
+                                    <p>Anna Morán</p>
+                                    <span>Docente</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
-
+            
+            document.getElementById('juego').innerHTML = reconocimientoHTML;
             document.getElementById('reiniciar-btn').style.display = 'block';
             document.getElementById('terminar-btn').style.display = 'none';
         }
@@ -942,13 +1082,7 @@
             listaHistorial.innerHTML = '';
             historial.forEach(p => {
                 const clase = p.jerarquia.toLowerCase().replace('é', 'e');
-                listaHistorial.innerHTML += `
-                    <tr>
-                        <td>${p.nombre}</td>
-                        <td class="${clase}">${p.aniquilaciones}</td>
-                        <td class="${clase}">${p.jerarquia}</td>
-                    </tr>
-                `;
+                listaHistorial.innerHTML += `<tr><td>${p.nombre}</td><td class="${clase}">${p.aniquilaciones}</td><td class="${clase}">${p.jerarquia}</td></tr>`;
             });
         }
 
@@ -958,10 +1092,8 @@
                 actualizarHistorial();
             }
         }
-
-        document.getElementById('nombre-input').addEventListener('keydown', (e) =>
-            e.key === "Enter" && iniciarJuego()
-        );
+        
+        document.getElementById('nombre-input').addEventListener('keydown', (e) => e.key === "Enter" && iniciarJuego());
         document.addEventListener('dragstart', (e) => e.preventDefault());
     </script>
 </body>
