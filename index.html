@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -882,7 +883,7 @@
 
         /* NUEVOS ESTILOS PARA VISOR DE ACTIVIDADES EN PANTALLA COMPLETA */
         .activity-viewer {
-            display: none;
+            display: flex;
             position: fixed;
             top: 0;
             left: 0;
@@ -891,10 +892,31 @@
             background: white;
             z-index: 9999;
             flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        visibility 0.4s;
         }
 
         .activity-viewer.active {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Transición suave para el iframe */
+        .activity-viewer-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.3s ease 0.2s;
+        }
+
+        .activity-viewer.active .activity-viewer-content iframe {
+            opacity: 1;
         }
 
         .activity-viewer-header {
@@ -971,6 +993,93 @@
         body.fullscreen-mode {
             padding: 0;
             overflow: hidden;
+        }
+
+                /* Indicador de carga suave */
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .loading-indicator.visible {
+            opacity: 1;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(63, 81, 181, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mejora en el botón de cerrar */
+        .activity-viewer-close {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-viewer-close::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .activity-viewer-close:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .activity-viewer-close:hover {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .activity-viewer-close:active {
+            transform: scale(0.95) rotate(90deg);
         }
 
         @media (max-width: 768px) {
@@ -1094,6 +1203,7 @@
             }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="floating-element" style="top: 5%; left: 3%; animation-delay: 0s;">📐</div>
@@ -1462,6 +1572,10 @@
             <button class="activity-viewer-close" onclick="closeActivity()" title="Cerrar y volver">✕</button>
         </div>
         <div class="activity-viewer-content">
+            <div class="loading-indicator" id="loading-indicator">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Cargando...</div>
+            </div>
             <iframe id="activity-iframe" src=""></iframe>
         </div>
     </div>
