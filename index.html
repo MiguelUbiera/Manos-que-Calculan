@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -881,9 +880,9 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        /* NUEVOS ESTILOS PARA VISOR DE ACTIVIDADES EN PANTALLA COMPLETA */
+        /* VISOR DE ACTIVIDADES - SIN BARRA SUPERIOR */
         .activity-viewer {
-            display: flex;
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -892,69 +891,10 @@
             background: white;
             z-index: 9999;
             flex-direction: column;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.95);
-            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                        visibility 0.4s;
         }
 
         .activity-viewer.active {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-        }
-
-        /* Transición suave para el iframe */
-        .activity-viewer-content iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            opacity: 0;
-            transition: opacity 0.3s ease 0.2s;
-        }
-
-        .activity-viewer.active .activity-viewer-content iframe {
-            opacity: 1;
-        }
-
-        .activity-viewer-header {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 0.8rem 1rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-        }
-
-        .activity-viewer-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .activity-viewer-close {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .activity-viewer-close:hover {
-            background: white;
-            color: var(--primary);
-            transform: scale(1.1);
         }
 
         .activity-viewer-content {
@@ -969,33 +909,51 @@
             border: none;
         }
 
-        /* Modo pantalla completa - oculta sidebar y expande main */
-        body.fullscreen-mode .sidebar {
-            display: none;
+        /* BOTÓN FLOTANTE PARA VOLVER */
+        .floating-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-100px);
         }
 
-        body.fullscreen-mode .container {
-            max-width: 100%;
-            padding: 0;
-            margin: 0;
+        .floating-back-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
         }
 
-        body.fullscreen-mode .main-content {
-            width: 100%;
-            max-width: 100%;
+        .floating-back-btn:hover {
+            transform: scale(1.1) translateX(0);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
 
-        body.fullscreen-mode header,
-        body.fullscreen-mode footer {
-            display: none;
+        .floating-back-btn:active {
+            transform: scale(0.95) translateX(0);
         }
 
-        body.fullscreen-mode {
-            padding: 0;
-            overflow: hidden;
+        .floating-back-btn::before {
+            content: '←';
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
-                /* Indicador de carga suave */
+        /* Indicador de carga */
         .loading-indicator {
             position: absolute;
             top: 50%;
@@ -1034,52 +992,30 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Mejora en el botón de cerrar */
-        .activity-viewer-close {
-            background: rgba(255,255,255,0.15);
-            border: 2px solid rgba(255,255,255,0.5);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 1.2rem;
-            position: relative;
-            overflow: hidden;
+        /* Modo pantalla completa - oculta sidebar y expande main */
+        body.fullscreen-mode .sidebar {
+            display: none;
         }
 
-        .activity-viewer-close::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
+        body.fullscreen-mode .container {
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
         }
 
-        .activity-viewer-close:hover::before {
+        body.fullscreen-mode .main-content {
             width: 100%;
-            height: 100%;
+            max-width: 100%;
         }
 
-        .activity-viewer-close:hover {
-            background: white;
-            color: var(--primary);
-            border-color: white;
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        body.fullscreen-mode header,
+        body.fullscreen-mode footer {
+            display: none;
         }
 
-        .activity-viewer-close:active {
-            transform: scale(0.95) rotate(90deg);
+        body.fullscreen-mode {
+            padding: 0;
+            overflow: hidden;
         }
 
         @media (max-width: 768px) {
@@ -1194,12 +1130,16 @@
                 font-size: 0.75rem;
             }
 
-            .activity-viewer-header {
-                padding: 0.6rem;
+            /* Botón flotante responsive */
+            .floating-back-btn {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                left: 15px;
             }
 
-            .activity-viewer-title {
-                font-size: 1rem;
+            .floating-back-btn::before {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -1565,12 +1505,8 @@
         </main>
     </div>
 
-    <!-- VISOR DE ACTIVIDADES EN PANTALLA COMPLETA -->
+    <!-- VISOR DE ACTIVIDADES - SIN BARRA SUPERIOR -->
     <div id="activity-viewer" class="activity-viewer">
-        <div class="activity-viewer-header">
-            <h3 class="activity-viewer-title" id="activity-viewer-title">Actividad</h3>
-            <button class="activity-viewer-close" onclick="closeActivity()" title="Cerrar y volver">✕</button>
-        </div>
         <div class="activity-viewer-content">
             <div class="loading-indicator" id="loading-indicator">
                 <div class="loading-spinner"></div>
@@ -1579,6 +1515,9 @@
             <iframe id="activity-iframe" src=""></iframe>
         </div>
     </div>
+
+    <!-- BOTÓN FLOTANTE PARA VOLVER -->
+    <button id="floating-back-btn" class="floating-back-btn" onclick="closeActivity()" title="Volver al menú"></button>
 
     <footer>
         <p>Instituto para Sordos Santa Rosa, Inc.</p>
@@ -1781,7 +1720,7 @@
             }, 50);
         }
 
-        // NUEVAS FUNCIONES PARA CARGAR ACTIVIDADES EN PANTALLA COMPLETA
+        // FUNCIONES PARA CARGAR ACTIVIDADES - VENTANA EMERGENTE SIN BARRA SUPERIOR
         function loadActivity(file, title) {
             if (!file) {
                 alert('Esta actividad estará disponible próximamente.');
@@ -1790,20 +1729,28 @@
 
             const viewer = document.getElementById('activity-viewer');
             const iframe = document.getElementById('activity-iframe');
-            const titleElement = document.getElementById('activity-viewer-title');
+            const backBtn = document.getElementById('floating-back-btn');
 
             currentActivityFile = file;
-            titleElement.textContent = title;
             iframe.src = file;
             
             viewer.classList.add('active');
             document.body.classList.add('fullscreen-mode');
+            
+            // Mostrar el botón flotante con animación
+            setTimeout(() => {
+                backBtn.classList.add('visible');
+            }, 100);
         }
 
         function closeActivity() {
             const viewer = document.getElementById('activity-viewer');
             const iframe = document.getElementById('activity-iframe');
+            const backBtn = document.getElementById('floating-back-btn');
 
+            // Ocultar el botón flotante primero
+            backBtn.classList.remove('visible');
+            
             viewer.classList.remove('active');
             document.body.classList.remove('fullscreen-mode');
             
