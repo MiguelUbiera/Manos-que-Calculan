@@ -909,48 +909,56 @@
             border: none;
         }
 
-        /* BOTÓN FLOTANTE PARA VOLVER */
+        /* BOTÓN FLOTANTE PARA VOLVER: abajo, a la izquierda, en forma de píldora discreta (20 % transparente) */
         .floating-back-btn {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
+            bottom: 6px;
+            left: 14px;
+            height: 28px;
+            padding: 0 14px 0 10px;
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            border: 3px solid white;
-            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.85);
+            border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 6px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            line-height: 1;
             cursor: pointer;
             z-index: 10000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
             visibility: hidden;
-            transform: translateX(-100px);
+            transform: translateY(40px);
         }
 
         .floating-back-btn.visible {
-            opacity: 1;
+            opacity: 0.8;
             visibility: visible;
-            transform: translateX(0);
+            transform: translateY(0);
         }
 
-        .floating-back-btn:hover {
-            transform: scale(1.1) translateX(0);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        .floating-back-btn.visible:hover {
+            opacity: 1;
+            transform: translateY(-1px);
         }
 
-        .floating-back-btn:active {
-            transform: scale(0.95) translateX(0);
+        .floating-back-btn.visible:active {
+            transform: scale(0.96);
         }
 
         .floating-back-btn::before {
             content: '←';
-            color: white;
-            font-size: 1.5rem;
+            font-size: 1rem;
             font-weight: bold;
+        }
+
+        .floating-back-btn::after {
+            content: 'Menú';
         }
 
         /* Indicador de carga */
@@ -1132,14 +1140,9 @@
 
             /* Botón flotante responsive */
             .floating-back-btn {
-                width: 45px;
-                height: 45px;
-                top: 15px;
-                left: 15px;
-            }
-
-            .floating-back-btn::before {
-                font-size: 1.3rem;
+                height: 26px;
+                bottom: 5px;
+                left: 10px;
             }
         }
     </style>
