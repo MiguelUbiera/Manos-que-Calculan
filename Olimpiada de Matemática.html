@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -45,6 +45,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .barra .acciones{display:flex;gap:.5rem;align-items:center}
 .btn-icono{display:grid;place-items:center;width:2.7rem;height:2.7rem;padding:0;background:transparent;border:.14rem solid var(--crema);color:var(--crema);border-radius:2rem}
 .btn-icono:hover{background:rgba(247,241,230,.14)}
+.pildora{display:flex;align-items:center;gap:.5rem;height:2.7rem;padding:0 1.15rem 0 .95rem;background:transparent;border:.14rem solid var(--crema);color:var(--crema);border-radius:2rem;font:800 1.02rem/1 var(--f-texto);letter-spacing:.02em}
+.pildora:hover{background:rgba(247,241,230,.14)}
+.pildora svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 .btn-icono svg{width:1.3rem;height:1.3rem;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .btn-icono svg .rel{fill:currentColor;stroke:none}
 
@@ -251,6 +254,7 @@ body.calma .confeti{display:none}
     <div class="sub">Olimpiada de Matemáticas 2026 · Instituto para Sordos Santa Rosa</div>
   </div>
   <div class="acciones">
+    <button class="pildora" id="btn-torneo" title="Torneo: sorteo y rondas" aria-label="Torneo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M12 14v4M8.5 20h7"/></svg>Torneo</button>
     <button class="btn-icono" id="btn-registro" title="Registro de duelos" aria-label="Registro de duelos"></button>
     <button class="btn-icono" id="btn-pausa" hidden title="Pausa (barra espaciadora)" aria-label="Pausa"></button>
     <button class="btn-icono" id="btn-pantalla" title="Pantalla completa" aria-label="Pantalla completa"></button>
@@ -361,6 +365,7 @@ let cfg = { meta:12, turnoS:5, limiteS:240 };
   if(LIMITES.includes(g.limiteS)) cfg.limiteS=g.limiteS; }
 const nuevoJ = i => ({ nombre:'', avatar:AVATARES[i*8], pasos:0, aciertos:0, errores:0, agotados:0, racha:0, mejor:0, ms:0 });
 let J = [nuevoJ(0), nuevoJ(1)];
+let ligaTorneo=null;     // duelo preparado desde el Torneo: {a,b}; se borra si se cambian los nombres
 
 const G = { fase:'config', turno:0, pausa:false, prob:null, entrada:'', restTurno:0, totalTurno:0, restRonda:0,
             id:0, faseMs:0, ult:'', fb:null, sd:false, sdRes:[null,null], ultimo:'', empieza:0, sorteoPaso:0 };
@@ -487,7 +492,7 @@ function comenzar(){
   G.id++; G.sd=false; G.sdRes=[null,null]; G.pausa=false; G.fb=null; G.prob=null; G.entrada='';
   G.restRonda=cfg.limiteS*1000; G.ultimo='';
   $('#config').hidden=true; $('#juego').hidden=false;
-  $('#btn-pausa').hidden=false; $('#btn-terminar').hidden=false; $('#btn-registro').hidden=true; cerrarAvatares(); iconoPausa();
+  $('#btn-pausa').hidden=false; $('#btn-terminar').hidden=false; $('#btn-registro').hidden=true; $('#btn-torneo').hidden=true; cerrarAvatares(); iconoPausa();
   $('#capa-fin').hidden=true; $('#confeti').hidden=true; $('#capa-pausa').hidden=true;
   construirJuego(); render(); hacerSorteo();
 }
@@ -569,6 +574,7 @@ function terminar(g,porDesempate){
   reg.push({ hora:d.toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'}), aj:`${cfg.meta} aciertos · ${cfg.turnoS} s · ${cfg.limiteS?(cfg.limiteS/60)+' min':'sin límite'}`,
              gana:nombreDe(g), pierde:nombreDe(p), marc, sd:!!porDesempate });
   guardar(REG_KEY,reg.slice(-120)); pintarRegistro();
+  if(ligaTorneo&&window.Torneo&&window.Torneo.resultado) window.Torneo.resultado({ a:ligaTorneo.a, b:ligaTorneo.b, ganador:g, pasos:[J[0].pasos,J[1].pasos] });
 
   const prom=j=>j.aciertos?((j.ms/j.aciertos)/1000).toFixed(1).replace('.',',')+' s':'—';
   $('#caja-fin').innerHTML=`
@@ -583,10 +589,12 @@ function terminar(g,porDesempate){
     <div class="fila-botones">
       <button class="btn-grande" id="btn-revancha" style="font-size:1.25rem;padding:.6rem 1.6rem">Revancha</button>
       <button class="btn-sec" id="btn-nuevo">Nuevo duelo</button>
+      ${ligaTorneo?'<button class="btn-sec" id="btn-vtorneo">Volver al torneo</button>':''}
     </div>`;
   $('#capa-fin').hidden=false; lanzarConfeti();
   $('#btn-revancha').onclick=()=>{ comenzar(); };
   $('#btn-nuevo').onclick=volverInicio;
+  if($('#btn-vtorneo')) $('#btn-vtorneo').onclick=()=>{ volverInicio(); if(window.Torneo) window.Torneo.abrir(); };
   hablar(`Ganó ${nombreDe(g)}. Marcador ${marc}.`);
 }
 function lanzarConfeti(){
@@ -597,7 +605,7 @@ function lanzarConfeti(){
 function volverInicio(){
   G.id++; G.fase='config'; G.pausa=false;
   $('#juego').hidden=true; $('#config').hidden=false; $('#capa-fin').hidden=true; $('#capa-pausa').hidden=true; $('#confeti').hidden=true;
-  $('#btn-pausa').hidden=true; $('#btn-terminar').hidden=true; $('#btn-registro').hidden=false; iconoPausa();
+  $('#btn-pausa').hidden=true; $('#btn-terminar').hidden=true; $('#btn-registro').hidden=false; $('#btn-torneo').hidden=false; iconoPausa();
   $('#nom0').value=J[0].nombre; $('#nom1').value=J[1].nombre; pintarAvatares(); pintarRegistro();
 }
 const SVG=c=>`<svg viewBox="0 0 24 24" aria-hidden="true">${c}</svg>`;
@@ -691,7 +699,7 @@ function render(){
 }
 
 /* ---------- Eventos ---------- */
-$('#btn-comenzar').addEventListener('click',()=>{ J.forEach((j,i)=>{ j.nombre=$('#nom'+i).value.trim(); }); comenzar(); });
+$('#btn-comenzar').addEventListener('click',()=>{ J.forEach((j,i)=>{ j.nombre=$('#nom'+i).value.trim(); }); if(ligaTorneo&&(J[0].nombre!==ligaTorneo.a||J[1].nombre!==ligaTorneo.b)) ligaTorneo=null; comenzar(); });
 $('#btn-pausa').addEventListener('click',alternarPausa);
 $('#btn-seguir').addEventListener('click',alternarPausa);
 $('#btn-terminar').addEventListener('click',e=>confirmarDosToques(e.currentTarget,'¿Seguro? Toca otra vez',volverInicio));
@@ -709,7 +717,7 @@ $('#btn-pantalla').addEventListener('click',()=>{
 document.addEventListener('fullscreenchange',iconoPantalla);
 document.addEventListener('keyup',e=>{ if(e.code==='Space'&&!$('#juego').hidden) e.preventDefault(); });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ if(!$('#capa-registro').hidden) cerrarRegistro(); cerrarAvatares(); return; }
+  if(e.key==='Escape'){ if(window.Torneo&&window.Torneo.abierto&&window.Torneo.abierto()) return; if(!$('#capa-registro').hidden) cerrarRegistro(); cerrarAvatares(); return; }
   if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
   if(e.code==='Space'&&!$('#juego').hidden){ e.preventDefault(); alternarPausa(); return; }
   if(G.fase==='turno'&&!G.pausa){
@@ -718,10 +726,473 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+/* ---------- Puente con el Torneo ---------- */
+window.Carrera={
+  preparar(a,b,aj){
+    if(G.fase!=='config') volverInicio();
+    J[0].nombre=a; J[1].nombre=b; ligaTorneo={a,b};
+    if(aj){ if(METAS.includes(aj.meta)) cfg.meta=aj.meta; if(TURNOS.includes(aj.turnoS)) cfg.turnoS=aj.turnoS; if(LIMITES.includes(aj.limiteS)) cfg.limiteS=aj.limiteS; }
+    refrescarConfig(); $('#nom0').value=a; $('#nom1').value=b; pintarAvatares();
+  }
+};
+
 /* ---------- Inicio ---------- */
 construirConfig(); refrescarConfig(); pintarRegistro(); iconoPausa(); iconoPantalla();
 if(location.hash==='#prueba') window.__olimpiada={G,J,cfg,tocar};   // solo para pruebas
 })();
 </script>
+<!-- =====================================================================
+     TORNEO · sorteo y rondas de la Olimpiada de Matemáticas 2026
+     Fragmento aparte: build.py lo incrusta en el archivo del juego.
+     Se abre con la píldora «Torneo» y se muestra encima del juego.
+     ===================================================================== -->
+<style>
+#torneo{position:fixed;inset:0;z-index:45;display:flex;flex-direction:column;background:var(--crema);
+  background-image:radial-gradient(circle at 10% 20%,rgba(190,90,38,.05) 0 9rem,transparent 9.1rem),radial-gradient(circle at 92% 85%,rgba(44,110,104,.06) 0 11rem,transparent 11.1rem)}
+#torneo:not([hidden]){animation:fundido .25s}
+.t-barra{display:flex;align-items:center;gap:1.2rem;padding:.4rem 1.1rem;background:var(--petroleo);color:var(--crema);border-bottom:.28rem solid var(--terracota)}
+.t-tit h2{font:700 1.55rem/1.1 var(--f-titulo)}
+.t-tit .sub{font-size:.82rem;font-weight:600;opacity:.92}
+.t-etapas{flex:1;display:flex;justify-content:center;gap:.6rem;list-style:none}
+.t-etapas li{display:flex;align-items:center;gap:.45rem;padding:.3rem .9rem;border:.14rem solid rgba(247,241,230,.45);border-radius:2rem;font-weight:800;font-size:.95rem;opacity:.7;transition:background-color .3s,opacity .3s}
+.t-etapas li small{font-weight:700;font-size:.8rem;opacity:.9}
+.t-etapas li.hecha{opacity:1;border-color:var(--crema)}
+.t-etapas li.hecha::before{content:'✔';font-weight:900}
+.t-etapas li.actual{opacity:1;background:var(--terracota);border-color:var(--terracota);color:#fff}
+.t-cuerpo{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 18.5rem;gap:1.3rem;padding:.9rem 1.4rem .6rem;max-width:90rem;width:100%;margin:0 auto}
+.t-cuerpo.ancho{grid-template-columns:minmax(0,1fr)}
+.t-cuerpo>*{position:relative;z-index:2;animation:subir .4s cubic-bezier(.3,.9,.3,1) backwards}
+.t-intro{font-size:1rem;font-weight:700;color:var(--gris);margin-bottom:.6rem}
+.t-intro b{color:var(--petroleo);font:700 1.45rem var(--f-titulo);display:block;margin-bottom:.1rem}
+.t-principal{min-height:0;display:flex;flex-direction:column}
+/* tarjetas de participantes */
+.t-tarjetas{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),1fr);grid-auto-rows:minmax(0,8.5rem);gap:.75rem;align-content:center}
+.t-tarj{display:flex;flex-direction:column;justify-content:center;gap:.35rem;background:var(--papel);border:.16rem solid var(--linea);border-left:.5rem solid var(--verde);border-radius:1rem;padding:.55rem .9rem;position:relative}
+.t-tarj:nth-child(3n+1){border-left-color:var(--terracota)} .t-tarj:nth-child(3n+2){border-left-color:var(--petroleo)}
+.t-tarj .n{position:absolute;top:.4rem;right:.7rem;font:700 .85rem var(--f-cifra);color:var(--gris)}
+.t-tarj .nom{font:700 1.35rem/1.15 var(--f-titulo);color:var(--petroleo)}
+.t-tarj input.nom{width:100%;border:.12rem solid transparent;border-bottom-color:#9aa5a3;background:transparent;border-radius:.3rem;padding:.1rem .2rem;font:700 1.3rem var(--f-titulo)}
+.t-tarj input.nom:focus{border-color:var(--petroleo);background:#fff}
+.t-tarj .cur{font-weight:800;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--verde)}
+.t-tarj select{border:.12rem solid #9aa5a3;border-radius:.4rem;background:#fff;font-weight:800;font-size:.9rem;padding:.1rem .3rem;width:max-content}
+/* duelos */
+.t-duelos{flex:1;min-height:0;display:grid;grid-template-rows:repeat(var(--n),minmax(0,6.6rem));gap:.6rem;align-content:center}
+.duelo{display:grid;grid-template-columns:2.3rem minmax(0,1fr) 2.4rem minmax(0,1fr) 9.5rem;gap:.6rem;align-items:center;background:var(--papel);border:.14rem solid var(--linea);border-radius:1.1rem;padding:.4rem .8rem .4rem .5rem;min-height:0}
+.duelo .num{font:700 1.3rem var(--f-cifra);color:var(--petroleo);text-align:center}
+.duelo .vs{font:800 .95rem var(--f-texto);color:var(--gris);text-align:center;letter-spacing:.05em}
+.quien{--c:var(--terracota);--ct:var(--terracota-txt);position:relative;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.1rem;min-width:0;height:100%;max-height:4.9rem;padding:.3rem .9rem;background:#fff;border:.2rem solid var(--c);border-radius:.9rem;text-align:left}
+.quien.b{--c:var(--verde);--ct:var(--verde)}
+.quien .nm{font:700 1.4rem/1.1 var(--f-titulo);color:var(--ct);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.quien small{font-size:.78rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gris)}
+.quien:hover:not(:disabled){background:var(--panel)}
+.quien.hueco{border-style:dashed;border-color:#b6c0be;background:transparent;cursor:default;align-items:center}
+.quien.hueco .nm{color:#9aa5a3;font-size:1.6rem}
+.quien.nuevo{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+.quien.confirma{box-shadow:0 0 0 .3rem rgba(190,90,38,.3)} .quien.b.confirma{box-shadow:0 0 0 .3rem rgba(44,110,104,.3)}
+.quien.confirma small{color:var(--terracota-txt);font-size:.85rem}
+.quien.sug{box-shadow:0 0 0 .22rem #fff,0 0 0 .4rem var(--ambar)}
+.quien.gano{background:linear-gradient(135deg,#1f7a4d,#2f9a64);border-color:#145c37;box-shadow:0 0 0 .22rem #fff,0 0 0 .45rem #d9a441,0 .4rem 1rem rgba(31,122,77,.35);padding-right:3.4rem;animation:ganador .6s cubic-bezier(.3,1.5,.5,1)}
+.quien.gano .nm,.quien.gano small{color:#fff}
+.quien.gano .nm{font-size:1.55rem}
+.quien.gano::after{content:'🏆';position:absolute;right:.7rem;top:50%;transform:translateY(-50%);font-size:2.1rem;line-height:1;filter:drop-shadow(0 .1rem .1rem rgba(0,0,0,.3))}
+.quien.perdio{background:#b9c0c3;border-color:#7f8a90;filter:grayscale(1);opacity:.7;position:relative;padding-right:3rem}
+.quien.perdio::after{content:'✖';position:absolute;right:.9rem;top:50%;transform:translateY(-50%);font:900 1.7rem/1 var(--f-texto);color:#5b656b}
+.quien.perdio .nm{color:#4f5a60;text-decoration:line-through;text-decoration-thickness:.14rem}
+.quien.perdio small{color:#4f5a60}
+.duelo.hecho .vs{opacity:.45}
+@keyframes ganador{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.quien:disabled{cursor:default}
+.duelo .acc{display:flex;flex-direction:column;align-items:stretch;gap:.2rem}
+.duelo .acc .nota{font-size:.78rem;font-weight:700;color:var(--gris);text-align:center;line-height:1.2}
+.duelo.hecho{background:var(--crema-2)}
+/* lado */
+.t-lado{min-height:0;display:flex;flex-direction:column;gap:.7rem}
+.t-lado h3{font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--verde);margin-bottom:.25rem}
+.t-lado ul{list-style:none;display:flex;flex-direction:column;gap:.18rem}
+.t-lado li{display:flex;justify-content:space-between;gap:.5rem;font-weight:800;font-size:.98rem;padding:.12rem .55rem;border-radius:.5rem;background:var(--papel);border:.1rem solid var(--linea)}
+.t-lado li small{font-weight:700;color:var(--gris)}
+.t-lado .elim li{background:transparent;border-color:transparent;color:#7b8794;font-weight:700;text-decoration:line-through;padding-top:0;padding-bottom:0}
+.t-lado .elim li small{text-decoration:none}
+table.t-pos{width:100%;border-collapse:collapse;font-size:.95rem}
+table.t-pos th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--verde);text-align:center;padding:.15rem .2rem;border-bottom:.12rem solid var(--linea)}
+table.t-pos td{padding:.28rem .25rem;text-align:center;border-bottom:.08rem solid var(--linea);font-weight:800}
+table.t-pos td:nth-child(2){text-align:left}
+table.t-pos tr.emp td{background:#fff6e3}
+.t-emp{font-size:.82rem;font-weight:700;color:var(--ambar);margin-top:.3rem}
+/* bombo */
+.bombo{position:relative;width:14rem;height:14rem;margin:0 auto;border-radius:50%;border:.34rem solid var(--petroleo);overflow:hidden;
+  background:radial-gradient(circle at 35% 28%,#fff,var(--panel) 70%);box-shadow:0 .5rem 0 rgba(18,58,84,.14)}
+.bombo .giro{position:absolute;inset:0;animation:girar 9s linear infinite}
+.bombo .bola{position:absolute;width:2.7rem;height:2.7rem;border-radius:50%;display:grid;place-items:center;font:800 .88rem var(--f-texto);color:#fff;
+  left:calc(50% + var(--x)*1rem - 1.35rem);top:calc(50% + var(--y)*1rem - 1.35rem);animation:contra 9s linear infinite;
+  box-shadow:inset -.25rem -.25rem 0 rgba(0,0,0,.14),inset .2rem .2rem 0 rgba(255,255,255,.25)}
+.bombo .bola.sale{animation:bolaFuera .45s ease-in forwards}
+.bombo.agita{animation:sacudeBombo .55s}
+@keyframes girar{to{transform:rotate(360deg)}} @keyframes contra{to{transform:rotate(-360deg)}}
+@keyframes bolaFuera{to{transform:scale(1.8) translateY(-1.5rem);opacity:0}}
+@keyframes sacudeBombo{0%,100%{transform:rotate(0)}15%{transform:rotate(-5deg) translateX(-.3rem)}35%{transform:rotate(5deg) translateX(.3rem)}55%{transform:rotate(-4deg)}75%{transform:rotate(3deg)}}
+.sale-card{min-height:5.4rem;display:grid;place-items:center;text-align:center;background:var(--papel);border:.22rem solid var(--terracota);border-radius:1.1rem;padding:.4rem .6rem}
+.sale-card b{font:700 1.5rem/1.15 var(--f-titulo);color:var(--petroleo)}
+.sale-card small{display:block;font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--terracota-txt)}
+.sale-card.nueva{animation:entra .4s cubic-bezier(.3,1.5,.5,1)}
+.sale-card .quedan{font-weight:700;color:var(--gris);font-size:.95rem}
+/* cuadro de honor */
+.t-honor{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:1.6rem;align-items:stretch}
+.podio{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:.8rem;min-height:0}
+.puesto{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;gap:.2rem;padding:.7rem .6rem;border-radius:1.2rem 1.2rem .4rem .4rem;background:var(--papel);border:.2rem solid var(--linea);min-height:0}
+.puesto .med{font:700 2.8rem/1 var(--f-titulo)}
+.puesto .pn{font:700 1.5rem/1.15 var(--f-titulo);color:var(--petroleo);overflow-wrap:anywhere}
+.puesto .pc{font-weight:800;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--verde)}
+.puesto .pv{font:700 1rem var(--f-cifra);color:var(--gris)}
+.puesto.p1{height:100%;max-height:25rem;background:linear-gradient(180deg,#fff8e1,var(--papel) 60%);border:.3rem solid #c9962b;box-shadow:0 0 0 .3rem rgba(201,150,43,.22)}
+.puesto.p1 .med{font-size:5.2rem;color:#8a6212;text-shadow:0 .1rem 0 #f1d77f}
+.puesto.p1 .pn{font-size:2.1rem} .puesto.p1 .tit{font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#8a6212;font-size:.95rem}
+.puesto.p2{height:78%;border-color:#9aa5a3} .puesto.p3{height:66%;border-color:#c98a5a}
+.puesto.p1{animation:caja .7s .2s cubic-bezier(.2,1.2,.3,1) backwards} .puesto.p2{animation:caja .6s .5s backwards} .puesto.p3{animation:caja .6s .8s backwards}
+.curso-g{background:var(--papel);border:.2rem solid var(--terracota);border-radius:1.2rem;padding:.8rem 1rem;display:flex;flex-direction:column;gap:.35rem;min-height:0}
+.curso-g h3{font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--verde)}
+.curso-g .gan{font:700 1.7rem/1.1 var(--f-titulo);color:var(--terracota-txt)}
+.cg-fila{display:grid;grid-template-columns:2.4rem 1fr 1.6rem;align-items:center;gap:.4rem;font-weight:800;font-size:.95rem}
+.cg-barra{height:.85rem;border-radius:1rem;background:var(--panel);overflow:hidden}
+.cg-barra i{display:block;height:100%;background:var(--petroleo);border-radius:1rem;transform-origin:left;animation:crece .8s .9s cubic-bezier(.3,.9,.3,1) backwards}
+.cg-fila.top .cg-barra i{background:var(--terracota)} .cg-fila.top{color:var(--terracota-txt)}
+@keyframes crece{from{transform:scaleX(0)}}
+.curso-g .nota{font-size:.78rem;font-weight:600;color:var(--gris)}
+/* pie */
+.t-pie{position:relative;z-index:2;display:flex;align-items:center;gap:1rem;padding:.5rem 1.4rem .7rem;border-top:.1rem solid var(--linea);background:var(--crema-2)}
+.t-pie .izq{display:flex;gap:.5rem;flex:0 0 auto}
+.t-pie .centro{flex:1;display:flex;flex-direction:column;align-items:center;gap:.15rem;text-align:center;min-width:0}
+.t-pie .avance{font-weight:800;font-size:1.02rem;color:var(--petroleo)}
+.t-pie .ajs{font-size:.82rem;font-weight:700;color:var(--gris)}
+.t-pie .der{flex:0 0 auto;display:flex;gap:.6rem;align-items:center}
+.t-pie .btn-grande{font-size:1.3rem;padding:.55rem 1.7rem;min-height:3.2rem}
+.t-pie .btn-grande:disabled{background:#b6c0be;box-shadow:none;cursor:not-allowed;transform:none}
+.t-confeti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.t-confeti i{position:absolute;top:-2rem;width:.7rem;height:1rem;opacity:0;animation:cae 3.4s linear infinite}
+</style>
+
+<div id="torneo" hidden role="dialog" aria-modal="true" aria-labelledby="t-titulo">
+  <header class="t-barra">
+    <div class="t-tit"><h2 id="t-titulo">Torneo</h2><div class="sub">Todos contra todos · 12 participantes</div></div>
+    <ol class="t-etapas" id="t-etapas"></ol>
+    <button class="btn-icono" id="t-cerrar" aria-label="Volver al juego" title="Volver al juego"></button>
+  </header>
+  <div class="t-cuerpo" id="t-cuerpo"></div>
+  <footer class="t-pie" id="t-pie"></footer>
+  <div class="t-confeti" id="t-confeti" hidden></div>
+  <div class="sr" id="t-voz" aria-live="polite"></div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const KEY = 'olim2026.torneo';
+/* Los 12 finalistas: nombre y primer apellido, y curso */
+const BASE = [['Jefferson Soto',1],['Ana Valenzuela',1],['Marisol Guzmán',2],['Hillary Poché',2],['Emmanuel Martínez',3],['Nerolisa Morillo',3],
+              ['Nicolasny Asencio',4],['José Frías',4],['Carlos Encarnación',5],['Criss Pérez',5],['Génesis Massiel',6],['Estrella Mongouin',6]];
+/* Ajustes que se aplican al pulsar «Jugar» en cada ronda */
+const AJ = { 1:{meta:12,turnoS:5,limiteS:240}, 2:{meta:15,turnoS:5,limiteS:300}, 3:{meta:20,turnoS:5,limiteS:480} };
+const NOMBRE_RONDA = { 1:'Ronda 1', 2:'Ronda 2', 3:'la final' };
+const BOLAS = ['#9c4318','#2c6e68','#123a54','#8a5a12'];
+
+/* ---------- Estado (se guarda en el navegador) ---------- */
+const nuevoT = () => ({ jug: BASE.map((b,i)=>({id:i+1,n:b[0],c:b[1]})), ronda:1, r:{}, rank:{}, hon:false });
+function cargar(){
+  try{
+    const t = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(t && Array.isArray(t.jug) && t.jug.length===12 && t.r && typeof t.ronda==='number') return Object.assign(nuevoT(), t);
+  }catch(e){}
+  return nuevoT();
+}
+let T = cargar();
+const guardar = () => { try{ localStorage.setItem(KEY, JSON.stringify(T)); }catch(e){} };
+
+let rev = null, sacadas = 0, saleId = null, tmr = null;   // animación del sorteo (no se guarda)
+let confirma = null;                                       // {clave, hasta} confirmación de dos toques
+let pend = null;                                           // duelo lanzado hacia el juego
+
+/* ---------- Utilidades del torneo ---------- */
+const J = id => T.jug.find(j => j.id === id);
+const nom = id => ((J(id).n || '').trim() || 'Participante ' + id);
+const cur = id => J(id).c + '.º';
+const aleatorio = n => { if(window.crypto && crypto.getRandomValues){ const u = new Uint32Array(1); crypto.getRandomValues(u); return u[0] % n; } return Math.floor(Math.random()*n); };
+function barajar(a){ const b = a.slice(); for(let i=b.length-1;i>0;i--){ const j = aleatorio(i+1); [b[i],b[j]] = [b[j],b[i]]; } return b; }
+const duelosDe = r => (T.r[r] ? T.r[r].duelos : []);
+const decididos = r => duelosDe(r).filter(d => d.g != null).length;
+const completa = r => !!T.r[r] && duelosDe(r).length > 0 && decididos(r) === duelosDe(r).length;
+const ganadores = r => duelosDe(r).filter(d => d.g != null).map(d => d.g);
+const perdedores = r => duelosDe(r).filter(d => d.g != null).map(d => d.g === d.a ? d.b : d.a);
+function participantes(r){ return r===1 ? T.jug.map(j=>j.id) : ganadores(r-1); }
+function eliminados(){ return [1,2].filter(r=>T.r[r]).flatMap(r => perdedores(r)); }
+const rk = id => T.rank[id] || 0;
+
+function crearDuelos(r, orden){
+  const mk = (x,y) => ({ a:orden[x], b:orden[y], ai:x, bi:y, g:null, m:null, s:null });
+  if(r < 3){ const d = []; for(let i=0;i<orden.length;i+=2) d.push(mk(i,i+1)); return d; }
+  return [mk(0,1), mk(0,2), mk(1,2)];
+}
+function tabla3(){
+  const r = T.r[3]; if(!r) return [];
+  const t = r.orden.map(id => ({ id, v:0, a:0, pj:0 }));
+  r.duelos.forEach(d => {
+    if(d.g == null) return;
+    const ta = t.find(z=>z.id===d.a), tb = t.find(z=>z.id===d.b);
+    ta.pj++; tb.pj++; (d.g===d.a ? ta : tb).v++;
+    if(d.m){ ta.a += d.m[0]; tb.a += d.m[1]; }
+  });
+  t.sort((p,q) => q.v-p.v);
+  return t;
+}
+/* Campeón: quien gana sus dos duelos de la vuelta actual. Si cada uno gana uno (ciclo), se juega otra vuelta. */
+const hayCampeon = () => completa(3) && tabla3()[0].v === 2;
+const hayCiclo = () => completa(3) && !hayCampeon();
+const vuelta = () => (T.r[3] && T.r[3].vuelta) || 1;
+function victoriasPorCurso(){
+  const c = {1:0,2:0,3:0,4:0,5:0,6:0};
+  [1,2,3].forEach(r => duelosDe(r).forEach(d => { if(d.g != null) c[J(d.g).c]++; }));
+  if(T.r[3]) (T.r[3].hist || []).forEach(v => v.forEach(d => { if(d.g != null) c[J(d.g).c]++; }));
+  return c;
+}
+
+/* ---------- Acciones ---------- */
+function sortear(){
+  const r = T.ronda; if(T.r[r]) return;
+  const orden = barajar(participantes(r));
+  T.r[r] = { orden, duelos: crearDuelos(r, orden) }; guardar();
+  rev = 0; sacadas = 0; saleId = null;
+  pintar(); setTimeout(paso, 500);
+}
+function paso(){
+  const r = T.ronda, o = T.r[r] && T.r[r].orden; if(rev === null || !o) return;
+  if(rev >= o.length){ terminarSorteo(); return; }
+  saleId = o[rev]; sacadas = rev + 1;
+  const b = $('.bombo'); if(b){ b.classList.remove('agita'); void b.offsetWidth; b.classList.add('agita'); }
+  const bola = $(`.bola[data-b="${saleId}"]`); if(bola) bola.classList.add('sale');
+  const sc = $('#t-sale'); if(sc){ sc.className = 'sale-card nueva'; sc.innerHTML = `<div><small>Sale la bola ${rev+1} de ${o.length}</small><b>${esc(nom(saleId))}</b><small>${cur(saleId)} de secundaria</small></div>`; }
+  $('#t-voz').textContent = 'Sale ' + nom(saleId);
+  tmr = setTimeout(() => { rev++; pintarFilas(); tmr = setTimeout(paso, 550); }, 1150);
+}
+function terminarSorteo(){ clearTimeout(tmr); rev = null; saleId = null; pintar(); }
+function mostrarYa(){ clearTimeout(tmr); terminarSorteo(); }
+function repetirSorteo(){ delete T.r[T.ronda]; rev = null; guardar(); pintar(); }
+function siguiente(){
+  if(T.ronda < 3 && completa(T.ronda)){ T.ronda++; guardar(); pintar(); }
+}
+function volverRonda(){ if(T.ronda > 1 && !T.r[T.ronda]){ T.ronda--; guardar(); pintar(); } }
+function marcar(i, lado){
+  const d = duelosDe(T.ronda)[i]; if(!d || d.g != null) return;
+  d.g = lado === 'a' ? d.a : d.b;
+  d.m = (d.s && ((d.s.g === 0) === (lado === 'a'))) ? d.s.m : null;
+  guardar(); pintar();
+}
+function deshacer(i){ const d = duelosDe(T.ronda)[i]; if(d){ d.g = null; d.m = null; if(T.ronda===3 && T.hon) T.hon = false; guardar(); pintar(); } }
+function nuevaVuelta(){
+  const r = T.r[3]; if(!r || !hayCiclo()) return;
+  r.hist = (r.hist || []).concat([r.duelos]); r.vuelta = vuelta() + 1;
+  r.duelos = crearDuelos(3, r.orden); guardar(); pintar();
+}
+function verHonor(){ if(hayCampeon()){ T.hon = true; guardar(); pintar(); confeti(); } }
+function reiniciar(){ const jug = T.jug; T = nuevoT(); T.jug = jug; rev = null; guardar(); pintar(); }
+
+/* ---------- Puente con el juego ---------- */
+function jugar(i){
+  const d = duelosDe(T.ronda)[i]; if(!d || d.g != null || !window.Carrera) return;
+  pend = { ronda:T.ronda, i };
+  cerrar();
+  window.Carrera.preparar(nom(d.a), nom(d.b), AJ[T.ronda]);
+}
+function resultado(x){
+  // x: { a, b, ganador (0 o 1), pasos:[pa,pb] } → se guarda como sugerencia; la mesa confirma
+  let d = null;
+  const lista = duelosDe(T.ronda);
+  if(pend && lista[pend.i] && pend.ronda === T.ronda) d = lista[pend.i];
+  if(!d || d.g != null || nom(d.a) !== x.a || nom(d.b) !== x.b) d = lista.find(q => q.g == null && nom(q.a) === x.a && nom(q.b) === x.b);
+  if(!d) return;
+  d.s = { g: x.ganador, m: x.pasos }; guardar();
+}
+
+/* ---------- Dibujo ---------- */
+function etapas(){
+  const info = { 1:['Ronda 1','12 → 6'], 2:['Ronda 2','6 → 3'], 3:['Final','3 juegan entre sí'] };
+  $('#t-etapas').innerHTML = [1,2,3].map(n => {
+    const hecha = T.hon || n < T.ronda, actual = !T.hon && n === T.ronda;
+    return `<li class="${hecha?'hecha':''} ${actual?'actual':''}">${info[n][0]}<small>${info[n][1]}</small></li>`;
+  }).join('');
+}
+const ajTxt = r => `Meta ${AJ[r].meta} · Turno ${AJ[r].turnoS} s · Ronda ${AJ[r].limiteS/60} min`;
+function btnDos(clave, texto, textoConf, cls, act){
+  const c = confirma && confirma.clave === clave && confirma.hasta > Date.now();
+  return `<button class="btn-sec mini ${cls||''}" data-act="${act}" data-dos="${clave}">${c ? textoConf : texto}</button>`;
+}
+
+function pintar(){
+  etapas();
+  const r = T.ronda, cuerpo = $('#t-cuerpo'), pie = $('#t-pie');
+  const reiniciarBtn = btnDos('reiniciar', 'Reiniciar torneo', '¿Seguro? Toca otra vez', 'peligro', 'reiniciar');
+  // ---------- Cuadro de honor
+  if(T.hon){
+    const t = tabla3(), cg = victoriasPorCurso(), max = Math.max(...Object.values(cg));
+    let tops = Object.keys(cg).filter(k => cg[k] === max).map(Number);
+    const c1 = J(t[0].id).c;
+    const ganador = tops.length > 1 ? (tops.includes(c1) ? c1 : tops[0]) : tops[0];
+    const med = ['🥇','🥈','🥉'];
+    cuerpo.className = 't-cuerpo ancho';
+    cuerpo.innerHTML = `<div class="t-principal">
+      <div class="t-intro"><b>Cuadro de honor</b>Resultados de la final y victorias de todo el torneo.</div>
+      <div class="t-honor">
+        <div class="podio">
+          ${[1,0,2].map(k => `<div class="puesto p${k+1}"><div class="med">${med[k]}</div>${k===0?'<div class="tit">Primer lugar</div>':`<div class="tit" style="font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;color:var(--gris)">${k===1?'Segundo':'Tercer'} lugar</div>`}
+            <div class="pn">${esc(nom(t[k].id))}</div><div class="pc">${cur(t[k].id)} de secundaria</div><div class="pv">${t[k].v} ${t[k].v===1?'victoria':'victorias'}</div></div>`).join('')}
+        </div>
+        <div class="curso-g">
+          <h3>Curso ganador</h3>
+          <div class="gan">${ganador}.º de secundaria</div>
+          ${[1,2,3,4,5,6].map(c => `<div class="cg-fila ${c===ganador?'top':''}"><span>${c}.º</span><span class="cg-barra"><i style="width:${max?cg[c]/max*100:0}%"></i></span><span>${cg[c]}</span></div>`).join('')}
+          <div class="nota">Victorias de los dos finalistas de cada curso en todo el torneo. Si hay empate, gana el curso del Primer lugar.</div>
+        </div>
+      </div></div>`;
+    pie.innerHTML = `<div class="izq">${reiniciarBtn}<button class="btn-sec mini" data-act="corregir">Corregir resultados</button></div>
+      <div class="centro"><div class="avance">¡Felicitaciones a los tres finalistas!</div></div>
+      <div class="der"><button class="btn-grande" data-act="cerrar">Volver al juego</button></div>`;
+    return;
+  }
+  // ---------- Antes del sorteo de la ronda
+  if(!T.r[r]){
+    const ids = participantes(r), cols = ids.length > 6 ? 4 : 3;
+    const intro = r===1 ? ['Los 12 participantes','Revisa los nombres (puedes corregirlos aquí) y sortea los duelos de la ronda 1.']
+      : r===2 ? [`Pasan ${ids.length} participantes`,'Se sortean los duelos de la ronda 2 entre los que quedan.']
+      : [`Quedan ${ids.length}: la final`,'Juegan todos contra todos (3 duelos). Gana quien venza a los otros dos.'];
+    cuerpo.className = 't-cuerpo ancho';
+    cuerpo.innerHTML = `<div class="t-principal"><div class="t-intro"><b>${intro[0]}</b>${intro[1]}</div>
+      <div class="t-tarjetas" style="--cols:${cols}">${ids.map((id,i) => r===1
+        ? `<div class="t-tarj"><span class="n">${i+1}</span><input class="nom" data-nom="${id}" maxlength="30" value="${esc(J(id).n)}" aria-label="Nombre del participante ${i+1}">
+             <select data-cur="${id}" aria-label="Curso">${[1,2,3,4,5,6].map(c=>`<option value="${c}" ${J(id).c===c?'selected':''}>${c}.º de secundaria</option>`).join('')}</select></div>`
+        : `<div class="t-tarj"><span class="n">${i+1}</span><div class="nom">${esc(nom(id))}</div><div class="cur">${cur(id)} de secundaria</div></div>`).join('')}</div></div>`;
+    pie.innerHTML = `<div class="izq">${reiniciarBtn}${r>1?'<button class="btn-sec mini" data-act="atras">← Ronda anterior</button>':''}</div>
+      <div class="centro"><div class="avance">${r===1?'12 participantes · 6 duelos':ids.length+' participantes · '+(r===2?'3 duelos':'3 duelos, todos contra todos')}</div><div class="ajs">${ajTxt(r)} (se aplican al pulsar «Jugar»)</div></div>
+      <div class="der"><button class="btn-grande" data-act="sortear">Sortear ${r===3?'la final':'la ronda '+r}</button></div>`;
+    return;
+  }
+  // ---------- Ronda con duelos
+  const n = duelosDe(r).length, sorteando = rev !== null;
+  cuerpo.className = 't-cuerpo';
+  cuerpo.innerHTML = `<div class="t-principal">
+      <div class="t-intro"><b>${r===3?'La final: todos contra todos'+(vuelta()>1?' · vuelta '+vuelta():''):'Ronda '+r}</b>${sorteando?'Sorteo en curso…':(r===3?'Cada participante juega dos duelos. Campeón: quien venza a los otros dos. Si cada uno gana uno, se juega otra vuelta hasta que alguien gane los dos.':'Marca al ganador de cada duelo con dos toques. El perdedor queda eliminado.')}</div>
+      <div class="t-duelos" id="t-duelos" style="--n:${n}">${filasHTML()}</div></div>
+    <aside class="t-lado" id="t-lado">${sorteando ? ladoSorteo() : ladoRonda()}</aside>`;
+  const quedan = n - decididos(r);
+  const puede = !sorteando && completa(r) && (r < 3 || hayCampeon());
+  const accion = sorteando ? `<button class="btn-grande" data-act="ya">Mostrar ya</button>`
+    : r < 3 ? `<button class="btn-grande" data-act="siguiente" ${puede?'':'disabled'}>${r===1?'Siguiente ronda':'A la final'} ▶</button>`
+    : (hayCiclo() ? `<button class="btn-grande" data-act="vuelta">Nueva vuelta ▶</button>`
+      : `<button class="btn-grande" data-act="honor" ${puede?'':'disabled'}>Ver cuadro de honor</button>`);
+  let aviso = '';
+  if(!sorteando && !puede){ aviso = (r===3 && hayCiclo()) ? 'Cada uno ganó un duelo: nadie venció a los otros dos.' : `Faltan ${quedan} ${quedan===1?'duelo':'duelos'} por decidir.`; }
+  pie.innerHTML = `<div class="izq">${reiniciarBtn}${(!sorteando && decididos(r)===0) ? btnDos('repetir','Repetir sorteo','¿Seguro?','','repetir') : ''}</div>
+    <div class="centro"><div class="avance">${sorteando ? 'Sorteo de la ronda…' : `${decididos(r)} de ${n} duelos decididos`}</div><div class="ajs">${aviso ? aviso+' · ' : ''}${ajTxt(r)}</div></div>
+    <div class="der">${accion}</div>`;
+}
+
+function slotHTML(d, lado, i){
+  const id = lado==='a' ? d.a : d.b, idx = lado==='a' ? d.ai : d.bi;
+  if(rev !== null && idx >= rev) return `<div class="quien ${lado==="b"?"b":""} hueco"><span class="nm">?</span></div>`;
+  const nuevo = rev !== null && idx === rev - 1 ? ' nuevo' : '';
+  const gano = d.g === id, perdio = d.g != null && !gano;
+  const conf = confirma && confirma.clave === `g${i}${lado}` && confirma.hasta > Date.now();
+  const sug = d.g == null && d.s && ((d.s.g === 0) === (lado === 'a'));
+  const sub = gano ? 'Ganó' : perdio ? (T.ronda===3 ? 'Perdió' : 'Eliminado') : conf ? '¿Ganó? Toca otra vez' : (sug ? 'El juego dice: ganó' : cur(id));
+  return `<button class="quien ${lado==='b'?'b':''}${nuevo}${gano?' gano':''}${perdio?' perdio':''}${conf?' confirma':''}${sug?' sug':''}" data-act="gana" data-i="${i}" data-l="${lado}" ${(d.g!=null||rev!==null)?'disabled':''}>
+      <span class="nm">${esc(nom(id))}</span><small>${sub}</small></button>`;
+}
+function filasHTML(){
+  return duelosDe(T.ronda).map((d,i) => {
+    const hecho = d.g != null, enSorteo = rev !== null;
+    const m = hecho ? (d.m ? `Marcador ${d.m[0]}–${d.m[1]}` : '') : (d.s ? `Juego: ${d.s.m[0]}–${d.s.m[1]}` : '');
+    const acc = enSorteo ? '' : hecho ? `<button class="btn-sec mini" data-act="deshacer" data-i="${i}">↺ Deshacer</button>`
+      : `<button class="btn-sec mini" data-act="jugar" data-i="${i}">▶ Jugar</button>`;
+    return `<article class="duelo ${hecho?'hecho':''}"><div class="num">${i+1}</div>${slotHTML(d,'a',i)}<div class="vs">VS</div>${slotHTML(d,'b',i)}<div class="acc">${acc}<span class="nota">${m}</span></div></article>`;
+  }).join('');
+}
+function pintarFilas(){ const el = $('#t-duelos'); if(el) el.innerHTML = filasHTML(); }
+
+function ladoSorteo(){
+  const o = T.r[T.ronda].orden;
+  return `<div class="bombo" aria-hidden="true"><div class="giro">${o.map((id,k) => {
+      const ang = (k / o.length) * Math.PI * 2 + 0.6, rad = 2.3 + (k % 3) * 1.55;
+      return `<span class="bola" data-b="${id}" style="--x:${(Math.cos(ang)*rad).toFixed(2)};--y:${(Math.sin(ang)*rad).toFixed(2)};background:${BOLAS[k%4]}">${esc(nom(id).split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase())}</span>`; }).join('')}</div></div>
+    <div class="sale-card" id="t-sale"><span class="quedan">Las bolas están girando…</span></div>`;
+}
+function ladoRonda(){
+  const r = T.ronda, elim = eliminados();
+  const siguen = r < 3 ? participantes(r).filter(id => !perdedores(r).includes(id)) : [];
+  const li = (id, small) => `<li><span>${esc(nom(id))}</span><small>${small||cur(id)}</small></li>`;
+  let h = '';
+  if(r < 3) h += `<div><h3>Siguen (${siguen.length})</h3><ul>${siguen.map(id => li(id)).join('')}</ul></div>`;
+  else {
+    const t = tabla3();
+    h += `<div><h3>Posiciones</h3><table class="t-pos"><thead><tr><th>#</th><th>Nombre</th><th>Vic.</th></tr></thead><tbody>${
+      t.map((p,i) => `<tr><td>${i+1}</td><td>${esc(nom(p.id))}</td><td>${p.v}</td></tr>`).join('')}</tbody></table>
+      ${hayCiclo() ? `<div class="t-emp">Ciclo: cada uno ganó un duelo, así que nadie venció a los otros dos. Se juega la vuelta ${vuelta()+1} y solo cuenta la última vuelta.</div>` : (vuelta()>1 ? `<div class="t-emp" style="color:var(--gris)">Cuenta solo la vuelta ${vuelta()}.</div>` : '')}</div>`;
+  }
+  if(elim.length) h += `<div class="elim"><h3>Eliminados (${elim.length})</h3><ul>${elim.map(id => li(id)).join('')}</ul></div>`;
+  return h;
+}
+
+function confeti(){
+  const c = $('#t-confeti'), col = ['#be5a26','#2c6e68','#123a54','#d9a441','#9c4318','#5aa9a0'];
+  c.innerHTML = Array.from({length:36}, () => `<i style="left:${Math.random()*100}%;background:${col[Math.floor(Math.random()*col.length)]};animation-delay:${(-Math.random()*3.4).toFixed(2)}s;animation-duration:${(2.6+Math.random()*1.8).toFixed(2)}s"></i>`).join('');
+  c.hidden = false;
+}
+
+/* ---------- Abrir y cerrar ---------- */
+const abierto = () => !$('#torneo').hidden;
+function abrir(){ T = cargar(); rev = null; $('#t-confeti').hidden = true; $('#torneo').hidden = false; pintar(); if(T.hon) confeti(); $('#t-cerrar').focus(); }
+function cerrar(){ clearTimeout(tmr); if(rev !== null && T.r[T.ronda]) rev = null; $('#torneo').hidden = true; $('#t-confeti').hidden = true; }
+
+$('#t-cerrar').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+$('#btn-torneo').addEventListener('click', abrir);
+$('#t-cerrar').addEventListener('click', cerrar);
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && abierto()) cerrar(); });
+
+$('#torneo').addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if(!b || b.disabled) return;
+  const act = b.dataset.act, i = +b.dataset.i;
+  const dos = (clave, accion) => {              // dos toques para acciones delicadas
+    if(confirma && confirma.clave === clave && confirma.hasta > Date.now()){ confirma = null; accion(); return; }
+    confirma = { clave, hasta: Date.now() + 3000 }; pintarSegunVista();
+    setTimeout(() => { if(confirma && confirma.clave === clave && confirma.hasta <= Date.now() + 50){ confirma = null; pintarSegunVista(); } }, 3100);
+  };
+  switch(act){
+    case 'sortear': sortear(); break;
+    case 'ya': mostrarYa(); break;
+    case 'siguiente': siguiente(); break;
+    case 'honor': verHonor(); break;
+    case 'jugar': jugar(i); break;
+    case 'deshacer': deshacer(i); break;
+    case 'vuelta': nuevaVuelta(); break;
+    case 'atras': volverRonda(); break;
+    case 'corregir': T.hon = false; $('#t-confeti').hidden = true; guardar(); pintar(); break;
+    case 'cerrar': cerrar(); break;
+    case 'gana': dos(`g${i}${b.dataset.l}`, () => marcar(i, b.dataset.l)); break;
+    case 'reiniciar': dos('reiniciar', reiniciar); break;
+    case 'repetir': dos('repetir', repetirSorteo); break;
+  }
+});
+function pintarSegunVista(){ if(rev !== null) return; pintar(); }
+$('#t-cuerpo').addEventListener('input', e => {
+  if(e.target.dataset.nom){ J(+e.target.dataset.nom).n = e.target.value; guardar(); }
+});
+$('#t-cuerpo').addEventListener('change', e => {
+  if(e.target.dataset.cur){ J(+e.target.dataset.cur).c = +e.target.value; guardar(); }
+});
+
+window.Torneo = { abrir, cerrar, abierto, resultado };
+})();
+</script>
+
 </body>
 </html>
