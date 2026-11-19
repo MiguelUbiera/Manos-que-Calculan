@@ -890,9 +890,9 @@ const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const KEY = 'olim2026.torneo.v2';   // v2: nombres actualizados el 19 nov (ignora torneos guardados con la lista anterior)
+const KEY = 'olim2026.torneo.v3';   // v3: nombres actualizados el 19 nov (ignora torneos guardados con la lista anterior)
 /* Los 12 finalistas: nombre y primer apellido, y curso */
-const BASE = [['Hanyel Santos',1],['Ana Valenzuela',1],['Leandro Agüero',2],['Jadiel Parra',2],['Diosvaldy Jiménez',3],['Wanner Rossis',3],
+const BASE = [['Hendry Vargas',1],['Ana Valenzuela',1],['Leandro Agüero',2],['Jadiel Parra',2],['Diosvaldy Jiménez',3],['Wanner Rossis',3],
               ['Axel Araujo',4],['José Frías',4],['Alejandro Armaroli',5],['Carlos Encarnación',5],['Melissa Bayona',6],['Paula Carrasco',6]];
 /* Ajustes que se aplican al pulsar «Jugar» en cada ronda */
 const AJ = { 1:{meta:12,turnoS:5,limiteS:240}, 2:{meta:15,turnoS:5,limiteS:300}, 3:{meta:20,turnoS:5,limiteS:480} };
