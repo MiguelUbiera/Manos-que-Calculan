@@ -890,10 +890,10 @@ const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const KEY = 'olim2026.torneo';
+const KEY = 'olim2026.torneo.v2';   // v2: nombres actualizados el 19 nov (ignora torneos guardados con la lista anterior)
 /* Los 12 finalistas: nombre y primer apellido, y curso */
-const BASE = [['Jefferson Soto',1],['Ana Valenzuela',1],['Marisol Guzmán',2],['Hillary Poché',2],['Emmanuel Martínez',3],['Nerolisa Morillo',3],
-              ['Nicolasny Asencio',4],['José Frías',4],['Carlos Encarnación',5],['Criss Pérez',5],['Génesis Massiel',6],['Estrella Mongouin',6]];
+const BASE = [['Hanyel Santos',1],['Ana Valenzuela',1],['Leandro Agüero',2],['Jadiel Parra',2],['Diosvaldy Jiménez',3],['Wanner Rossis',3],
+              ['Axel Araujo',4],['José Frías',4],['Alejandro Armaroli',5],['Carlos Encarnación',5],['Melissa Bayona',6],['Paula Carrasco',6]];
 /* Ajustes que se aplican al pulsar «Jugar» en cada ronda */
 const AJ = { 1:{meta:12,turnoS:5,limiteS:240}, 2:{meta:15,turnoS:5,limiteS:300}, 3:{meta:20,turnoS:5,limiteS:480} };
 const NOMBRE_RONDA = { 1:'Ronda 1', 2:'Ronda 2', 3:'la final' };
